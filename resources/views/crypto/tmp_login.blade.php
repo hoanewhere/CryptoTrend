@@ -17,6 +17,27 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    aaa
+    {{-- header --}}
+    <header class="l-header u-px-md">
+        <div>
+            <a href="{{ url('/') }}"><img src="{{ asset('img/logo.png') }}"></a>
+        </div>
+        <nav class="c-nav">
+            <ul class="c-nav_ul">
+                <li class="u-ml-md"><a href="">ログイン</a></li>
+                <li class="u-ml-md"><a href="">ユーザー登録</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    {{-- main --}}
+    <main>
+
+    </main>
+
+    {{-- footer --}}
+    <footer>
+
+    </footer>
 </body>
 </html>
