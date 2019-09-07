@@ -1,0 +1,38 @@
+.c-form {
+    background-color: $co-base0;
+    margin: 1rem;
+    padding: 1.5rem;
+    max-width: $layout-width-innerForm;
+    border: 1px solid $co-base2;
+    border-radius: 5px;
+    @include mq(md) {
+        margin: 1rem auto;
+    }
+}
+
+.c-form_title {
+    text-align: center;
+    padding: 1rem;
+}
+
+.c-form_contents {
+    
+}
+
+.c-form_content-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.c-form_input {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-weight: 400;
+    background-color: $co-base0;
+    border: 1px solid $co-base2;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
