@@ -7,11 +7,11 @@
         <div class="c-form_contents">
             <div class="u-mb-lg">
                 <label for="email" class="u-mb-sm">Email</label>
-                <input type="text" name="" id="email" class="c-form_input">
+                <input type="text" name="" id="email" class="c-input_text">
             </div>
             <div class="u-mb-lg">
                 <label for="password" class="u-mb-sm">パスワード</label>
-                <input type="password" name="" id="password" class="c-form_input">
+                <input type="password" name="" id="password" class="c-input_text">
             </div>
             <div class="c-form_content-row u-mb-lg">
                 <input type="checkbox" name="" id="remember" class="u-mr-md">

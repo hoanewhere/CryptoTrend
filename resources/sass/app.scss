@@ -32,11 +32,15 @@
 // -----------------------------------------------------------------
 @import 'Object/Component/nav';
 @import 'Object/Component/form';
+@import 'Object/Component/input';
 @import 'Object/Component/button';
+@import 'Object/Component/title';
 
 // -----------------------------------------------------------------
 // Project
 // -----------------------------------------------------------------
+@import 'Object/Project/ranks';
+@import 'Object/Project/search';
 
 // -----------------------------------------------------------------
 // Utility
