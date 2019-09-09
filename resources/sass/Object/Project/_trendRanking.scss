@@ -1,0 +1,22 @@
+// PC画面表示時に検索バーとランキング表示を左右に振り分けるためのscss
+// スマホ、タブレット表示時は本scssは無効にし、各プロジェクト(_rank, search)で描画内容を記載する
+
+.p-trendRanking {
+    @include mq(lg) {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+    }
+}
+
+.p-trendRanking_child:nth-of-type(1) {
+    @include mq(lg) {
+        flex: 0 0 30%;
+    }
+}
+
+.p-trendRanking_child:nth-of-type(2) {
+    @include mq(lg) {
+        flex: 0 0 70%;
+    }
+}

@@ -1,0 +1,41 @@
+.c-search {
+    display: none;
+    position: absolute;
+    z-index: 50;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba($color: $co-base99, $alpha: .8);
+    padding: 3rem 1rem;
+    color: $co-base0;
+    @include mq(lg) {
+        display: block;
+        position: relative;
+        max-width: $layout-width-innerSub;
+        margin: 1rem;
+        color: $co-base99;
+        background-color: $co-base0;
+        border: 1px solid $co-base2;
+        border-radius: 0.35rem;
+    }
+}
+
+.c-search_mono {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.c-search_chks {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.c-search_chk {
+    flex: 0 0 50%;
+    padding: 0 15%;
+    text-align: left;
+
+    display: flex;
+    align-items: center;
+}
