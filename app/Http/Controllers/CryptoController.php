@@ -10,6 +10,10 @@ class CryptoController extends Controller
         return view('crypto.trendRanking');
     }
 
+    public function accountList() {
+        return view('crypto.accountList');
+    }
+
     public function test_login() {
         return view('crypto.tmp_login');
     }
