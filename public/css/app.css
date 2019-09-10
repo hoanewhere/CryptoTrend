@@ -10946,6 +10946,12 @@ img {
   border-color: #048DFF;
 }
 
+.c-button_link {
+  font-weight: 400;
+  color: #048DFF;
+  text-decoration: none;
+}
+
 .c-title_main {
   font-size: 1.5rem;
   margin: 1rem;
@@ -10966,6 +10972,24 @@ img {
 .c-title_sub {
   font-size: 1.2rem;
   text-align: center;
+}
+
+.c-invalid_input-text {
+  border-color: #e3342f;
+}
+
+.c-invalid_input-text:focus {
+  border-color: #e3342f;
+  box-shadow: 0 0 0 0.2rem rgba(227, 52, 47, 0.25);
+  outline: 0;
+}
+
+.c-invalid_text {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 80%;
+  color: #e3342f;
 }
 
 .c-ranks {
