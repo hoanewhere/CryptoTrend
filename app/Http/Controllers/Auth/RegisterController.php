@@ -51,8 +51,6 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'twitter-id' => ['string', 'nullable'],
-            'twitter-pass' => ['string', 'nullable', 'confirmed'],
         ]);
     }
 
@@ -67,8 +65,6 @@ class RegisterController extends Controller
         return User::create([
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'twitter-id' => $data['twitter-id'],
-            'twitter-pass' => Hash::make($data['twitter-pass']),
         ]);
     }
 }

@@ -31,30 +31,6 @@
                 <label for="password-confirm" class="u-mb-sm">Re:パスワード</label>
                 <input type="password" name="password_confirmation" id="password-confirm" class="c-input_text" required autocomplete="new-password">
             </div>
-            <div class="u-mb-lg">
-                <label for="twitter-id" class="u-mb-sm">Twitter アカウント</label>
-                <input type="text" name="twitter-id" id="twitter-id" class="c-input_text">
-
-                @error('twitter-id')
-                    <span class="c-invalid_text" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
-            </div>
-            <div class="u-mb-lg">
-                <label for="twitter-pass" class="u-mb-sm">Twitter パスワード</label>
-                <input type="password" name="twitter-pass" id="twitter-pass" class="c-input_text">
-
-                @error('twitter-pass')
-                    <span class="c-invalid_text" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
-            </div>
-            <div class="u-mb-lg">
-                <label for="twitter-pass-confirm" class="u-mb-sm">Twitter Re:パスワード</label>
-                <input type="password" name="twitter-pass_confirmation" id="twitter-pass-confirm" class="c-input_text">
-            </div>
             <div class="u-mb-lg u-ta-c">
                 <button type="submit" class="c-button c-button-peace u-mb-md">新規登録</button>
             </div>
