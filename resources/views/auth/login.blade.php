@@ -31,7 +31,7 @@
                 <input type="checkbox" name="remember" id="remember" class="u-mr-md" {{ old('remember') ? 'checkd' : '' }}>
                 <label for="remember">ログイン状態を保持する</label>
             </div>
-            <div class="c-form_content-row u-mb-lg">
+            <div class="c-form_content-row">
                 <button type="submit" class="c-button c-button-peace u-mb-md">ログイン</button>
                 <a href="{{ route('password.request') }}" class="c-button c-button_link u-mb-md">パスワードを忘れた方</a>
             </div>
