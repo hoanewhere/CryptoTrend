@@ -30,7 +30,7 @@
                 <label for="rePassword" class="u-mb-sm">Re:パスワード</label>
                 <input type="password" name="rePassword" id="rePassword" class="c-input_text" required autocomplete="new-password">
             </div>
-            <div class="u-mb-lg">
+            <div class="u-mb-lg u-ta-c">
                     <button type="submit" class="c-button c-button-peace u-mb-md">パスワードリセット</button>
             </div>
         </div>

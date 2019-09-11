@@ -17,7 +17,7 @@
                     </span>
                 @enderror
             </div>
-            <div class="u-mb-lg">
+            <div class="u-mb-lg u-ta-c">
                     <button type="submit" class="c-button c-button-peace u-mb-md">パスワードリセットメール送信</button>
             </div>
         </div>
