@@ -32,7 +32,7 @@
                 <input type="password" name="password_confirmation" id="password-confirm" class="c-input_text" required autocomplete="new-password">
             </div>
             <div class="u-mb-lg">
-                <label for="twitter-id" class="u-mb-sm">Twitter アカウント</label>
+                <label for="twitter-id" class="u-mb-sm">Twitterアカウント</label>
                 <input type="text" name="twitter-id" id="twitter-id" class="c-input_text">
 
                 @error('twitter-id')
@@ -42,7 +42,7 @@
                 @enderror
             </div>
             <div class="u-mb-lg">
-                <label for="twitter-pass" class="u-mb-sm">Twitter パスワード</label>
+                <label for="twitter-pass" class="u-mb-sm">Twitterパスワード</label>
                 <input type="password" name="twitter-pass" id="twitter-pass" class="c-input_text">
 
                 @error('twitter-pass')
