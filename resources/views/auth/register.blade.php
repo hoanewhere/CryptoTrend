@@ -1,77 +1,64 @@
-@extends('layouts.app')
+@extends('layouts.crypto')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
+<div class="c-form">
+    <h1 class="c-form_title u-fz-lg">ユーザー登録</h1>
+    <form action="{{ route('register') }}" method="POST">
+        @csrf
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
-                        @csrf
+        <div class="c-form_contents">
+            <div class="u-mb-lg">
+                <label for="email" class="u-mb-sm">Email</label>
+                <input type="email" name="email" id="email" value="{{ old('email') }}" class="c-input_text @error('email') c-invalid_input-text @enderror" required autocomplete="email" autofocus>
 
-                        <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
+                @error('email')
+                    <span class="c-invalid_text" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+            <div class="u-mb-lg">
+                <label for="password" class="u-mb-sm">パスワード</label>
+                <input type="password" name="password" id="password" class="c-input_text @error('password') is-invalid @enderror" required autocomplete="new-password">
 
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                @error('password')
+                    <span class="c-invalid_text" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+            <div class="u-mb-lg">
+                <label for="password-confirm" class="u-mb-sm">Re:パスワード</label>
+                <input type="password" name="password_confirmation" id="password-confirm" class="c-input_text" required autocomplete="new-password">
+            </div>
+            <div class="u-mb-lg">
+                <label for="twitter-id" class="u-mb-sm">Twitter アカウント</label>
+                <input type="text" name="twitter-id" id="twitter-id" class="c-input_text">
 
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+                @error('twitter-id')
+                    <span class="c-invalid_text" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+            <div class="u-mb-lg">
+                <label for="twitter-pass" class="u-mb-sm">Twitter パスワード</label>
+                <input type="password" name="twitter-pass" id="twitter-pass" class="c-input_text">
 
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                @error('twitter-pass')
+                    <span class="c-invalid_text" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+            <div class="u-mb-lg">
+                <label for="twitter-pass-confirm" class="u-mb-sm">Twitter Re:パスワード</label>
+                <input type="password" name="twitter-pass_confirmation" id="twitter-pass-confirm" class="c-input_text">
+            </div>
+            <div class="u-mb-lg u-ta-c">
+                <button type="submit" class="c-button c-button-peace u-mb-md">新規登録</button>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 @endsection

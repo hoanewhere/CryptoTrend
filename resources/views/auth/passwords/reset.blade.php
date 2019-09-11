@@ -28,8 +28,8 @@
                 @enderror
             </div>
             <div class="u-mb-lg">
-                <label for="rePassword" class="u-mb-sm">Re:パスワード</label>
-                <input type="password" name="rePassword" id="rePassword" class="c-input_text" required autocomplete="new-password">
+                <label for="password-confirm" class="u-mb-sm">Re:パスワード</label>
+                <input type="password" name="password_confirmation" id="password-confirm" class="c-input_text" required autocomplete="new-password">
             </div>
             <div class="u-ta-c">
                 <button type="submit" class="c-button c-button-peace u-mb-md">パスワードリセット</button>
