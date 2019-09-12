@@ -23,3 +23,6 @@ Route::get('/crypto/register', 'CryptoController@test_register');
 Route::get('/index', 'CryptoController@index');
 Route::get('/accountList', 'CryptoController@accountList');
 
+// test
+Route::get('/test', 'CryptoController@test');
+
