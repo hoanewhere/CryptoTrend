@@ -26,7 +26,7 @@ class AddCompleteFlgInUpadteTable extends Migration
     public function down()
     {
         Schema::table('updated_time', function (Blueprint $table) {
-            //
+            $table->dropColumn('complete_flg');
         });
     }
 }

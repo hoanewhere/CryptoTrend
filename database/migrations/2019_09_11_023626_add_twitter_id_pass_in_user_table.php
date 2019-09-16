@@ -27,7 +27,8 @@ class AddTwitterIdPassInUserTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->dropColumn('twitter_id');
+            $table->dropColumn('twitter_pass');
         });
     }
 }
