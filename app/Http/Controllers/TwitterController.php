@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 class TwitterController extends Controller
 {
-    const MAX_SEARCH = 14;
+    const MAX_SEARCH = 450;
 
     private static $searchd_cnt = 0;
     public static $searchd_limit_flg = false;
@@ -45,7 +45,7 @@ class TwitterController extends Controller
             Log::debug('twitter接続時のパラメータ:'. print_r($params, true));
             $result_std = $connection->get('search/tweets', $params);
             $result = json_decode(json_encode($result_std), true);
-            Log::debug('ツイートresult:'. print_r($result, true));
+            // Log::debug('ツイートresult:'. print_r($result, true));
 
             // レスポンスがエラーで返ってきた場合、limit_flgを立ててループを抜ける
             if (isset($result['errors'])) {
@@ -87,6 +87,7 @@ class TwitterController extends Controller
 
             // search回数をカウント
             self::$searchd_cnt++;
+            Log::debug('制限カウント：'.self::$searchd_cnt);
             if (self::$searchd_cnt >= self::MAX_SEARCH) {
                 self::$searchd_limit_flg = true;
                 self::$searchd_cnt = 0;

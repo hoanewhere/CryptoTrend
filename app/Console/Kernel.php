@@ -5,6 +5,8 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
+use App\Http\Controllers\TrendRankingController;
+
 class Kernel extends ConsoleKernel
 {
     /**
@@ -24,8 +26,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        // 15分毎にツイート数の集計を実施
+        $schedule->call(function() {
+            $trend_ranking = New TrendRankingController();
+            $trend_ranking->aggregateTweetTrend();
+        })->everyFifteenMinutes();
     }
 
     /**

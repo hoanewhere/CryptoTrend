@@ -69,7 +69,7 @@ class TrendRankingController extends Controller
             
             // UpdatedTimeテーブルに追加したレコードの時刻を読み出し
             $updated_time_result = UpdatedTime::where('time_index', '1')->where('created_at', 'LIKE', "$today%")->get(); 
-            Log::debug('タイムテーブルの取得データ: '.print_r($updated_time_result, true));
+            // Log::debug('タイムテーブルの取得データ: '.print_r($updated_time_result, true));
             $start_day = date("Y-m-d H:i:s", strtotime($updated_time_result[0]->created_at));
             $start_id = $updated_time_result[0]->id;
 
@@ -89,11 +89,11 @@ class TrendRankingController extends Controller
             ]);
             $trend[0]->save();
         }
-        Log::debug('集計結果: '.print_r($crypto_data, true));
+        // Log::debug('集計結果: '.print_r($crypto_data, true));
 
         // 集計が完了したか確認する
         foreach($crypto_data as $item) {
-            if($item['complete_flg'] === false) {
+            if($item['complete_flg'] == false) {
                 Log::debug('集計完了(１５分後に再開):');
                 return; // 一つでも未完了のものがあれば処理終了。15分後に処理再開。
             }
@@ -117,12 +117,12 @@ class TrendRankingController extends Controller
 
          // crypto_data作成
         $crypto_data = $this->createCryptoData();
-        Log::debug('作成データ: '.print_r($crypto_data, true));
+        // Log::debug('作成データ: '.print_r($crypto_data, true));
 
         // 作成したデータでtrendテーブルにレコードを新規追加する
         foreach($crypto_data as $key => $data) {
-            Log::debug('Key: '. $key);
-            Log::debug('Data: '. print_r($data, true));
+            // Log::debug('Key: '. $key);
+            // Log::debug('Data: '. print_r($data, true));
             $trend = New Trend();
             $trend->fill([
                 'crypto_id' => $key,
@@ -137,7 +137,6 @@ class TrendRankingController extends Controller
         $crypto_data = $this->searchForDetails($start_day, $crypto_data);
         return $crypto_data;
     }
-
 
     /**
      * 前回の続きから集計データを取得する（前回のデータはDBから読み出す。）。
@@ -174,11 +173,11 @@ class TrendRankingController extends Controller
     private function searchForDetails(string $start_day, array $crypto_data){
         Log::debug('searchForDetails(関数呼び出し)');
         Log::debug('引数:start_day:' . $start_day);
-        Log::debug('引数:crypto_data:' . print_r($crypto_data, true));
+        // Log::debug('引数:crypto_data:' . print_r($crypto_data, true));
 
         // 仮想通貨の数だけループする
         foreach($crypto_data as $key => &$data) {
-            Log::debug('ループのdata:' . print_r($data, true));
+            // Log::debug('ループのdata:' . print_r($data, true));
 
             // 検索wordを取得
             $crypto_result = Crypto::where('id', $key)->get();
@@ -207,7 +206,7 @@ class TrendRankingController extends Controller
     private function createCryptoData() {
         $cyrpto_data = array();
         $crypto_list = [];
-        
+
         $cryptos = Crypto::get();
         foreach($cryptos as $crypto) {
             $crypto_list[] = $crypto->id;
