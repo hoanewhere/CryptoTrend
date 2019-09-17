@@ -7,12 +7,13 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\TwitterController;
 use App\Http\Controllers\CoinCheckController;
 
+//Model
+use App\UpdatedTime;
+use App\Trend;
+use App\Crypto;
+
 class TrendRankingController extends Controller
 {
-
-
-
-
     public function index() {
         // $hogehoge =  $this->searchTrends(1);
         // Log::debug('$trends: '.print_r($hogehoge, true));
@@ -23,100 +24,169 @@ class TrendRankingController extends Controller
 
 
     /**
-     * 仮想通貨のトレンド（ツイート数と取引価格）を取得する。
+     * トレンドワードのツイート数を集計してDB更新する。
      * 
-     * @return array $trends
+     * @return void
      */
-    // private function searchTrends() {
-    //     Log::debug('searchTrends(関数呼び出し)');
-    //     $trends = array();
-
-    //     // cryptoテーブルから対象のcryptoを取得 
-    //     $crypto_list = ['BTC', 'AAA'];// TBD: $crypto_list =; TBD:テーブルから読み出し
-
-    //     // 仮想通貨の数だけループする
-    //     foreach($crypto_list as $crypto) {
-    //         // 条件からツイート情報取得
-    //         $searched_tweet = TwitterController::countTweet($crypto); // TBD: メソッド未実装
-    //         $tweet_cnt = $searched_tweet;// TBD: $searched_tweetからツイート数抜き出す
-
-    //         // 仮想通貨の取引価格を取得
-    //         $search_price = CoinCheckController::searchTransactionPrice($crypto); // TBD: メソッド未実装
-    //         $crypto_max = $search_price; // TBD: $search_priceから最大取引価格を取り出す
-    //         $crypto_min = $search_price; // TBD: $search_priceから最小取引価格を取り出す
-
-    //         $trends[$crypto] = ['tweet_cnt'=>$tweet_cnt, 'transaction_price_max'=>$crypto_max, 'transaction_price_min'=>$crypto_min];
-    //         Log::debug('$trends: '.print_r($trends, true));
-    //     }
-    //     Log::debug('$trends: '.print_r($trends, true));
-    //     return $trends;
-    // }
-
     public function aggregateTweetTrend() {
         Log::debug('aggregateTweetTrend(関数呼び出し)');
+
+        $time_flg = false; // UpdatedTimeテーブルレコード有無フラグ
+        $complete_flg = false; // UpdatedTimeテーブル完了フラグ
+        $updated_time_result = array(); // UpdatedTimeテーブル呼び出し結果
+
         // 現在の日付でtimeテーブル呼び出し
-        $time_flg = false; // TBD: タイムテーブル呼び出してあるかないかを判定
-        $complete_flg = false; // TBD: timeテーブルの完了フラグをセット
+        $today = date('Y-m-d');
+        $updated_time_result = UpdatedTime::where('time_index', '1')->where('created_at', 'LIKE', "$today%")->get(); 
+        if(count($updated_time_result)) {
+            $time_flg = true;
+            if($updated_time_result[0]->complete_flg) {
+                $complete_flg = true;
+            }
+        }
+        Log::debug('タイムテーブルの取得データ: '.print_r($updated_time_result, true));
+        Log::debug('タイムフラグ: '.$time_flg);
+        Log::debug('タイムテーブルのコンプリートフラグ: '.$complete_flg);
 
         if($time_flg) { //現在日付のレコードがある場合
             if ($complete_flg) { // 現在日付の情報取得が完了している場合
                 return;
-            } else {
-                $start_day = '2019-09-11 00:00:00'; // TBD: timestampからstringに変換。右記参照 $start_day = date('Y-m-d_H:i:s', strtotime(timeテーブルのtimestamp));
-                $crypto_data = $this->resumeSearch($start_day); //TBD: 再開処理開始
+            } else { // 現在日付の情報収集が未完了の場合
+                $start_day = date("Y-m-d H:i:s", strtotime($updated_time_result[0]->created_at)); //timestampからstringに変換。右記参照 $start_day = date('Y-m-d_H:i:s', strtotime(timeテーブルのtimestamp));
+                $start_id = $updated_time_result[0]->id;
+
+                // 集計データを取得
+                $crypto_data = $this->resumeSearch($start_day, $start_id);
             }
         } else { //現在日付のレコードがない場合
-            // TBD: timeテーブルにレコード追加
+            // UpdatedTimeテーブルにレコード追加
+            $updated_time = New UpdatedTime();
+            $updated_time->fill([
+                'time_index' => 1,
+                'complete_flg' => false
+            ]);
+            $updated_time->save();
             
-            $start_day = date("Y-m-d H:i:s");
-            $crypto_data = $this->startSearch($start_day); // TBD: 新規処理開始
+            // UpdatedTimeテーブルに追加したレコードの時刻を読み出し
+            $updated_time_result = UpdatedTime::where('time_index', '1')->where('created_at', 'LIKE', "$today%")->get(); 
+            Log::debug('タイムテーブルの取得データ: '.print_r($updated_time_result, true));
+            $start_day = date("Y-m-d H:i:s", strtotime($updated_time_result[0]->created_at));
+            $start_id = $updated_time_result[0]->id;
+
+            // 初回の集計データを取得
+            $crypto_data = $this->startSearch($start_day, $start_id);
         }
 
-        // 集計結果をもとにDB更新
-        //TBD:
+        // 集計データをもとにDB更新
+        foreach($crypto_data as $key => $data) {
+            $trend = Trend::where('crypto_id', $key)->where('time_id', $updated_time_result[0]->id)->get();
+            $trend[0]->fill([
+                'hour_cnt' => $data['hour_cnt'],
+                'day_cnt' => $data['day_cnt'],
+                'week_cnt' => $data['week_cnt'],
+                'complete_flg' =>$data['complete_flg'],
+                'next_params' =>$data['next_params'],
+            ]);
+            $trend[0]->save();
+        }
         Log::debug('集計結果: '.print_r($crypto_data, true));
 
         // 集計が完了したか確認する
         foreach($crypto_data as $item) {
             if($item['complete_flg'] === false) {
-                return; // 一つでも未完了のものがあれば処理終了
+                Log::debug('集計完了(１５分後に再開):');
+                return; // 一つでも未完了のものがあれば処理終了。15分後に処理再開。
             }
         }
         // 全て完了の場合、timeテーブルのcomplete_flgを完了にして処理終了
-        // TBD:
-
+        $updated_time_result[0]->fill([
+            'complete_flg' => true
+        ]);
+        $updated_time_result[0]->save();
+        Log::debug('集計完了:');
     }
 
-    private function startSearch(string $start_day) {
+
+    /**
+     * 初回の集計データを取得する。
+     * @param string $start_day, int $start_id
+     * @return array $cyrpto_data
+     */
+    private function startSearch(string $start_day, int $start_id) {
         Log::debug('startSearch(関数呼び出し)');
 
-        $crypto_list = ['月代', '匕首']; // TBD: crypto_list取得 ←　別関数
-        $crypto_data = $this->createCryptoData($crypto_list); // crypto_listからtmp生成
-        $crypto_data = $this->searchForDetails($start_day, $crypto_data, $crypto_list);
+         // crypto_data作成
+        $crypto_data = $this->createCryptoData();
+        Log::debug('作成データ: '.print_r($crypto_data, true));
+
+        // 作成したデータでtrendテーブルにレコードを新規追加する
+        foreach($crypto_data as $key => $data) {
+            Log::debug('Key: '. $key);
+            Log::debug('Data: '. print_r($data, true));
+            $trend = New Trend();
+            $trend->fill([
+                'crypto_id' => $key,
+                'complete_flg' => false,
+                'next_params' => "",
+                'time_id' => $start_id
+            ]);
+            $trend->save();
+        }
+
+        // 集計開始
+        $crypto_data = $this->searchForDetails($start_day, $crypto_data);
         return $crypto_data;
     }
 
-    private function resumeSearch(string $start_day) {
+
+    /**
+     * 前回の続きから集計データを取得する（前回のデータはDBから読み出す。）。
+     * @param string $start_day, int $start_id
+     * @return array $cyrpto_data
+     */
+    private function resumeSearch(string $start_day, int $start_id) {
         Log::debug('resumeSearch(関数呼び出し)');
+        $crypto_data = array();
 
-        $crypto_list = array(); // TBD: crypto_list取得 ←　別関数(getCryotoList)
-        $crypto_data = array(); // DBからデータ取得してtmp生成
-        $crypto_data = $this->searchForDetails($start_day, $crypto_data, $crypto_list);
+        // DBからデータ取得して$crypto_data作成
+        $trends = Trend::where('time_id', $start_id)->get();
+        foreach($trends as $trend) {
+            $crypto_data[$trend->crypto_id] = [
+                'hour_cnt' => $trend->hour_cnt,
+                'day_cnt' => $trend->day_cnt,
+                'week_cnt' => $trend->week_cnt,
+                'complete_flg' => $trend->complete_flg,
+                'next_params' => $trend->next_params,
+            ];
+        }
+        
+        // 集計開始
+        $crypto_data = $this->searchForDetails($start_day, $crypto_data);
         return $crypto_data;
     }
 
-    private function searchForDetails(string $start_day, array $crypto_data, array $crypto_list){
+
+    /**
+     * 集計処理を呼び出して、集計結果を返す。
+     * @param string $start_day, array $crypto_data
+     * @return array $cyrpto_data
+     */
+    private function searchForDetails(string $start_day, array $crypto_data){
         Log::debug('searchForDetails(関数呼び出し)');
         Log::debug('引数:start_day:' . $start_day);
         Log::debug('引数:crypto_data:' . print_r($crypto_data, true));
-        Log::debug('引数:crypto_list:' . print_r($crypto_list, true));
 
         // 仮想通貨の数だけループする
         foreach($crypto_data as $key => &$data) {
             Log::debug('ループのdata:' . print_r($data, true));
-            // 条件からツイート数を取得
+
+            // 検索wordを取得
+            $crypto_result = Crypto::where('id', $key)->get();
+            $word = $crypto_result[0]->crypto;
+
+            // 集計が完了していない単語のツイート数を取得
             if ($data['complete_flg'] == false) {
-                $data = TwitterController::countTweet($key, $start_day, $data); // TBD: メソッド未実装
+                $data = TwitterController::countTweet($word, $start_day, $data);
             }
 
             // twitterの制限状態を確認(フラグが立っている場合、下ろしてループ抜ける)
@@ -128,16 +198,28 @@ class TrendRankingController extends Controller
         return $crypto_data;
     }
 
-    private function createCryptoData(array $list) {
-        $cyrpto_data = array();
 
-        foreach($list as $item) {
+    /**
+     * 初回の集計用データを作成する。
+     *
+     * @return array $cyrpto_data
+     */
+    private function createCryptoData() {
+        $cyrpto_data = array();
+        $crypto_list = [];
+        
+        $cryptos = Crypto::get();
+        foreach($cryptos as $crypto) {
+            $crypto_list[] = $crypto->id;
+        }
+
+        foreach($crypto_list as $item) {
             $cyrpto_data[$item] = [
                 'hour_cnt' => 0,
                 'day_cnt' => 0,
                 'week_cnt' => 0,
                 'complete_flg' => false,
-                'next_params' => ''
+                'next_params' => '',
             ];
         }
         return $cyrpto_data;

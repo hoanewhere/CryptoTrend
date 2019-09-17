@@ -96,7 +96,7 @@ class TwitterController extends Controller
 
         Log::debug('twitterController集計結果:'. print_r($data, true));
         Log::debug('制限フラグ：'.self::$searchd_limit_flg);
-        Log::debug('制限フラグ：'.self::$searchd_cnt);
+        Log::debug('制限カウント：'.self::$searchd_cnt);
         return $data;
     }
 }
