@@ -18,9 +18,31 @@ class TrendRankingController extends Controller
         // $hogehoge =  $this->searchTrends(1);
         // Log::debug('$trends: '.print_r($hogehoge, true));
 
-        $this->aggregateTweetTrend();
+        // $this->aggregateTweetTrend();
+        // $this->aggregateCryptoPrice();
         return view('crypto.trendRanking');
     }
+
+
+    /**
+     * 仮想通貨の取引価格（24時間での最大、最小額）を集計してDB更新する。
+     * 
+     * @return void
+     */
+    public function aggregateCryptoPrice(int $id) {
+        // 現状はBTCのみの価格を取得
+        $result = CoinCheckController::getTransactionPrice();
+        
+        // 取得結果からDB更新(BTCのみ)
+        $time_id = $id;
+        $trend = Trend::where('crypto_id', 1)->where('time_id', $time_id)->get();
+        $trend[0]->fill([
+            'transaction_price_max' => $result['high'],
+            'transaction_price_min' => $result['low']
+        ]);
+        $trend[0]->save();
+    }
+
 
 
     /**
@@ -132,6 +154,9 @@ class TrendRankingController extends Controller
             ]);
             $trend->save();
         }
+
+        // 初回のタイミングで仮想通貨の取引価格を取得し、DB更新する
+        $this->aggregateCryptoPrice($start_id);
 
         // 集計開始
         $crypto_data = $this->searchForDetails($start_day, $crypto_data);

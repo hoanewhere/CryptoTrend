@@ -13,46 +13,46 @@ class CryptoTableseeder extends Seeder
     {
         DB::table('cryptos')->insert([
             [
-                'crypto' => 'BTC',
+                'crypto' => 'bitcoin',
             ],
             [
-                'crypto' => 'ETH',
+                'crypto' => 'Ethereum',
             ],
             [
-                'crypto' => 'ETC',
+                'crypto' => 'EthereumClassic',
             ],
             [
-                'crypto' => 'LSK',
+                'crypto' => 'LISK',
             ],
             [
-                'crypto' => 'FCT',
+                'crypto' => 'Factom',
             ],
             [
-                'crypto' => 'XRP',
+                'crypto' => 'Ripple',
             ],
             [
-                'crypto' => 'XEM',
+                'crypto' => 'NEM',
             ],
             [
-                'crypto' => 'LTC',
+                'crypto' => 'Litecoin',
             ],
             [
-                'crypto' => 'BCH',
+                'crypto' => 'BitcoinCash',
             ],
             [
-                'crypto' => 'MONA',
+                'crypto' => 'MonaCoin',
             ],
             [
-                'crypto' => 'DASH',
+                'crypto' => 'Dash',
             ],
             [
-                'crypto' => 'ZEC',
+                'crypto' => 'Zcash',
             ],
             [
-                'crypto' => 'XMR',
+                'crypto' => 'Monero',
             ],
             [
-                'crypto' => 'REP',
+                'crypto' => 'Augur',
             ]
         ]);
     }
