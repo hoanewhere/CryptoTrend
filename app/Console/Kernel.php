@@ -30,7 +30,9 @@ class Kernel extends ConsoleKernel
         $schedule->call(function() {
             $trend_ranking = New TrendRankingController();
             $trend_ranking->aggregateTweetTrend();
-        })->everyFifteenMinutes();
+        })->everyFiveMinutes()
+        ->name('task-aggregateTweetTrend')
+        ->withoutOverlapping();
     }
 
     /**
