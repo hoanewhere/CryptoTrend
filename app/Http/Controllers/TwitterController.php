@@ -28,9 +28,15 @@ class TwitterController extends Controller
         $ut_a_day_ago = strtotime($ref_date . " -1 day");
         $string_since_day = date("Y-m-d_H:i:s", strtotime($ref_date . " -7 day"));
 
-        // クライアントIDでツイッター認証
         $config = config('twitter');
-        $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], $config['access_token'], $config['access_token_secret']);
+
+        // クライアントIDでツイッター認証
+        // $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], $config['access_token'], $config['access_token_secret']);
+
+        // アプリケーション認証
+        $twitter = new TwitterOAuth($config['api_key'], $config['secret_key']);
+        $access_token = $twitter->oauth2('oauth2/token', ['grant_type' => 'client_credentials']);
+        $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], null, $access_token->access_token);
         
         // パラメータを設定
         if ($data['next_params']){
