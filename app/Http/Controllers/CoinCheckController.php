@@ -9,6 +9,15 @@ use Illuminate\Support\Facades\Log;
 
 class CoinCheckController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Coin Check Controller
+    |--------------------------------------------------------------------------
+    |
+    | CoinCheck APIにアクセスするコントローラ
+    |
+    */
+
     public static function getTransactionPrice() {
         $config = config('coincheck');
         $coincheck = new Coincheck($config['access_key'], $config['secret_key']);

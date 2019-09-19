@@ -13,6 +13,16 @@ use App\SearchedAccount;
 
 class AccountListController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Account List Controller
+    |--------------------------------------------------------------------------
+    |
+    | 仮想通貨のキーワードに関連するアカウントをtwitterから取得し、
+    | DB保存やview側にデータを渡すコントローラ
+    |
+    */
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -27,6 +37,12 @@ class AccountListController extends Controller
 
     }
     
+
+    /**
+     * 仮想通貨に関連するユーザを取得し、DBに保存する。
+     * 
+     * @return void
+     */
     public function getUsers() {
         Log::debug('getUsers(関数呼び出し)');
 
@@ -45,6 +61,12 @@ class AccountListController extends Controller
         $this->saveUsers($users, $login_user_id);
     }
 
+
+    /**
+     * 仮想通貨に関連するユーザを取得する。
+     * 
+     * @return array $result_arr
+     */
     private function searchUsers() {
         Log::debug('serachUsers(関数呼び出し)');
 
@@ -55,6 +77,13 @@ class AccountListController extends Controller
         return $result_arr;
     }
 
+    
+    /**
+     * 仮想通貨に関連するユーザをDBに保存する。
+     * 
+     * @param array $users, int $login_id
+     * @return void
+     */
     private function saveUsers(array $users, int $login_id) {
         Log::debug('saveUsers(関数呼び出し)');
 

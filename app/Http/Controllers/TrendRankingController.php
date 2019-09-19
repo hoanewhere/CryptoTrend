@@ -14,6 +14,16 @@ use App\Crypto;
 
 class TrendRankingController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Trend Ranking Controller
+    |--------------------------------------------------------------------------
+    |
+    | 仮想通貨のトレンド情報をtwitterやcoincheckから取得し、
+    | DB保存やview側にデータを渡すコントローラ
+    |
+    */
+
     public function index() {
         // $hogehoge =  $this->searchTrends(1);
         // Log::debug('$trends: '.print_r($hogehoge, true));

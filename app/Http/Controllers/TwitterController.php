@@ -9,6 +9,15 @@ use Illuminate\Support\Facades\Log;
 
 class TwitterController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Twitter Controller
+    |--------------------------------------------------------------------------
+    |
+    | Twitter APIにアクセスするコントローラ
+    |
+    */
+
     const MAX_TWEET_SEARCH = 450;
     const MAX_USER_SEARCH = 900;
 
