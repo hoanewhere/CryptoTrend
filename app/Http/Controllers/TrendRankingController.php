@@ -214,8 +214,8 @@ class TrendRankingController extends Controller
             }
 
             // twitterの制限状態を確認(フラグが立っている場合、下ろしてループ抜ける)
-            if (TwitterController::$searchd_limit_flg == true) {
-                TwitterController::$searchd_limit_flg = false;
+            if (TwitterController::$searchd_tweet_limit_flg == true) {
+                TwitterController::$searchd_tweet_limit_flg = false;
                 break;
             }
         }
