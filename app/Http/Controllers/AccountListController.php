@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Reest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\TwitterController;
@@ -29,12 +29,33 @@ class AccountListController extends Controller
     }
 
     public function index() {
+        $login_user = Auth::user();
+        if(empty($login_user->access_token)) {
+            return TwitterController::authenticateUser();
+        }
+
         $this->getUsers();
         return view('crypto.accountList');
     }
 
-    public function authenticateUser() {
+    public function callback(Request $request) {
+        Log::debug('callback後のメソッド呼び出し');
+        // アクセストークンを取得する
+        $access_token = TwitterController::getAccessToken($request);
+        if(empty($access_token)) {
+            return redirect('index');
+        }
 
+        // アクセストークンをjson形式でDBに保存する
+        $access_token_json = json_encode($access_token);
+        $login_user = Auth::user();
+        $login_user->fill([
+            'access_token' => $access_token_json
+        ]);
+        $login_user->save();
+
+        $this->getUsers();
+        return redirect('accountList');
     }
     
 
@@ -46,9 +67,20 @@ class AccountListController extends Controller
     public function getUsers() {
         Log::debug('getUsers(関数呼び出し)');
 
-        // UpdatedTimeテーブルにレコード追加
+        // 今日、すでにgetUsers()が実施されている場合は何もしない
+        $today = date('Y-m-d');
+        $updated_time_result = UpdatedTime::where('time_index', '2')->where('created_at', 'LIKE', "$today%")->get(); 
+        if(count($updated_time_result)) {
+            if($updated_time_result[0]->complete_flg) {
+                return;
+            }
+        }
+
         $login_user = Auth::user();
         $login_user_id = $login_user->id;
+        $access_token = json_decode($login_user->access_token, true);
+
+        // UpdatedTimeテーブルにレコード追加
         $updated_time = New UpdatedTime();
         $updated_time->fill([
             'time_index' => 2,
@@ -57,7 +89,10 @@ class AccountListController extends Controller
         ]);
         $updated_time->save();
 
-        $users = $this->searchUsers();
+        // ユーザ検索
+        $users = $this->searchUsers($access_token);
+
+        // ユーザデータ保存
         $this->saveUsers($users, $login_user_id);
     }
 
@@ -67,11 +102,10 @@ class AccountListController extends Controller
      * 
      * @return array $result_arr
      */
-    private function searchUsers() {
+    private function searchUsers(array $access_token) {
         Log::debug('serachUsers(関数呼び出し)');
 
-        // TBD: ログインユーザからアクセストークンを取得して関数呼び出す(現状はクライアントユーザで実施)
-        $result_arr = TwitterController::searchTweetUsers('TBD', 'TBD');
+        $result_arr = TwitterController::searchTweetUsers($access_token);
         Log::debug('取得データ(result_arr)：'. print_r($result_arr, true));
         Log::debug('取得データの数：'. count($result_arr));
         return $result_arr;

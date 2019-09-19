@@ -29,14 +29,14 @@ class TwitterController extends Controller
      * @param string $word
      * @return array $tweet_cnt
      */
-    public static function countTweet(string $word, string $ref_date, array $data) {
+    public static function countTweet(string $word, string $start_day, array $data) {
         // twitterAPIのパラメータ初期化
         $params = array();
 
         // 計測用のunixtime, date取得
-        $ut_one_hour_ago = strtotime($ref_date . " -1 hour");
-        $ut_a_day_ago = strtotime($ref_date . " -1 day");
-        $string_since_day = date("Y-m-d_H:i:s", strtotime($ref_date . " -7 day"));
+        $ut_one_hour_ago = strtotime($start_day . " -1 hour");
+        $ut_a_day_ago = strtotime($start_day . " -1 day");
+        $string_since_day = date("Y-m-d_H:i:s", strtotime($start_day . " -7 day"));
 
         $config = config('twitter');
 
@@ -52,7 +52,7 @@ class TwitterController extends Controller
         if ($data['next_params']){
             parse_str($data['next_params'], $params);
         } else {
-            $params = ['q' => $word . ' since:' . $string_since_day, 'count' => 100]; // 例：「BTC since:2019-09-09_00:00:00」で100件検索する
+            $params = ['q' => $word . ' since:' . $string_since_day, 'until' => $start_day, 'count' => 100]; // 例：「BTC since:2019-09-09_00:00:00」で100件検索する
         }
         
         // 全件取得 or アクセス制限の上限までループ
@@ -118,14 +118,13 @@ class TwitterController extends Controller
     }
 
     
-    public static function searchTweetUsers(string $access_tokun, string $access_secret) {
+    public static function searchTweetUsers(array $access_token) {
         // 返り値の配列を初期化
         $result_arr = array();
         
-        // ユーザログインのアカウント認証
-        // TBD:引数にあるユーザログインにひもづくアクセストークンで認証する。（現状はクライアントで認証）
+        // ログインユーザにひもづくアクセストークンで認証する
         $config = config('twitter');
-        $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], $config['access_token'], $config['access_token_secret']);
+        $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], $access_token['oauth_token'], $access_token['oauth_token_secret']);
 
         // パラメータを設定
         $params = ['q' => '憚る', 'page' => 0, 'count' => 20];
@@ -162,5 +161,54 @@ class TwitterController extends Controller
         }
 
         return $result_arr;
+    }
+
+    public static function authenticateUser() {
+        Log::debug('authenticateUser(関数呼び出し)');
+
+        // リクエストトークンを入手
+        $config = config('twitter');
+        Log::debug('コールバックurl'.$config['call_back_url']);
+        $connection = new TwitterOAuth($config['api_key'], $config['secret_key']);
+        $request_token = $connection->oauth("oauth/request_token", array("oauth_callback" => $config['call_back_url']));
+
+        Log::debug('リクエストトークン'.$request_token['oauth_token']);
+        Log::debug('リクエストトークン(secret)'.$request_token['oauth_token_secret']);
+
+        // callback後に認証で使用するため、セッションに保存
+        session(['oauth_token' => $request_token['oauth_token']]);
+        session(['oauth_token_secret' => $request_token['oauth_token_secret']]);
+
+        // 認証画面へ移動
+        $url = $connection->url('oauth/authorize', array(
+            'oauth_token' => $request_token['oauth_token']
+        ));
+        Log::debug('飛び先'.$url);
+
+        return redirect($url);
+    }
+
+    public static function getAccessToken(Request $request) {
+        Log::debug('callback後のリクエスト：'. $request);
+
+        $oauth_token = session('oauth_token');
+        $oauth_token_secret = session('oauth_token_secret');
+
+        if ($request->has('oauth_token') && $oauth_token !== $request->oauth_token) {
+            return null;
+        }
+
+        // request_tokenからaccess_tokenを取得
+        $connection = new TwitterOAuth(
+            $oauth_token,
+            $oauth_token_secret
+        );
+        $access_token = $connection->oauth('oauth/access_token', array(
+            'oauth_verifier' => $request->oauth_verifier,
+            'oauth_token' => $request->oauth_token,
+        ));
+        Log::debug('アクセストークン：'. print_r($access_token, true));
+
+        return $access_token;
     }
 }
