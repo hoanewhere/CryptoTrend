@@ -3,11 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Reest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\TwitterController;
 
+//Model
+use App\UpdatedTime;
+use App\SearchedAccount;
+
 class AccountListController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index() {
         $this->getUsers();
         return view('crypto.accountList');
@@ -19,8 +29,20 @@ class AccountListController extends Controller
     
     public function getUsers() {
         Log::debug('getUsers(関数呼び出し)');
+
+        // UpdatedTimeテーブルにレコード追加
+        $login_user = Auth::user();
+        $login_user_id = $login_user->id;
+        $updated_time = New UpdatedTime();
+        $updated_time->fill([
+            'time_index' => 2,
+            'complete_flg' => false,
+            'login_user_id' => $login_user_id
+        ]);
+        $updated_time->save();
+
         $users = $this->searchUsers();
-        $this->saveUsers($users);
+        $this->saveUsers($users, $login_user_id);
     }
 
     private function searchUsers() {
@@ -33,14 +55,27 @@ class AccountListController extends Controller
         return $result_arr;
     }
 
-    private function saveUsers(array $users) {
+    private function saveUsers(array $users, int $login_id) {
         Log::debug('saveUsers(関数呼び出し)');
 
-        // foreach($users as $user) {
-        //     $user_json = json_encode($user);
+        $today = date('Y-m-d');
+        $updated_time = UpdatedTime::where('time_index', '2')->where('login_user_id', $login_id)->where('created_at', 'LIKE', "$today%")->get(); 
 
-            
-        // }
-        return 0;
+        foreach($users as $user) {
+            $user_json = json_encode($user);
+            $searched_account = New SearchedAccount();
+            $searched_account->fill([
+                'account_data' => $user_json,
+                'update_time_id' => $updated_time[0]->id,
+                'login_user_id' => $login_id // 不要？
+            ]);
+            $searched_account->save();
+        }
+
+        // timeテーブルの完了フラグを更新
+        $updated_time[0]->fill([
+            'complete_flg' => true
+        ]);
+        $updated_time[0]->save();
     }
 }
