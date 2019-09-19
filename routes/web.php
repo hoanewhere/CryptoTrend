@@ -21,7 +21,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 // Route::get('/crypto/login', 'CryptoController@test_login');
 Route::get('/crypto/register', 'CryptoController@test_register');
 Route::get('/index', 'TrendRankingController@index');
-Route::get('/accountList', 'CryptoController@accountList');
+Route::get('/accountList', 'AccountListController@index');
 
 
 // test

@@ -9,10 +9,11 @@ use Illuminate\Support\Facades\Log;
 
 class TwitterController extends Controller
 {
-    const MAX_SEARCH = 450;
+    const MAX_TWEET_SEARCH = 450;
+    const MAX_USER_SEARCH = 900;
 
-    private static $searchd_cnt = 0;
-    public static $searchd_limit_flg = false;
+    private static $searchd_tweet_cnt = 0;
+    public static $searchd_tweet_limit_flg = false;
     
     /**
      * 指定されたワードの検索数を１時間、１日、１週間でそれぞれ計測する。
@@ -46,7 +47,7 @@ class TwitterController extends Controller
         }
         
         // 全件取得 or アクセス制限の上限までループ
-        for($i=0; $i<self::MAX_SEARCH; $i++) {
+        for($i=0; $i<self::MAX_TWEET_SEARCH; $i++) {
             Log::debug('twitter接続開始:');
             Log::debug('twitter接続時のパラメータ:'. print_r($params, true));
             $result_std = $connection->get('search/tweets', $params);
@@ -56,8 +57,8 @@ class TwitterController extends Controller
             // レスポンスがエラーで返ってきた場合、limit_flgを立ててループを抜ける
             if (isset($result['errors'])) {
                 Log::debug('resultエラー:'. print_r($result['errors'], true));
-                self::$searchd_limit_flg = true;
-                self::$searchd_cnt = 0;
+                self::$searchd_tweet_limit_flg = true;
+                self::$searchd_tweet_cnt = 0;
                 break;
             }
 
@@ -92,18 +93,65 @@ class TwitterController extends Controller
             parse_str($data['next_params'], $params);
 
             // search回数をカウント
-            self::$searchd_cnt++;
-            Log::debug('制限カウント：'.self::$searchd_cnt);
-            if (self::$searchd_cnt >= self::MAX_SEARCH) {
-                self::$searchd_limit_flg = true;
-                self::$searchd_cnt = 0;
+            self::$searchd_tweet_cnt++;
+            Log::debug('制限カウント：'.self::$searchd_tweet_cnt);
+            if (self::$searchd_tweet_cnt >= self::MAX_TWEET_SEARCH) {
+                self::$searchd_tweet_limit_flg = true;
+                self::$searchd_tweet_cnt = 0;
                 break;
             }
         }
 
         Log::debug('twitterController集計結果:'. print_r($data, true));
-        Log::debug('制限フラグ：'.self::$searchd_limit_flg);
-        Log::debug('制限カウント：'.self::$searchd_cnt);
+        Log::debug('制限フラグ：'.self::$searchd_tweet_limit_flg);
+        Log::debug('制限カウント：'.self::$searchd_tweet_cnt);
         return $data;
+    }
+
+    
+    public static function searchTweetUsers(string $access_tokun, string $access_secret) {
+        // 返り値の配列を初期化
+        $result_arr = array();
+        
+        // ユーザログインのアカウント認証
+        // TBD:引数にあるユーザログインにひもづくアクセストークンで認証する。（現状はクライアントで認証）
+        $config = config('twitter');
+        $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], $config['access_token'], $config['access_token_secret']);
+
+        // パラメータを設定
+        $params = ['q' => '憚る', 'page' => 0, 'count' => 20];
+
+        for($i=1; $i<=50; $i++) {
+            // パラメータを更新してユーザを検索
+            $params['page'] = $i;
+            Log::debug('パラメータ：'. print_r($params, true));
+            $users = $connection->get('users/search', $params);
+            Log::debug('取得データ（apiの返り値）：'. print_r($users, true));
+
+            // 取得データを連想配列に変換
+            foreach($users as $user) {
+                Log::debug('個別データ：'. print_r($user, true));
+                $user_arr = json_decode(json_encode($user), true);
+
+                // レスポンスがエラーで返ってきた場合、処理を終了する
+                if (isset($user_arr[0]['code'])) {
+                Log::debug('resultエラー:'. print_r($user_arr, true));
+                return $result_arr;
+                }
+
+                // 取得データに重複がないかチェック
+                foreach($result_arr as $result) {
+                    if($result['id'] === $user_arr['id']) { // 重複している場合、処理終了して上位に配列を返す
+                        Log::debug('重複データあり(処理終了)：');
+                        return $result_arr;
+                    }
+                }
+
+                // 重複してなければ返り値の配列に取得データを追加
+                $result_arr[] = $user_arr;
+            }
+        }
+
+        return $result_arr;
     }
 }
