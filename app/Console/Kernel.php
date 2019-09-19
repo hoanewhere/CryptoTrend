@@ -6,6 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 use App\Http\Controllers\TrendRankingController;
+use App\Http\Controllers\AccountListController;
 
 class Kernel extends ConsoleKernel
 {
@@ -32,6 +33,14 @@ class Kernel extends ConsoleKernel
             $trend_ranking->aggregateTweetTrend();
         })->everyFiveMinutes()
         ->name('task-aggregateTweetTrend')
+        ->withoutOverlapping();
+
+
+        $schedule->call(function() {
+            $account_list = New AccountListController();
+            $account_list->getUsers();
+        })->daily()
+        ->name('task-getUsers')
         ->withoutOverlapping();
     }
 
