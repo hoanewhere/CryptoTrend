@@ -37,6 +37,7 @@ class TwitterController extends Controller
         $ut_one_hour_ago = strtotime($start_day . " -1 hour");
         $ut_a_day_ago = strtotime($start_day . " -1 day");
         $string_since_day = date("Y-m-d_H:i:s", strtotime($start_day . " -7 day"));
+        $string_until_day = date("Y-m-d_H:i:s", strtotime($start_day));
 
         $config = config('twitter');
 
@@ -52,7 +53,7 @@ class TwitterController extends Controller
         if ($data['next_params']){
             parse_str($data['next_params'], $params);
         } else {
-            $params = ['q' => $word . ' since:' . $string_since_day, 'until' => $start_day, 'count' => 100]; // 例：「BTC since:2019-09-09_00:00:00」で100件検索する
+            $params = ['q' => $word . ' since:' . $string_since_day . '_JST', 'until' => $string_until_day . '_JST', 'count' => 100]; // 例：「BTC since:2019-09-09_00:00:00」で100件検索する
         }
         
         // 全件取得 or アクセス制限の上限までループ
@@ -75,11 +76,15 @@ class TwitterController extends Controller
             foreach ($result['statuses'] as $arr) {
                 $ut_result = strtotime($arr['created_at']); // 取得データの日時をunixtimeに変換
 
+                Log::debug('ut_result(取得データの生成時間):'. $ut_result);
+
                 if ($ut_result >= $ut_one_hour_ago) {
+                    // Log::debug('ut_one_hour_ago(１時間前の時間):'. $ut_one_hour_ago);
                     $data['hour_cnt']++;
                     $data['day_cnt']++;
                     $data['week_cnt']++;
                 } else if ($ut_result >= $ut_a_day_ago) {
+                    // Log::debug('ut_one_hour_ago(１日前の時間):'. $ut_a_day_ago);
                     $data['day_cnt']++;
                     $data['week_cnt']++;
                 } else {
