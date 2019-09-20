@@ -27,15 +27,10 @@
 }
 
 .c-search_chks {
-    display: flex;
-    flex-wrap: wrap;
+    margin: 0 auto;
 }
 
 .c-search_chk {
-    flex: 0 0 50%;
-    padding: 0 15%;
-    text-align: left;
-
+    text-align: center;
     display: flex;
-    align-items: center;
 }
