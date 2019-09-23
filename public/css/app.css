@@ -11012,8 +11012,7 @@ img {
 .c-rank {
   position: relative;
   display: flex;
-  justify-content: space-around;
-  align-items: center;
+  flex-direction: column;
   background-color: #ffffff;
   border: 1px solid #b7b7b7;
   border-radius: 0.35rem;
@@ -11024,9 +11023,10 @@ img {
 .c-rank:before {
   content: attr(rank-cnt) "";
   position: absolute;
-  width: 2rem;
-  height: 2rem;
-  line-height: 2rem;
+  width: 3rem;
+  height: 3rem;
+  line-height: 3rem;
+  font-size: 2rem;
   border-radius: 0.35rem;
   border: 1px solid #000000;
   background-color: #000000;
@@ -11038,10 +11038,10 @@ img {
 
 @media screen and (min-width: 1024px) {
   .c-rank:before {
-    width: 3rem;
-    height: 3rem;
-    line-height: 3rem;
-    font-size: 2rem;
+    width: 4rem;
+    height: 4rem;
+    line-height: 4rem;
+    font-size: 3rem;
   }
 }
 
@@ -11095,16 +11095,12 @@ img {
 }
 
 .c-search_chks {
-  display: flex;
-  flex-wrap: wrap;
+  margin: 0 auto;
 }
 
 .c-search_chk {
-  flex: 0 0 50%;
-  padding: 0 15%;
-  text-align: left;
+  text-align: center;
   display: flex;
-  align-items: center;
 }
 
 @media screen and (min-width: 1024px) {
