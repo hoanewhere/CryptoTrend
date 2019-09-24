@@ -49214,9 +49214,136 @@ Vue.component('example-component', __webpack_require__(/*! ./components/ExampleC
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+// const app = new Vue({
+//     el: '#app'
+// });
 
-var app = new Vue({
-  el: '#app'
+var trend_ranking = new Vue({
+  el: '#trend-ranking',
+  data: {
+    trends: [],
+    filteredTrends: [],
+    cryptoList: [],
+    gotTime: '',
+    selectedCryptoIds: [],
+    selectedSearchTerm: 0
+  },
+  mounted: function mounted() {
+    this.reloadData();
+  },
+  computed: {
+    selectAll: {
+      get: function get() {
+        if (this.selectedCryptoIds.length === this.cryptoList.length) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      set: function set(checked) {
+        if (checked) {
+          this.selectedCryptoIds = [];
+          var _iteratorNormalCompletion = true;
+          var _didIteratorError = false;
+          var _iteratorError = undefined;
+
+          try {
+            for (var _iterator = this.cryptoList[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+              var crypto = _step.value;
+              this.selectedCryptoIds.push(crypto.id);
+            }
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+                _iterator["return"]();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
+              }
+            }
+          }
+        } else {
+          this.selectedCryptoIds = [];
+        }
+      }
+    }
+  },
+  methods: {
+    reloadData: function reloadData() {
+      var _this = this;
+
+      axios.get('/index/reloadTrendData/' + this.selectedSearchTerm).then(function (res) {
+        _this.trends = res.data.trends;
+        _this.cryptoList = res.data.crypto_list;
+        _this.gotTime = res.data.got_time;
+        _this.selectedCryptoIds = [];
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+          for (var _iterator2 = _this.cryptoList[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var crypto = _step2.value;
+
+            _this.selectedCryptoIds.push(crypto.id);
+          }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+              _iterator2["return"]();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
+          }
+        }
+
+        _this.display();
+      });
+    },
+    display: function display() {
+      var _this2 = this;
+
+      this.filteredTrends = [];
+      trendCnt = 0;
+      this.trends.forEach(function (trend) {
+        _this2.selectedCryptoIds.forEach(function (cryptoId) {
+          if (cryptoId === trend.crypto.id) {
+            _this2.filteredTrends[trendCnt] = trend;
+            _this2.filteredTrends[trendCnt]['rank'] = trendCnt + 1;
+
+            switch (_this2.selectedSearchTerm) {
+              case 0:
+                _this2.filteredTrends[trendCnt]['tweet_cnt'] = trend.hour_cnt;
+                break;
+
+              case 1:
+                _this2.filteredTrends[trendCnt]['tweet_cnt'] = trend.day_cnt;
+                break;
+
+              case 2:
+                _this2.filteredTrends[trendCnt]['tweet_cnt'] = trend.week_cnt;
+                break;
+
+              default:
+                _this2.filteredTrends[trendCnt]['tweet_cnt'] = 0;
+                break;
+            }
+
+            trendCnt++;
+          }
+        });
+      });
+    }
+  }
 });
 
 /***/ }),

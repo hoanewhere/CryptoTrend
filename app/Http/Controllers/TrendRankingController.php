@@ -139,6 +139,69 @@ class TrendRankingController extends Controller
     }
 
 
+    
+    // 集計が完了している最新データを取得する
+    public function reloadTrendData( Request $request) {
+        Log::debug('reloadTrendData(関数呼び出し)');
+        Log::debug('reloadTrendData時の$request: '.$request);
+        Log::debug('$request->term: '.$request->term);
+        $request->validate([
+            'term' => 'numeric',
+        ]);
+
+        // 更新日付取得
+        $updated_time = UpdatedTime::where('time_index', 1)->where('complete_flg', true)->orderby('created_at', 'desc')->first();
+
+        // 銘柄名を取得
+        $crypto_list = array();
+        $cryptos = Crypto::get();
+        foreach($cryptos as $crypto) {
+            $crypto_list[] = ['id' => $crypto->id, 'crypto' => $crypto->crypto];
+        }
+        
+        // トレンド取得
+        $trendsQuery = Trend::with('crypto')->where('time_id', $updated_time->id)->where('complete_flg', 1);
+        if($request->term == 0) {
+            $trendsQuery->orderby('hour_cnt', 'desc');
+        } else if($request->term == 1) {
+            $trendsQuery->orderby('day_cnt', 'desc');
+        } else if($request->term == 2){
+            $trendsQuery->orderby('week_cnt', 'desc');
+        }
+        $trends = $trendsQuery->get();
+
+        foreach($trends as &$trend) {
+            if(empty($trend['transaction_price_max'])) {
+                $trend['transaction_price_max'] = '不明';
+            }
+            if(empty($trend['transaction_price_min'])) {
+                $trend['transaction_price_min'] = '不明';
+            }
+        }
+
+        // トレンドが取得できない場合は、空で返す
+        $res_data = array();
+
+        if(count($trends) === count($crypto_list)) {
+            $res_data = [
+                'trends' => $trends,
+                'crypto_list' => $crypto_list,
+                'got_time' => date("Y-m-d H:i:s", strtotime($updated_time->created_at))
+            ];
+        }
+        Log::debug('初期表示データ：' . print_r($res_data, true));
+        return $res_data;
+    }
+
+
+
+
+
+
+    // **
+    // 以下 private関数
+    // **
+
     /**
      * 初回の集計データを取得する。
      * @param string $start_day, int $start_id

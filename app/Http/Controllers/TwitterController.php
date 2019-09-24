@@ -58,7 +58,7 @@ class TwitterController extends Controller
         
         // 全件取得 or アクセス制限の上限までループ
         for($i=0; $i<self::MAX_TWEET_SEARCH; $i++) {
-            Log::debug('twitter接続開始:');
+            // Log::debug('twitter接続開始:');
             Log::debug('twitter接続時のパラメータ:'. print_r($params, true));
             $result_std = $connection->get('search/tweets', $params);
             $result = json_decode(json_encode($result_std), true);
@@ -76,7 +76,7 @@ class TwitterController extends Controller
             foreach ($result['statuses'] as $arr) {
                 $ut_result = strtotime($arr['created_at']); // 取得データの日時をunixtimeに変換
 
-                Log::debug('ut_result(取得データの生成時間):'. $ut_result);
+                // Log::debug('ut_result(取得データの生成時間):'. $ut_result);
 
                 if ($ut_result >= $ut_one_hour_ago) {
                     // Log::debug('ut_one_hour_ago(１時間前の時間):'. $ut_one_hour_ago);
