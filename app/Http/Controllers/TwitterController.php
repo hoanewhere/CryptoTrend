@@ -168,6 +168,14 @@ class TwitterController extends Controller
                 $user_arr['latest_html'] = $latest_html;
                 Log::debug('latest_htmlの結果:'. $latest_html);
 
+                // image_urlのサイズをオリジナルに変更する
+                $pattern1 = '/_normal\./';
+                $pattern2 = '/_normal$/';
+                $replace1 = '.';
+                $replace2 = '';
+                $user_arr['profile_image_url'] = preg_replace($pattern1, $replace1, $user_arr['profile_image_url']);
+                $user_arr['profile_image_url'] = preg_replace($pattern2, $replace2, $user_arr['profile_image_url']);
+
                 // 返り値の配列にデータを追加
                 $result_arr[] = $user_arr;
             }
