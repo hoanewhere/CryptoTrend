@@ -10946,6 +10946,12 @@ img {
   border-color: #048DFF;
 }
 
+.c-button-dark {
+  color: #ffffff;
+  background-color: #787878;
+  border-color: #787878;
+}
+
 .c-button_link {
   font-weight: 400;
   color: #048DFF;
