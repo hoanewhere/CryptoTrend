@@ -160,13 +160,37 @@ class TwitterController extends Controller
                     }
                 }
 
-                // 重複してなければ返り値の配列に取得データを追加
+                // 重複していなければ最新ツイートの埋め込みhtmlを取得
+                $latest_html = "";
+                if(!empty($user_arr['status'])) {
+                    $latest_html = self::getOembed($connection, $user_arr['screen_name'], $user_arr['status']['id']);
+                }
+                $user_arr['latest_html'] = $latest_html;
+                Log::debug('latest_htmlの結果:'. $latest_html);
+
+                // 返り値の配列にデータを追加
                 $result_arr[] = $user_arr;
             }
         }
 
         return $result_arr;
     }
+
+
+    public static function getOembed(TwitterOAuth $connection, string $screen_name, int $id) {
+        // 取得したいツイートのurlを作成
+        $url = 'https://twitter.com/' . $screen_name . '/status/' . $id;
+
+        $params = ['url' => $url, 'maxwidth' => 284, 'omit_script' => true];
+        $oembed = $connection->get('statuses/oembed', $params);
+        $html = $oembed->html;
+
+        Log::debug('$oembedの結果:'. print_r($oembed, true));
+        Log::debug('htmlは？:'. $html);
+
+        return $html;
+    }
+
 
     public static function authenticateUser() {
         Log::debug('authenticateUser(関数呼び出し)');
