@@ -49183,6 +49183,48 @@ module.exports = function(module) {
 
 /***/ }),
 
+/***/ "./resources/js/account_list.js":
+/*!**************************************!*\
+  !*** ./resources/js/account_list.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var account_list = new Vue({
+  el: '#account-list',
+  data: {
+    accounts: {},
+    gotTime: ''
+  },
+  mounted: function mounted() {
+    this.reloadData(); // twttr.widgets.load()
+  },
+  updated: function updated() {
+    twttr.widgets.load();
+  },
+  beforeDestroy: function beforeDestroy() {
+    twttr.widgets.load();
+  },
+  computed: {},
+  methods: {
+    reloadData: function reloadData() {
+      var _this = this;
+
+      axios.get('/accountList/reloadTweetData/').then(function (res) {
+        _this.accounts = res.data.accounts;
+        _this.gotTime = res.data.got_time; // acocuntデータをjsonにパース
+
+        for (var i in _this.accounts) {
+          jsonData = JSON.parse(_this.accounts[i].account_data);
+          _this.accounts[i].account_data = jsonData;
+        }
+      });
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/js/app.js":
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
@@ -49219,6 +49261,8 @@ Vue.component('example-component', __webpack_require__(/*! ./components/ExampleC
 // });
 
 __webpack_require__(/*! ./trend_ranking */ "./resources/js/trend_ranking.js");
+
+__webpack_require__(/*! ./account_list */ "./resources/js/account_list.js");
 
 /***/ }),
 

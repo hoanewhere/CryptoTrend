@@ -97,6 +97,33 @@ class AccountListController extends Controller
     }
 
 
+    public function reloadTweetData() {
+        Log::debug('reloadTweetData(関数呼び出し)');
+        $login_user = Auth::user();
+
+        // 更新日付取得
+        $updated_time = UpdatedTime::where('time_index', 2)->where('complete_flg', true)->where('login_user_id', $login_user->id)->orderby('created_at', 'desc')->first();
+
+        // アカウント取得
+        $accounts = SearchedAccount::select(['id', 'account_data'])->where('update_time_id', $updated_time->id)->orderby('account_data->following', 'asc')->get();
+        Log::debug('未アカウントフォロー:'. print_r($accounts[0]->account_data, true));
+
+        $res_data = [
+            'accounts' => $accounts,
+            'got_time' => date("Y-m-d H:i:s", strtotime($updated_time->created_at))
+        ];
+    
+        // Log::debug('初期表示データ：' . print_r($res_data, true));
+        return $res_data;
+    }
+
+
+    // **
+    // 以下 private関数
+    // **
+
+
+
     /**
      * 仮想通貨に関連するユーザを取得する。
      * 

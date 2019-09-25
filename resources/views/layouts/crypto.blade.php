@@ -7,6 +7,7 @@
     <title>{{ config('app.name', 'Crypto Trend') }}</title>
 
     <!-- Scripts -->
+    <script src="//platform.twitter.com/widgets.js" charset="utf-8" defer></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
@@ -39,5 +40,5 @@
     <footer>
 
     </footer>
-</body>
+    </body>
 </html>
