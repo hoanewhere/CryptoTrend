@@ -38,7 +38,7 @@
 
         {{-- ranking --}}
         <div class="c-ranks p-trendRanking_child">
-            <div class="c-rank" :rank-cnt="trend.rank" v-for="(trend, index) in filteredTrends">
+            <div class="c-rank" :rank-cnt="trend.rank" v-for="(trend, index) in filteredTrends" :key="trend.id">
                 <div class="c-rank_top u-ta-c u-mb-md">
                     <h3 class="c-title_article">@{{ trend.crypto.crypto }}</h3>
                     <p>ツイート数：<span>@{{ trend.tweet_cnt }}</span></p>
