@@ -26,6 +26,7 @@ Route::get('/index/reloadTrendData/{term}', 'TrendRankingController@reloadTrendD
 Route::get('/accountList', 'AccountListController@index');
 Route::get('/accountList/reloadTweetData', 'AccountListController@reloadTweetData');
 Route::get('/accountList/callback', 'AccountListController@callback');
+Route::post('/accountList/toFollow', 'AccountListController@toFollow');
 
 
 // test

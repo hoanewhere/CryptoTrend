@@ -31,6 +31,13 @@ const account_list = new Vue({
                 }
             })
         },
-
+        toFollow: function(account) {
+            axios.post('accountList/toFollow', {
+                record_id: account.id,
+                screen_name: account.account_data.screen_name
+            }).then((res) => {
+                account.account_data.following = true;
+            })
+        }
     }
 });

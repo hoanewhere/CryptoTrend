@@ -49219,6 +49219,14 @@ var account_list = new Vue({
           _this.accounts[i].account_data = jsonData;
         }
       });
+    },
+    toFollow: function toFollow(account) {
+      axios.post('accountList/toFollow', {
+        record_id: account.id,
+        screen_name: account.account_data.screen_name
+      }).then(function (res) {
+        account.account_data.following = true;
+      });
     }
   }
 });

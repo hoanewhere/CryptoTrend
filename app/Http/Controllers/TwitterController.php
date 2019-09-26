@@ -248,4 +248,14 @@ class TwitterController extends Controller
 
         return $access_token;
     }
+
+    public static function createFriendships(array $access_token, string $screen_name) {
+        // ログインユーザにひもづくアクセストークンで認証する
+        $config = config('twitter');
+        $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], $access_token['oauth_token'], $access_token['oauth_token_secret']);
+
+        // 対象IDをフォローする
+        $connection->post('friendships/create', array('screen_name' => $screen_name));
+        return;
+    }
 }
