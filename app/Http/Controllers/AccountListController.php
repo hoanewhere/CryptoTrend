@@ -119,13 +119,13 @@ class AccountListController extends Controller
 
 
     public function toFollow( Request $request) {
-        Log::debug('createFriendships(関数呼び出し)');
+        Log::debug('toFollow(関数呼び出し)');
         $request->validate([
             'record_id' => 'required|integer',
             'screen_name' => 'required|string'
         ]);
-        Log::debug('リクエスト(record_id)' . $request->record_id);
-        Log::debug('リクエスト(screen_name)' . $request->screen_name);
+        // Log::debug('リクエスト(record_id)' . $request->record_id);
+        // Log::debug('リクエスト(screen_name)' . $request->screen_name);
 
         $login_user = Auth::user();
         $access_token = json_decode($login_user->access_token, true);
@@ -133,6 +133,22 @@ class AccountListController extends Controller
 
         //DB更新
         $searched_account = SearchedAccount::where('id', $request->record_id)->update(['account_data->following' => true]);
+    }
+
+
+    public function unfollow( Request $request) {
+        Log::debug('unfollow(関数呼び出し)');
+        $request->validate([
+            'record_id' => 'required|integer',
+            'screen_name' => 'required|string'
+        ]);
+
+        $login_user = Auth::user();
+        $access_token = json_decode($login_user->access_token, true);
+        TwitterController::destroyFriendships($access_token, $request->screen_name);
+
+        //DB更新
+        $searched_account = SearchedAccount::where('id', $request->record_id)->update(['account_data->following' => false]);
     }
 
 

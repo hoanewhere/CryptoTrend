@@ -49227,6 +49227,14 @@ var account_list = new Vue({
       }).then(function (res) {
         account.account_data.following = true;
       });
+    },
+    unfollow: function unfollow(account) {
+      axios.post('accountList/unfollow', {
+        record_id: account.id,
+        screen_name: account.account_data.screen_name
+      }).then(function (res) {
+        account.account_data.following = false;
+      });
     }
   }
 });

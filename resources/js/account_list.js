@@ -38,6 +38,14 @@ const account_list = new Vue({
             }).then((res) => {
                 account.account_data.following = true;
             })
+        },
+        unfollow: function(account) {
+            axios.post('accountList/unfollow', {
+                record_id: account.id,
+                screen_name: account.account_data.screen_name
+            }).then((res) => {
+                account.account_data.following = false;
+            })
         }
     }
 });

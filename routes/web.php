@@ -27,6 +27,7 @@ Route::get('/accountList', 'AccountListController@index');
 Route::get('/accountList/reloadTweetData', 'AccountListController@reloadTweetData');
 Route::get('/accountList/callback', 'AccountListController@callback');
 Route::post('/accountList/toFollow', 'AccountListController@toFollow');
+Route::post('/accountList/unfollow', 'AccountListController@unfollow');
 
 
 // test

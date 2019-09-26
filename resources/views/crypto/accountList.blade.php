@@ -16,7 +16,7 @@
                 <img :src="account.account_data.profile_image_url" alt="" class="account_inner-img">
                 <div class="account_inner-btn u-mb-md">
                     <button v-if="account.account_data.following === false" type="button" class="c-button c-button-peace" @click="toFollow(account)">フォローする</button>
-                    <button v-else type="button" class="c-button c-button-dark">フォロー済</button>
+                    <button v-else type="button" class="c-button c-button-dark" @click="unfollow(account)">フォロー済</button>
                 </div>
                 <p class="u-mb-sm">@{{ account.account_data.name }}</p>
                 <p class="u-mb-sm">@{{ account.account_data.screen_name }}</p>
