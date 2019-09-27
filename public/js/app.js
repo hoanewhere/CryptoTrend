@@ -1858,127 +1858,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      trends: [],
-      filteredTrends: [],
-      cryptoList: [],
-      gotTime: '',
-      selectedCryptoIds: [],
-      selectedSearchTerm: 0
+      newsList: []
     };
   },
   mounted: function mounted() {
-    this.reloadTrendData();
+    this.reloadNewsData();
   },
-  computed: {
-    selectAll: {
-      get: function get() {
-        if (this.selectedCryptoIds.length === this.cryptoList.length) {
-          return true;
-        } else {
-          return false;
-        }
-      },
-      set: function set(checked) {
-        if (checked) {
-          this.selectedCryptoIds = [];
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
-
-          try {
-            for (var _iterator = this.cryptoList[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var crypto = _step.value;
-              this.selectedCryptoIds.push(crypto.id);
-            }
-          } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-                _iterator["return"]();
-              }
-            } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
-              }
-            }
-          }
-        } else {
-          this.selectedCryptoIds = [];
-        }
-      }
-    }
-  },
+  computed: {},
   methods: {
-    reloadTrendData: function reloadTrendData() {
+    reloadNewsData: function reloadNewsData() {
       var _this = this;
 
-      axios.get('/index/reloadTrendData/' + this.selectedSearchTerm).then(function (res) {
-        _this.trends = res.data.trends;
-        _this.cryptoList = res.data.crypto_list;
-        _this.gotTime = res.data.got_time;
-        _this.selectedCryptoIds = [];
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
-
-        try {
-          for (var _iterator2 = _this.cryptoList[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var crypto = _step2.value;
-
-            _this.selectedCryptoIds.push(crypto.id);
-          }
-        } catch (err) {
-          _didIteratorError2 = true;
-          _iteratorError2 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-              _iterator2["return"]();
-            }
-          } finally {
-            if (_didIteratorError2) {
-              throw _iteratorError2;
-            }
-          }
-        }
-
-        _this.display();
-      });
-    },
-    display: function display() {
-      var _this2 = this;
-
-      this.filteredTrends = [];
-      var trendCnt = 0;
-      this.trends.forEach(function (trend) {
-        _this2.selectedCryptoIds.forEach(function (cryptoId) {
-          if (cryptoId === trend.crypto.id) {
-            _this2.filteredTrends[trendCnt] = trend;
-            _this2.filteredTrends[trendCnt]['rank'] = trendCnt + 1;
-
-            switch (_this2.selectedSearchTerm) {
-              case 0:
-                _this2.filteredTrends[trendCnt]['tweet_cnt'] = trend.hour_cnt;
-                break;
-
-              case 1:
-                _this2.filteredTrends[trendCnt]['tweet_cnt'] = trend.day_cnt;
-                break;
-
-              case 2:
-                _this2.filteredTrends[trendCnt]['tweet_cnt'] = trend.week_cnt;
-                break;
-
-              default:
-                _this2.filteredTrends[trendCnt]['tweet_cnt'] = 0;
-                break;
-            }
-
-            trendCnt++;
-          }
-        });
+      axios.get('/newsList/reloadNewsData').then(function (res) {
+        _this.newsList = res.data;
       });
     }
   }
@@ -37654,34 +37546,37 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("h1", { staticClass: "c-title_main" }, [
-        _vm._v("仮想通貨関連ニュース")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "p-news" }, [
-        _c("div", { staticClass: "p-news_mono" }, [
-          _c("h3", { staticClass: "p-news_mono-title" }, [_vm._v("タイトル")]),
-          _vm._v(" "),
-          _c("p", { staticClass: "p-news_mono-sub" }, [
-            _vm._v("YYYY/MM/DD hh:mm:ss")
+  return _c("div", [
+    _c("h1", { staticClass: "c-title_main" }, [_vm._v("仮想通貨関連ニュース")]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "p-news" },
+      _vm._l(_vm.newsList, function(news, index) {
+        return _c("div", { key: index, staticClass: "p-news_mono" }, [
+          _c("h3", { staticClass: "p-news_mono-title" }, [
+            _vm._v(_vm._s(news.title))
           ]),
           _vm._v(" "),
-          _c("p", { staticClass: "p-news_mono-sub" }, [_vm._v("引用元")]),
+          _c("p", { staticClass: "p-news_mono-sub" }, [
+            _vm._v(_vm._s(news.date))
+          ]),
           _vm._v(" "),
-          _c("a", { staticClass: "p-news_mono-link", attrs: { href: "" } })
+          _c("p", { staticClass: "p-news_mono-sub" }, [
+            _vm._v(_vm._s(news.source))
+          ]),
+          _vm._v(" "),
+          _c("a", {
+            staticClass: "p-news_mono-link",
+            attrs: { href: news.url }
+          })
         ])
-      ])
-    ])
-  }
-]
+      }),
+      0
+    )
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 

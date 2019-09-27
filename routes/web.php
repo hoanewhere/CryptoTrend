@@ -32,6 +32,7 @@ Route::post('/accountList/toggleAutoFollow', 'AccountListController@toggleAutoFo
 
 
 Route::get('/newsList', 'NewsListController@index');
+Route::get('/newsList/reloadNewsData', 'NewsListController@reloadNews');
 
 
 // test
