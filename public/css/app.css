@@ -10846,6 +10846,10 @@ a {
   color: #000;
 }
 
+a:hover {
+  cursor: pointer;
+}
+
 img {
   vertical-align: middle;
 }
@@ -11164,6 +11168,45 @@ img {
 
 .account_inner-row {
   display: flex;
+}
+
+.p-news {
+  margin: 1rem;
+  max-width: 600px;
+}
+
+@media screen and (min-width: 768px) {
+  .p-news {
+    margin: 1rem auto;
+  }
+}
+
+.p-news_mono {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border: 1px solid #b7b7b7;
+  border-radius: 0.35rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+.p-news_mono-title {
+  font-size: 1rem;
+}
+
+.p-news_mono-sub {
+  font-size: 0.75rem;
+  color: #787878;
+}
+
+.p-news_mono-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
 }
 
 /*! Emma.css 0.15.0 | MIT License | https://git.io/emma */

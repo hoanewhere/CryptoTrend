@@ -23,6 +23,7 @@ window.Vue = require('vue');
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('trend-ranking-component', require('./components/TrendRankingComponent.vue').default);
 Vue.component('account-list-component', require('./components/AccountListComponent.vue').default);
+Vue.component('news-list-component', require('./components/NewsListComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

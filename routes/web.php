@@ -31,6 +31,9 @@ Route::post('/accountList/unfollow', 'AccountListController@unfollow');
 Route::post('/accountList/toggleAutoFollow', 'AccountListController@toggleAutoFollow');
 
 
+Route::get('/newsList', 'NewsListController@index');
+
+
 // test
 Route::get('/test', 'CryptoController@test');
 
