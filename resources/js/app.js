@@ -21,6 +21,8 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('trend-ranking-component', require('./components/TrendRankingComponent.vue').default);
+Vue.component('account-list-component', require('./components/AccountListComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -32,5 +34,9 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 //     el: '#app'
 // });
 
-require('./trend_ranking');
-require('./account_list');
+const app = new Vue({
+    el: '#crypto-trend',
+});
+
+// require('./trend_ranking');
+// require('./account_list');

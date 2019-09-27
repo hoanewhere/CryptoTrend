@@ -10,6 +10,8 @@ use App\Http\Controllers\TwitterController;
 //Model
 use App\UpdatedTime;
 use App\SearchedAccount;
+use App\FollowManagement;
+use App\User;
 
 class AccountListController extends Controller
 {
@@ -23,6 +25,8 @@ class AccountListController extends Controller
     |
     */
 
+    const MAX_FOLLOW_DAY_LIMIT = 1000;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -33,6 +37,11 @@ class AccountListController extends Controller
         if(empty($login_user->access_token)) {
             return TwitterController::authenticateUser();
         }
+
+
+        // test
+        // $this->toFollowAutoLimitFifteen();
+        self::clearFollowCntOfDayLimit();
 
         $this->getUsers();
         return view('crypto.accountList');
@@ -106,17 +115,69 @@ class AccountListController extends Controller
 
         // アカウント取得
         $accounts = SearchedAccount::select(['id', 'account_data'])->where('update_time_id', $updated_time->id)->orderby('account_data->following', 'asc')->get();
-        Log::debug('未アカウントフォロー:'. print_r($accounts[0]->account_data, true));
+        // Log::debug('未アカウントフォロー:'. print_r($accounts[0]->account_data, true));
+
+        // 自動フォローフラグ取得
+        $auto_follow_flg = false;
+        $follow_management = FollowManagement::where('login_user_id', $login_user->id)->first();
+        if(!empty($follow_management)) {
+            $auto_follow_flg = $follow_management->auto_follow_flg;
+        }
 
         $res_data = [
             'accounts' => $accounts,
-            'got_time' => date("Y-m-d H:i:s", strtotime($updated_time->created_at))
+            'got_time' => date("Y-m-d H:i:s", strtotime($updated_time->created_at)),
+            'auto_follow_flg' => $auto_follow_flg
         ];
     
         // Log::debug('初期表示データ：' . print_r($res_data, true));
         return $res_data;
     }
 
+
+    public function toFollowAutoLimitFifteen() {
+        Log::debug('toFollowAutoLimitFifteen(関数呼び出し)');
+
+        $auto_flg_users = FollowManagement::where('auto_follow_flg', true)->get();
+        Log::debug('autoflgが立っているuser: ' . print_r($auto_flg_users, true));
+        foreach($auto_flg_users as $auto_flg_user) { // auto_flgが立っているuserに対して処理を実施
+            // 未フォローのアカウントを15件取得
+            $login_user_id = $auto_flg_user->login_user_id;
+            $updated_time_id = UpdatedTime::select('id')->where('login_user_id', $login_user_id)->where('time_index', 2)->where('complete_flg', true)->latest()->first();
+            $accounts = SearchedAccount::select('id', 'account_data->screen_name as screen_name')->where('update_time_id', $updated_time_id->id)->where('account_data->following', false)->limit(15)->get();
+
+            foreach($accounts as $account) { // 最大15人に対してフォロー処理を実施
+                // day_cnt確認
+                $follow_management = FollowManagement::where('login_user_id', $login_user_id)->first();
+                $day_cnt = $follow_management->day_cnt;
+                Log::debug('アカウント名前: ' . print_r($account, true));
+                if($day_cnt < self::MAX_FOLLOW_DAY_LIMIT) {
+                    self::toFollowAuto($account->id, $account->screen_name, $login_user_id);
+
+                    $follow_management->fill([
+                        'day_cnt' => ++$day_cnt
+                    ])->save();
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+
+    public static function clearFollowCntOfDayLimit() {
+        $follow_management = FollowManagement::where('id', '>=', 1)->update(['day_cnt' => 0]);
+    }
+
+    public static function toFollowAuto( int $record_id, string $screen_name, int $user_id) {
+        Log::debug('toFollowAuto(関数呼び出し)'); 
+
+        $user = User::where('id', $user_id)->first();
+        $access_token = json_decode($user->access_token, true);
+        TwitterController::createFriendships($access_token, $screen_name);
+
+        //DB更新
+        $searched_account = SearchedAccount::where('id', $record_id)->update(['account_data->following' => true]);
+    }
 
     public function toFollow( Request $request) {
         Log::debug('toFollow(関数呼び出し)');
@@ -149,6 +210,19 @@ class AccountListController extends Controller
 
         //DB更新
         $searched_account = SearchedAccount::where('id', $request->record_id)->update(['account_data->following' => false]);
+    }
+
+    public function toggleAutoFollow( Request $request ) {
+        Log::debug('toggleAutoFollow(関数呼び出し)');
+        $request->validate([
+            'auto_flg' => 'required|boolean',
+        ]);
+
+        $login_user = Auth::user();
+        $follow_management = FollowManagement::updateOrCreate(
+            ['login_user_id' => $login_user->id],
+            ['auto_follow_flg' => $request->auto_flg]
+        );
     }
 
 

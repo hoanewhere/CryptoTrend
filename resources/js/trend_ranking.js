@@ -9,7 +9,7 @@ const trend_ranking = new Vue({
         selectedSearchTerm: 0,
     },
     mounted() {
-        this.reloadData()
+        this.reloadTrendData()
     },
     computed: {
         selectAll: {
@@ -33,7 +33,7 @@ const trend_ranking = new Vue({
         }
     },
     methods: {
-        reloadData: function() {
+        reloadTrendData: function() {
             axios.get('/index/reloadTrendData/' + this.selectedSearchTerm)
             .then((res) => {
                 this.trends = res.data.trends

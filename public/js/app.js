@@ -1688,6 +1688,116 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AccountListComponent.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AccountListComponent.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      accounts: {},
+      gotTime: '',
+      autoFollowFlg: false
+    };
+  },
+  mounted: function mounted() {
+    this.reloadData();
+  },
+  updated: function updated() {
+    twttr.widgets.load();
+  },
+  beforeDestroy: function beforeDestroy() {
+    twttr.widgets.load();
+  },
+  computed: {},
+  methods: {
+    reloadData: function reloadData() {
+      var _this = this;
+
+      axios.get('/accountList/reloadTweetData/').then(function (res) {
+        _this.accounts = res.data.accounts;
+        _this.gotTime = res.data.got_time;
+        _this.autoFollowFlg = res.data.auto_follow_flg; // acocuntデータをjsonにパース
+
+        for (var i in _this.accounts) {
+          var jsonData = JSON.parse(_this.accounts[i].account_data);
+          _this.accounts[i].account_data = jsonData;
+        }
+      });
+    },
+    toFollow: function toFollow(account) {
+      axios.post('accountList/toFollow', {
+        record_id: account.id,
+        screen_name: account.account_data.screen_name
+      }).then(function (res) {
+        account.account_data.following = true;
+      });
+    },
+    unfollow: function unfollow(account) {
+      axios.post('accountList/unfollow', {
+        record_id: account.id,
+        screen_name: account.account_data.screen_name
+      }).then(function (res) {
+        account.account_data.following = false;
+      });
+    },
+    toggleAutoFollow: function toggleAutoFollow() {
+      if (this.autoFollowFlg == true) {
+        this.autoFollowFlg = false;
+      } else {
+        this.autoFollowFlg = true;
+      }
+
+      axios.post('accountList/toggleAutoFollow', {
+        auto_flg: this.autoFollowFlg
+      }).then(function (res) {
+        console.log('toggleautofollow完了');
+      });
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&":
 /*!***************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js& ***!
@@ -1716,6 +1826,201 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
     console.log('Component mounted.');
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TrendRankingComponent.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TrendRankingComponent.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      trends: [],
+      filteredTrends: [],
+      cryptoList: [],
+      gotTime: '',
+      selectedCryptoIds: [],
+      selectedSearchTerm: 0
+    };
+  },
+  mounted: function mounted() {
+    this.reloadTrendData();
+  },
+  computed: {
+    selectAll: {
+      get: function get() {
+        if (this.selectedCryptoIds.length === this.cryptoList.length) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      set: function set(checked) {
+        if (checked) {
+          this.selectedCryptoIds = [];
+          var _iteratorNormalCompletion = true;
+          var _didIteratorError = false;
+          var _iteratorError = undefined;
+
+          try {
+            for (var _iterator = this.cryptoList[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+              var crypto = _step.value;
+              this.selectedCryptoIds.push(crypto.id);
+            }
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+                _iterator["return"]();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
+              }
+            }
+          }
+        } else {
+          this.selectedCryptoIds = [];
+        }
+      }
+    }
+  },
+  methods: {
+    reloadTrendData: function reloadTrendData() {
+      var _this = this;
+
+      axios.get('/index/reloadTrendData/' + this.selectedSearchTerm).then(function (res) {
+        _this.trends = res.data.trends;
+        _this.cryptoList = res.data.crypto_list;
+        _this.gotTime = res.data.got_time;
+        _this.selectedCryptoIds = [];
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+          for (var _iterator2 = _this.cryptoList[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var crypto = _step2.value;
+
+            _this.selectedCryptoIds.push(crypto.id);
+          }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+              _iterator2["return"]();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
+          }
+        }
+
+        _this.display();
+      });
+    },
+    display: function display() {
+      var _this2 = this;
+
+      this.filteredTrends = [];
+      var trendCnt = 0;
+      this.trends.forEach(function (trend) {
+        _this2.selectedCryptoIds.forEach(function (cryptoId) {
+          if (cryptoId === trend.crypto.id) {
+            _this2.filteredTrends[trendCnt] = trend;
+            _this2.filteredTrends[trendCnt]['rank'] = trendCnt + 1;
+
+            switch (_this2.selectedSearchTerm) {
+              case 0:
+                _this2.filteredTrends[trendCnt]['tweet_cnt'] = trend.hour_cnt;
+                break;
+
+              case 1:
+                _this2.filteredTrends[trendCnt]['tweet_cnt'] = trend.day_cnt;
+                break;
+
+              case 2:
+                _this2.filteredTrends[trendCnt]['tweet_cnt'] = trend.week_cnt;
+                break;
+
+              default:
+                _this2.filteredTrends[trendCnt]['tweet_cnt'] = 0;
+                break;
+            }
+
+            trendCnt++;
+          }
+        });
+      });
+    }
   }
 });
 
@@ -37000,6 +37305,138 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AccountListComponent.vue?vue&type=template&id=33686cbd&":
+/*!***********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AccountListComponent.vue?vue&type=template&id=33686cbd& ***!
+  \***********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("h1", { staticClass: "c-title_main" }, [
+      _vm._v("仮想通貨アカウント一覧")
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "u-ta-c u-mb-lg" }, [
+      _c("p", { staticClass: "u-mb-sm" }, [
+        _vm._v("データ取得時間：" + _vm._s(_vm.gotTime))
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "u-ta-c u-mb-lg" }, [
+      _vm.autoFollowFlg == true
+        ? _c(
+            "button",
+            {
+              staticClass: "c-button c-button-peace",
+              attrs: { type: "button" },
+              on: { click: _vm.toggleAutoFollow }
+            },
+            [_vm._v("自動フォロー ON")]
+          )
+        : _c(
+            "button",
+            {
+              staticClass: "c-button c-button-dark",
+              attrs: { type: "button" },
+              on: { click: _vm.toggleAutoFollow }
+            },
+            [_vm._v("自動フォロー OFF")]
+          )
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "accounts" },
+      _vm._l(_vm.accounts, function(account) {
+        return _c("div", { key: account.id, staticClass: "account" }, [
+          _c("div", { staticClass: "account_inner" }, [
+            _c("img", {
+              staticClass: "account_inner-img",
+              attrs: { src: account.account_data.profile_image_url, alt: "" }
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "account_inner-btn u-mb-md" }, [
+              account.account_data.following === false
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "c-button c-button-peace",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          return _vm.toFollow(account)
+                        }
+                      }
+                    },
+                    [_vm._v("フォローする")]
+                  )
+                : _c(
+                    "button",
+                    {
+                      staticClass: "c-button c-button-dark",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          return _vm.unfollow(account)
+                        }
+                      }
+                    },
+                    [_vm._v("フォロー済")]
+                  )
+            ]),
+            _vm._v(" "),
+            _c("p", { staticClass: "u-mb-sm" }, [
+              _vm._v(_vm._s(account.account_data.name))
+            ]),
+            _vm._v(" "),
+            _c("p", { staticClass: "u-mb-sm" }, [
+              _vm._v(_vm._s(account.account_data.screen_name))
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "account_inner-row u-mb-sm" }, [
+              _c("p", { staticClass: "u-mr-lg" }, [
+                _vm._v("フォロー"),
+                _c("span", [_vm._v(_vm._s(account.account_data.friends_count))])
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v("フォロワー"),
+                _c("span", [
+                  _vm._v(_vm._s(account.account_data.followers_count))
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "u-mb-sm" }, [
+              _c("p", [_vm._v(_vm._s(account.account_data.description))])
+            ]),
+            _vm._v(" "),
+            _c("div", {
+              domProps: { innerHTML: _vm._s(account.account_data.latest_html) }
+            })
+          ])
+        ])
+      }),
+      0
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e&":
 /*!*******************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e& ***!
@@ -37041,6 +37478,273 @@ var staticRenderFns = [
     ])
   }
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TrendRankingComponent.vue?vue&type=template&id=c06e746e&":
+/*!************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TrendRankingComponent.vue?vue&type=template&id=c06e746e& ***!
+  \************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("h1", { staticClass: "c-title_main" }, [
+      _vm._v("仮想通貨トレンドランキング")
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "u-ta-c" }, [
+      _c("p", { staticClass: "u-mb-sm" }, [
+        _vm._v("データ取得時間：" + _vm._s(_vm.gotTime))
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "p-trendRanking" }, [
+      _c("div", { staticClass: "c-search u-ta-c p-trendRanking_child" }, [
+        _c("h3", { staticClass: "c-title_article u-mb-lg" }, [
+          _vm._v("表示条件")
+        ]),
+        _vm._v(" "),
+        _c("form", { attrs: { action: "" } }, [
+          _c("div", { staticClass: "c-search_mono u-mb-lg" }, [
+            _c(
+              "label",
+              {
+                staticClass: "c-form-title c-title_sub u-mb-sm",
+                attrs: { for: "searchTime" }
+              },
+              [_vm._v("対象時間")]
+            ),
+            _vm._v(" "),
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.selectedSearchTerm,
+                    expression: "selectedSearchTerm"
+                  }
+                ],
+                staticClass: "c-input_select u-w50p u-mx-a",
+                attrs: { name: "", id: "searchTime" },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.selectedSearchTerm = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  }
+                }
+              },
+              [
+                _c("option", { domProps: { value: 0 } }, [_vm._v("1時間")]),
+                _vm._v(" "),
+                _c("option", { domProps: { value: 1 } }, [_vm._v("1日")]),
+                _vm._v(" "),
+                _c("option", { domProps: { value: 2 } }, [_vm._v("1週間")])
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "c-search_mono u-mb-lg" }, [
+            _c(
+              "label",
+              {
+                staticClass: "c-form-title c-title_sub u-mb-sm",
+                attrs: { for: "" }
+              },
+              [_vm._v("表示銘柄")]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "c-search_chks" },
+              [
+                _c("div", { staticClass: "c-search_chk u-mb-xs" }, [
+                  _c("label", [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.selectAll,
+                          expression: "selectAll"
+                        }
+                      ],
+                      staticClass: "c-input_checkbox u-mr-sm",
+                      attrs: {
+                        type: "checkbox",
+                        id: "showCryptoAll",
+                        value: "全て"
+                      },
+                      domProps: {
+                        checked: Array.isArray(_vm.selectAll)
+                          ? _vm._i(_vm.selectAll, "全て") > -1
+                          : _vm.selectAll
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.selectAll,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = "全て",
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 && (_vm.selectAll = $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                (_vm.selectAll = $$a
+                                  .slice(0, $$i)
+                                  .concat($$a.slice($$i + 1)))
+                            }
+                          } else {
+                            _vm.selectAll = $$c
+                          }
+                        }
+                      }
+                    }),
+                    _vm._v("全て")
+                  ])
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.cryptoList, function(crypto) {
+                  return _c(
+                    "div",
+                    { key: crypto.id, staticClass: "c-search_chk u-mb-xs" },
+                    [
+                      _c("label", [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.selectedCryptoIds,
+                              expression: "selectedCryptoIds"
+                            }
+                          ],
+                          staticClass: "c-input_checkbox u-mr-sm",
+                          attrs: { type: "checkbox" },
+                          domProps: {
+                            value: crypto.id,
+                            checked: Array.isArray(_vm.selectedCryptoIds)
+                              ? _vm._i(_vm.selectedCryptoIds, crypto.id) > -1
+                              : _vm.selectedCryptoIds
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.selectedCryptoIds,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = crypto.id,
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 &&
+                                    (_vm.selectedCryptoIds = $$a.concat([$$v]))
+                                } else {
+                                  $$i > -1 &&
+                                    (_vm.selectedCryptoIds = $$a
+                                      .slice(0, $$i)
+                                      .concat($$a.slice($$i + 1)))
+                                }
+                              } else {
+                                _vm.selectedCryptoIds = $$c
+                              }
+                            }
+                          }
+                        }),
+                        _vm._v(_vm._s(crypto.crypto))
+                      ])
+                    ]
+                  )
+                })
+              ],
+              2
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "c-button c-button-peace",
+              attrs: { type: "button" },
+              on: { click: _vm.reloadTrendData }
+            },
+            [_vm._v("表示")]
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "c-ranks p-trendRanking_child" },
+        _vm._l(_vm.filteredTrends, function(trend) {
+          return _c(
+            "div",
+            {
+              key: trend.id,
+              staticClass: "c-rank",
+              attrs: { "rank-cnt": trend.rank }
+            },
+            [
+              _c("div", { staticClass: "c-rank_top u-ta-c u-mb-md" }, [
+                _c("h3", { staticClass: "c-title_article" }, [
+                  _vm._v(_vm._s(trend.crypto.crypto))
+                ]),
+                _vm._v(" "),
+                _c("p", [
+                  _vm._v("ツイート数："),
+                  _c("span", [_vm._v(_vm._s(trend.tweet_cnt))])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "c-rank_buttom u-ta-c" }, [
+                _c("p", { staticClass: "u-mb-sm" }, [
+                  _vm._v("取引価格(過去24時間/単位：円)")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "u-d-fx u-jc-c" }, [
+                  _c("p", { staticClass: "u-mr-lg" }, [
+                    _vm._v("最高："),
+                    _c("span", [_vm._v(_vm._s(trend.transaction_price_max))])
+                  ]),
+                  _vm._v(" "),
+                  _c("p", [
+                    _vm._v("最低："),
+                    _c("span", [_vm._v(_vm._s(trend.transaction_price_min))])
+                  ])
+                ])
+              ])
+            ]
+          )
+        }),
+        0
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -49183,64 +49887,6 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./resources/js/account_list.js":
-/*!**************************************!*\
-  !*** ./resources/js/account_list.js ***!
-  \**************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-var account_list = new Vue({
-  el: '#account-list',
-  data: {
-    accounts: {},
-    gotTime: ''
-  },
-  mounted: function mounted() {
-    this.reloadData(); // twttr.widgets.load()
-  },
-  updated: function updated() {
-    twttr.widgets.load();
-  },
-  beforeDestroy: function beforeDestroy() {
-    twttr.widgets.load();
-  },
-  computed: {},
-  methods: {
-    reloadData: function reloadData() {
-      var _this = this;
-
-      axios.get('/accountList/reloadTweetData/').then(function (res) {
-        _this.accounts = res.data.accounts;
-        _this.gotTime = res.data.got_time; // acocuntデータをjsonにパース
-
-        for (var i in _this.accounts) {
-          jsonData = JSON.parse(_this.accounts[i].account_data);
-          _this.accounts[i].account_data = jsonData;
-        }
-      });
-    },
-    toFollow: function toFollow(account) {
-      axios.post('accountList/toFollow', {
-        record_id: account.id,
-        screen_name: account.account_data.screen_name
-      }).then(function (res) {
-        account.account_data.following = true;
-      });
-    },
-    unfollow: function unfollow(account) {
-      axios.post('accountList/unfollow', {
-        record_id: account.id,
-        screen_name: account.account_data.screen_name
-      }).then(function (res) {
-        account.account_data.following = false;
-      });
-    }
-  }
-});
-
-/***/ }),
-
 /***/ "./resources/js/app.js":
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
@@ -49267,6 +49913,8 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
+Vue.component('trend-ranking-component', __webpack_require__(/*! ./components/TrendRankingComponent.vue */ "./resources/js/components/TrendRankingComponent.vue")["default"]);
+Vue.component('account-list-component', __webpack_require__(/*! ./components/AccountListComponent.vue */ "./resources/js/components/AccountListComponent.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -49276,9 +49924,10 @@ Vue.component('example-component', __webpack_require__(/*! ./components/ExampleC
 //     el: '#app'
 // });
 
-__webpack_require__(/*! ./trend_ranking */ "./resources/js/trend_ranking.js");
-
-__webpack_require__(/*! ./account_list */ "./resources/js/account_list.js");
+var app = new Vue({
+  el: '#crypto-trend'
+}); // require('./trend_ranking');
+// require('./account_list');
 
 /***/ }),
 
@@ -49337,6 +49986,75 @@ if (token) {
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/components/AccountListComponent.vue":
+/*!**********************************************************!*\
+  !*** ./resources/js/components/AccountListComponent.vue ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AccountListComponent_vue_vue_type_template_id_33686cbd___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AccountListComponent.vue?vue&type=template&id=33686cbd& */ "./resources/js/components/AccountListComponent.vue?vue&type=template&id=33686cbd&");
+/* harmony import */ var _AccountListComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AccountListComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/AccountListComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _AccountListComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AccountListComponent_vue_vue_type_template_id_33686cbd___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AccountListComponent_vue_vue_type_template_id_33686cbd___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/AccountListComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/AccountListComponent.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/AccountListComponent.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountListComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./AccountListComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AccountListComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountListComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/AccountListComponent.vue?vue&type=template&id=33686cbd&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/components/AccountListComponent.vue?vue&type=template&id=33686cbd& ***!
+  \*****************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountListComponent_vue_vue_type_template_id_33686cbd___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./AccountListComponent.vue?vue&type=template&id=33686cbd& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AccountListComponent.vue?vue&type=template&id=33686cbd&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountListComponent_vue_vue_type_template_id_33686cbd___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountListComponent_vue_vue_type_template_id_33686cbd___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 
@@ -49409,140 +50127,72 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/trend_ranking.js":
-/*!***************************************!*\
-  !*** ./resources/js/trend_ranking.js ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/***/ "./resources/js/components/TrendRankingComponent.vue":
+/*!***********************************************************!*\
+  !*** ./resources/js/components/TrendRankingComponent.vue ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-var trend_ranking = new Vue({
-  el: '#trend-ranking',
-  data: {
-    trends: [],
-    filteredTrends: [],
-    cryptoList: [],
-    gotTime: '',
-    selectedCryptoIds: [],
-    selectedSearchTerm: 0
-  },
-  mounted: function mounted() {
-    this.reloadData();
-  },
-  computed: {
-    selectAll: {
-      get: function get() {
-        if (this.selectedCryptoIds.length === this.cryptoList.length) {
-          return true;
-        } else {
-          return false;
-        }
-      },
-      set: function set(checked) {
-        if (checked) {
-          this.selectedCryptoIds = [];
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TrendRankingComponent_vue_vue_type_template_id_c06e746e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TrendRankingComponent.vue?vue&type=template&id=c06e746e& */ "./resources/js/components/TrendRankingComponent.vue?vue&type=template&id=c06e746e&");
+/* harmony import */ var _TrendRankingComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TrendRankingComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/TrendRankingComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
-          try {
-            for (var _iterator = this.cryptoList[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var crypto = _step.value;
-              this.selectedCryptoIds.push(crypto.id);
-            }
-          } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-                _iterator["return"]();
-              }
-            } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
-              }
-            }
-          }
-        } else {
-          this.selectedCryptoIds = [];
-        }
-      }
-    }
-  },
-  methods: {
-    reloadData: function reloadData() {
-      var _this = this;
 
-      axios.get('/index/reloadTrendData/' + this.selectedSearchTerm).then(function (res) {
-        _this.trends = res.data.trends;
-        _this.cryptoList = res.data.crypto_list;
-        _this.gotTime = res.data.got_time;
-        _this.selectedCryptoIds = [];
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
 
-        try {
-          for (var _iterator2 = _this.cryptoList[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var crypto = _step2.value;
 
-            _this.selectedCryptoIds.push(crypto.id);
-          }
-        } catch (err) {
-          _didIteratorError2 = true;
-          _iteratorError2 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-              _iterator2["return"]();
-            }
-          } finally {
-            if (_didIteratorError2) {
-              throw _iteratorError2;
-            }
-          }
-        }
 
-        _this.display();
-      });
-    },
-    display: function display() {
-      var _this2 = this;
+/* normalize component */
 
-      this.filteredTrends = [];
-      trendCnt = 0;
-      this.trends.forEach(function (trend) {
-        _this2.selectedCryptoIds.forEach(function (cryptoId) {
-          if (cryptoId === trend.crypto.id) {
-            _this2.filteredTrends[trendCnt] = trend;
-            _this2.filteredTrends[trendCnt]['rank'] = trendCnt + 1;
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TrendRankingComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TrendRankingComponent_vue_vue_type_template_id_c06e746e___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TrendRankingComponent_vue_vue_type_template_id_c06e746e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
 
-            switch (_this2.selectedSearchTerm) {
-              case 0:
-                _this2.filteredTrends[trendCnt]['tweet_cnt'] = trend.hour_cnt;
-                break;
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/TrendRankingComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
-              case 1:
-                _this2.filteredTrends[trendCnt]['tweet_cnt'] = trend.day_cnt;
-                break;
+/***/ }),
 
-              case 2:
-                _this2.filteredTrends[trendCnt]['tweet_cnt'] = trend.week_cnt;
-                break;
+/***/ "./resources/js/components/TrendRankingComponent.vue?vue&type=script&lang=js&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/components/TrendRankingComponent.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-              default:
-                _this2.filteredTrends[trendCnt]['tweet_cnt'] = 0;
-                break;
-            }
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TrendRankingComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./TrendRankingComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TrendRankingComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TrendRankingComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
-            trendCnt++;
-          }
-        });
-      });
-    }
-  }
-});
+/***/ }),
+
+/***/ "./resources/js/components/TrendRankingComponent.vue?vue&type=template&id=c06e746e&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/components/TrendRankingComponent.vue?vue&type=template&id=c06e746e& ***!
+  \******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TrendRankingComponent_vue_vue_type_template_id_c06e746e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./TrendRankingComponent.vue?vue&type=template&id=c06e746e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TrendRankingComponent.vue?vue&type=template&id=c06e746e&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TrendRankingComponent_vue_vue_type_template_id_c06e746e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TrendRankingComponent_vue_vue_type_template_id_c06e746e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 

@@ -189,7 +189,7 @@ class TrendRankingController extends Controller
                 'got_time' => date("Y-m-d H:i:s", strtotime($updated_time->created_at))
             ];
         }
-        Log::debug('初期表示データ：' . print_r($res_data, true));
+        // Log::debug('初期表示データ：' . print_r($res_data, true));
         return $res_data;
     }
 

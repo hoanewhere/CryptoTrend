@@ -3,10 +3,10 @@ const account_list = new Vue({
     data: {
         accounts: {},
         gotTime: '',
+        autoFollowFlg: false,
     },
     mounted() {
         this.reloadData()
-        // twttr.widgets.load()
     },
     updated() {
         twttr.widgets.load()
@@ -23,6 +23,7 @@ const account_list = new Vue({
             .then((res) => {
                 this.accounts = res.data.accounts
                 this.gotTime = res.data.got_time
+                this.autoFollowFlg = res.data.auto_follow_flg
 
                 // acocuntデータをjsonにパース
                 for(let i in this.accounts) {
@@ -45,6 +46,18 @@ const account_list = new Vue({
                 screen_name: account.account_data.screen_name
             }).then((res) => {
                 account.account_data.following = false;
+            })
+        },
+        toggleAutoFollow: function() {
+            if(this.autoFollowFlg === true) {
+                this.autoFollowFlg = false
+            } else {
+                this.autoFollowFlg = true
+            }
+            axios.post('accountList/toggleAutoFollow', {
+                auto_flg: this.autoFollowFlg
+            }).then((res) => {
+                
             })
         }
     }
