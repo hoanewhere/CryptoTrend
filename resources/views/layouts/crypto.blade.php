@@ -18,6 +18,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
+    <div id="crypto-trend">
     {{-- header --}}
     <header class="l-header u-px-md">
         <div>

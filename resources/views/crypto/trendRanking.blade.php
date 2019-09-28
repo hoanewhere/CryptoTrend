@@ -1,6 +1,6 @@
 @extends('layouts.crypto')
 
 @section('content')
-<div id="crypto-trend">
+<div>
     <trend-ranking-component></trend-ranking-component>
 @endsection
