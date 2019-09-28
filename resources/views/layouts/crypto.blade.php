@@ -28,7 +28,7 @@
         </header>
 
         {{-- main --}}
-        <main class="">
+        <main class="l-header_pt">
             @yield('content')
         </main>
 
