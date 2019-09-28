@@ -10871,7 +10871,6 @@ img {
 
 .c-nav_ul {
   display: flex;
-  flex-direction: row-reverse;
 }
 
 .c-form {

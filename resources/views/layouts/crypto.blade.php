@@ -19,27 +19,23 @@
 </head>
 <body>
     <div id="crypto-trend">
-    {{-- header --}}
-    <header class="l-header u-px-md">
-        <div>
-            <a href="{{ url('/') }}"><img src="{{ asset('img/logo.png') }}"></a>
-        </div>
-        <nav class="c-nav">
-            <ul class="c-nav_ul">
-                <li class="u-ml-md"><a href="">ログイン</a></li>
-                <li class="u-ml-md"><a href="">ユーザー登録</a></li>
-            </ul>
-        </nav>
-    </header>
+        {{-- header --}}
+        <header class="l-header u-px-md">
+            <div>
+                <a href="{{ url('/') }}"><img src="{{ asset('img/logo.png') }}"></a>
+            </div>
+            <nav-component></nav-component>
+        </header>
 
-    {{-- main --}}
-    <main class="">
-        @yield('content')
-    </main>
+        {{-- main --}}
+        <main class="">
+            @yield('content')
+        </main>
 
-    {{-- footer --}}
-    <footer>
+        {{-- footer --}}
+        <footer>
 
-    </footer>
-    </body>
+        </footer>
+    </div>
+</body>
 </html>

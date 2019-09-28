@@ -18,11 +18,17 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+// 全体
 // Route::get('/crypto/login', 'CryptoController@test_login');
 Route::get('/crypto/register', 'CryptoController@test_register');
+Route::get('/crypto/reloadNavData', 'CryptoController@reloadNavData');
+
+// トレンドランキング
 Route::get('/index', 'TrendRankingController@index');
 Route::get('/index/reloadTrendData/{term}', 'TrendRankingController@reloadTrendData');
 
+// アカウント一覧
 Route::get('/accountList', 'AccountListController@index');
 Route::get('/accountList/reloadTweetData', 'AccountListController@reloadTweetData');
 Route::get('/accountList/callback', 'AccountListController@callback');
@@ -30,7 +36,7 @@ Route::post('/accountList/toFollow', 'AccountListController@toFollow');
 Route::post('/accountList/unfollow', 'AccountListController@unfollow');
 Route::post('/accountList/toggleAutoFollow', 'AccountListController@toggleAutoFollow');
 
-
+// ニュース一覧
 Route::get('/newsList', 'NewsListController@index');
 Route::get('/newsList/reloadNewsData', 'NewsListController@reloadNews');
 
