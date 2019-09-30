@@ -7,15 +7,17 @@
     </div>
     <div class="c-nav-sm" v-show="navActive">
         <ul class="c-nav_ul">
-            <li class="c-nav_li c-button c-button-warning" v-for="(nav, index) in navList" :key="index">
-                <a :href="nav.url">{{ nav.title }}</a>
+            <li class="c-nav_li" v-for="(nav, index) in navList" :key="index">
+                <a v-if="nav.title != 'ログアウト'" :href="nav.url" class="c-button c-button-warning">{{ nav.title }}</a>
+                <button v-else type="submit" class="c-button c-button-warning">{{ nav.title }}</button>
             </li>
         </ul>
     </div>
     <div class="c-nav-md">
         <ul class="c-nav_ul-md">
-            <li class="u-ml-md" v-for="(nav, index) in navList" :key="index">
-                <a :href="nav.url">{{ nav.title }}</a>
+            <li class="c-nav_li" v-for="(nav, index) in navList" :key="index">
+                <a v-if="nav.title != 'ログアウト'" :href="nav.url" class="c-button c-button-warning">{{ nav.title }}</a>
+                <button v-else type="submit" class="c-button c-button-warning">{{ nav.title }}</button>
             </li>
         </ul>
     </div>

@@ -24,7 +24,11 @@
             <div>
                 <a href="{{ url('/index') }}"><img src="{{ asset('img/logo.png') }}"></a>
             </div>
-            <nav-component></nav-component>
+            <form action="{{ url('/logout') }}" method="POST">
+                @csrf
+                
+                <nav-component></nav-component>
+            </form>
         </header>
 
         {{-- main --}}

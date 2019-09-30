@@ -1864,6 +1864,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -37641,15 +37643,25 @@ var render = function() {
           "ul",
           { staticClass: "c-nav_ul" },
           _vm._l(_vm.navList, function(nav, index) {
-            return _c(
-              "li",
-              { key: index, staticClass: "c-nav_li c-button c-button-warning" },
-              [
-                _c("a", { attrs: { href: nav.url } }, [
-                  _vm._v(_vm._s(nav.title))
-                ])
-              ]
-            )
+            return _c("li", { key: index, staticClass: "c-nav_li" }, [
+              nav.title != "ログアウト"
+                ? _c(
+                    "a",
+                    {
+                      staticClass: "c-button c-button-warning",
+                      attrs: { href: nav.url }
+                    },
+                    [_vm._v(_vm._s(nav.title))]
+                  )
+                : _c(
+                    "button",
+                    {
+                      staticClass: "c-button c-button-warning",
+                      attrs: { type: "submit" }
+                    },
+                    [_vm._v(_vm._s(nav.title))]
+                  )
+            ])
           }),
           0
         )
@@ -37661,8 +37673,24 @@ var render = function() {
         "ul",
         { staticClass: "c-nav_ul-md" },
         _vm._l(_vm.navList, function(nav, index) {
-          return _c("li", { key: index, staticClass: "u-ml-md" }, [
-            _c("a", { attrs: { href: nav.url } }, [_vm._v(_vm._s(nav.title))])
+          return _c("li", { key: index, staticClass: "c-nav_li" }, [
+            nav.title != "ログアウト"
+              ? _c(
+                  "a",
+                  {
+                    staticClass: "c-button c-button-warning",
+                    attrs: { href: nav.url }
+                  },
+                  [_vm._v(_vm._s(nav.title))]
+                )
+              : _c(
+                  "button",
+                  {
+                    staticClass: "c-button c-button-warning",
+                    attrs: { type: "submit" }
+                  },
+                  [_vm._v(_vm._s(nav.title))]
+                )
           ])
         }),
         0
