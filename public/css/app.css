@@ -10854,6 +10854,16 @@ img {
   vertical-align: middle;
 }
 
+.l-body {
+  display: flex;
+  flex-flow: column;
+  min-height: 100vh;
+}
+
+.l-body_main {
+  flex: 1;
+}
+
 .l-header {
   background-color: #ffffff;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
@@ -10869,6 +10879,13 @@ img {
 
 .l-header_pt {
   padding-top: 3rem;
+}
+
+.l-footer {
+  background-color: #ffffff;
+  text-align: center;
+  width: 100%;
+  padding-bottom: 1rem;
 }
 
 .c-nav_trigger {

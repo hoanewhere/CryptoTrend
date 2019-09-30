@@ -1,0 +1,9 @@
+.l-body {
+    display: flex;
+    flex-flow: column;
+    min-height: 100vh;
+}
+
+.l-body_main {
+    flex: 1;
+}

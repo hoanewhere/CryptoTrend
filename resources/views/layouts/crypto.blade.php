@@ -18,23 +18,26 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div id="crypto-trend">
+    <div id="crypto-trend" class="l-body">
         {{-- header --}}
         <header class="l-header u-px-md">
             <div>
-                <a href="{{ url('/') }}"><img src="{{ asset('img/logo.png') }}"></a>
+                <a href="{{ url('/index') }}"><img src="{{ asset('img/logo.png') }}"></a>
             </div>
             <nav-component></nav-component>
         </header>
 
         {{-- main --}}
-        <main class="l-header_pt">
+        <main class="l-header_pt l-body_main">
             @yield('content')
         </main>
 
         {{-- footer --}}
-        <footer>
-
+        <footer class="l-footer">
+            <div>
+                <a href="{{ url('/index') }}"><img src="{{ asset('img/logo.png') }}"></a>
+            </div>
+            <p>Copyright © Crypto Trend. All Rights Reserved</p>
         </footer>
     </div>
 </body>
