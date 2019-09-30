@@ -1850,10 +1850,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      navList: {}
+      navList: {},
+      navActive: false
     };
   },
   mounted: function mounted() {
@@ -1866,6 +1881,9 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('/crypto/reloadNavData').then(function (res) {
         _this.navList = res.data;
       });
+    },
+    navClick: function navClick() {
+      this.navActive = !this.navActive;
     }
   }
 });
@@ -37588,16 +37606,68 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("nav", { staticClass: "c-nav" }, [
-    _c(
-      "ul",
-      { staticClass: "c-nav_ul" },
-      _vm._l(_vm.navList, function(nav, index) {
-        return _c("li", { key: index, staticClass: "u-ml-md" }, [
-          _c("a", { attrs: { href: nav.url } }, [_vm._v(_vm._s(nav.title))])
-        ])
+    _c("div", { staticClass: "c-nav_trigger", on: { click: _vm.navClick } }, [
+      _c("span", {
+        staticClass: "c-nav_trigger-parts",
+        class: { "is-active": _vm.navActive }
       }),
-      0
-    )
+      _vm._v(" "),
+      _c("span", {
+        staticClass: "c-nav_trigger-parts",
+        class: { "is-active": _vm.navActive }
+      }),
+      _vm._v(" "),
+      _c("span", {
+        staticClass: "c-nav_trigger-parts",
+        class: { "is-active": _vm.navActive }
+      })
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.navActive,
+            expression: "navActive"
+          }
+        ],
+        staticClass: "c-nav-sm"
+      },
+      [
+        _c(
+          "ul",
+          { staticClass: "c-nav_ul" },
+          _vm._l(_vm.navList, function(nav, index) {
+            return _c(
+              "li",
+              { key: index, staticClass: "c-nav_li c-button c-button-warning" },
+              [
+                _c("a", { attrs: { href: nav.url } }, [
+                  _vm._v(_vm._s(nav.title))
+                ])
+              ]
+            )
+          }),
+          0
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "c-nav-md" }, [
+      _c(
+        "ul",
+        { staticClass: "c-nav_ul-md" },
+        _vm._l(_vm.navList, function(nav, index) {
+          return _c("li", { key: index, staticClass: "u-ml-md" }, [
+            _c("a", { attrs: { href: nav.url } }, [_vm._v(_vm._s(nav.title))])
+          ])
+        }),
+        0
+      )
+    ])
   ])
 }
 var staticRenderFns = []
