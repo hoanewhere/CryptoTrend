@@ -2003,6 +2003,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2011,7 +2012,8 @@ __webpack_require__.r(__webpack_exports__);
       cryptoList: [],
       gotTime: '',
       selectedCryptoIds: [],
-      selectedSearchTerm: 0
+      selectedSearchTerm: 0,
+      searchActive: false
     };
   },
   mounted: function mounted() {
@@ -2093,6 +2095,8 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         _this.display();
+
+        _this.searchActive = false;
       });
     },
     display: function display() {
@@ -2128,6 +2132,9 @@ __webpack_require__.r(__webpack_exports__);
           }
         });
       });
+    },
+    searchClick: function searchClick() {
+      this.searchActive = true;
     }
   }
 });
@@ -37780,194 +37787,213 @@ var render = function() {
     _c("div", { staticClass: "u-ta-c" }, [
       _c("p", { staticClass: "u-mb-sm" }, [
         _vm._v("データ取得時間：" + _vm._s(_vm.gotTime))
-      ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "c-button c-button-peace c-search_button",
+          attrs: { type: "button" },
+          on: { click: _vm.searchClick }
+        },
+        [_vm._v("表示条件")]
+      )
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "p-trendRanking" }, [
-      _c("div", { staticClass: "c-search u-ta-c p-trendRanking_child" }, [
-        _c("h3", { staticClass: "c-title_article u-mb-lg" }, [
-          _vm._v("表示条件")
-        ]),
-        _vm._v(" "),
-        _c("form", { attrs: { action: "" } }, [
-          _c("div", { staticClass: "c-search_mono u-mb-lg" }, [
-            _c(
-              "label",
-              {
-                staticClass: "c-form-title c-title_sub u-mb-sm",
-                attrs: { for: "searchTime" }
-              },
-              [_vm._v("対象時間")]
-            ),
-            _vm._v(" "),
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.selectedSearchTerm,
-                    expression: "selectedSearchTerm"
-                  }
-                ],
-                staticClass: "c-input_select u-w50p u-mx-a",
-                attrs: { name: "", id: "searchTime" },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.selectedSearchTerm = $event.target.multiple
-                      ? $$selectedVal
-                      : $$selectedVal[0]
-                  }
-                }
-              },
-              [
-                _c("option", { domProps: { value: 0 } }, [_vm._v("1時間")]),
-                _vm._v(" "),
-                _c("option", { domProps: { value: 1 } }, [_vm._v("1日")]),
-                _vm._v(" "),
-                _c("option", { domProps: { value: 2 } }, [_vm._v("1週間")])
-              ]
-            )
+      _c(
+        "div",
+        {
+          staticClass: "c-search-lg u-ta-c p-trendRanking_child",
+          class: { "c-search": _vm.searchActive }
+        },
+        [
+          _c("h3", { staticClass: "c-title_article u-mb-lg" }, [
+            _vm._v("表示条件")
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "c-search_mono u-mb-lg" }, [
-            _c(
-              "label",
-              {
-                staticClass: "c-form-title c-title_sub u-mb-sm",
-                attrs: { for: "" }
-              },
-              [_vm._v("表示銘柄")]
-            ),
+          _c("form", { attrs: { action: "" } }, [
+            _c("div", { staticClass: "c-search_mono u-mb-lg" }, [
+              _c(
+                "label",
+                {
+                  staticClass: "c-form-title c-title_sub u-mb-sm",
+                  attrs: { for: "searchTime" }
+                },
+                [_vm._v("対象時間")]
+              ),
+              _vm._v(" "),
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.selectedSearchTerm,
+                      expression: "selectedSearchTerm"
+                    }
+                  ],
+                  staticClass: "c-input_select u-w80p u-mx-a",
+                  attrs: { name: "", id: "searchTime" },
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.selectedSearchTerm = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    }
+                  }
+                },
+                [
+                  _c("option", { domProps: { value: 0 } }, [_vm._v("1時間")]),
+                  _vm._v(" "),
+                  _c("option", { domProps: { value: 1 } }, [_vm._v("1日")]),
+                  _vm._v(" "),
+                  _c("option", { domProps: { value: 2 } }, [_vm._v("1週間")])
+                ]
+              )
+            ]),
             _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "c-search_chks" },
-              [
-                _c("div", { staticClass: "c-search_chk u-mb-xs" }, [
-                  _c("label", [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.selectAll,
-                          expression: "selectAll"
-                        }
-                      ],
-                      staticClass: "c-input_checkbox u-mr-sm",
-                      attrs: {
-                        type: "checkbox",
-                        id: "showCryptoAll",
-                        value: "全て"
-                      },
-                      domProps: {
-                        checked: Array.isArray(_vm.selectAll)
-                          ? _vm._i(_vm.selectAll, "全て") > -1
-                          : _vm.selectAll
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.selectAll,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = "全て",
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 && (_vm.selectAll = $$a.concat([$$v]))
+            _c("div", { staticClass: "c-search_mono u-mb-lg" }, [
+              _c(
+                "label",
+                {
+                  staticClass: "c-form-title c-title_sub u-mb-sm",
+                  attrs: { for: "" }
+                },
+                [_vm._v("表示銘柄")]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "c-search_chks" },
+                [
+                  _c("div", { staticClass: "c-search_chk u-mb-xs" }, [
+                    _c("label", [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.selectAll,
+                            expression: "selectAll"
+                          }
+                        ],
+                        staticClass: "c-input_checkbox u-mr-sm",
+                        attrs: {
+                          type: "checkbox",
+                          id: "showCryptoAll",
+                          value: "全て"
+                        },
+                        domProps: {
+                          checked: Array.isArray(_vm.selectAll)
+                            ? _vm._i(_vm.selectAll, "全て") > -1
+                            : _vm.selectAll
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = _vm.selectAll,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = "全て",
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 && (_vm.selectAll = $$a.concat([$$v]))
+                              } else {
+                                $$i > -1 &&
+                                  (_vm.selectAll = $$a
+                                    .slice(0, $$i)
+                                    .concat($$a.slice($$i + 1)))
+                              }
                             } else {
-                              $$i > -1 &&
-                                (_vm.selectAll = $$a
-                                  .slice(0, $$i)
-                                  .concat($$a.slice($$i + 1)))
+                              _vm.selectAll = $$c
                             }
-                          } else {
-                            _vm.selectAll = $$c
                           }
                         }
-                      }
-                    }),
-                    _vm._v("全て")
-                  ])
-                ]),
-                _vm._v(" "),
-                _vm._l(_vm.cryptoList, function(crypto) {
-                  return _c(
-                    "div",
-                    { key: crypto.id, staticClass: "c-search_chk u-mb-xs" },
-                    [
-                      _c("label", [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.selectedCryptoIds,
-                              expression: "selectedCryptoIds"
-                            }
-                          ],
-                          staticClass: "c-input_checkbox u-mr-sm",
-                          attrs: { type: "checkbox" },
-                          domProps: {
-                            value: crypto.id,
-                            checked: Array.isArray(_vm.selectedCryptoIds)
-                              ? _vm._i(_vm.selectedCryptoIds, crypto.id) > -1
-                              : _vm.selectedCryptoIds
-                          },
-                          on: {
-                            change: function($event) {
-                              var $$a = _vm.selectedCryptoIds,
-                                $$el = $event.target,
-                                $$c = $$el.checked ? true : false
-                              if (Array.isArray($$a)) {
-                                var $$v = crypto.id,
-                                  $$i = _vm._i($$a, $$v)
-                                if ($$el.checked) {
-                                  $$i < 0 &&
-                                    (_vm.selectedCryptoIds = $$a.concat([$$v]))
+                      }),
+                      _vm._v("全て")
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _vm._l(_vm.cryptoList, function(crypto) {
+                    return _c(
+                      "div",
+                      { key: crypto.id, staticClass: "c-search_chk u-mb-xs" },
+                      [
+                        _c("label", [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.selectedCryptoIds,
+                                expression: "selectedCryptoIds"
+                              }
+                            ],
+                            staticClass: "c-input_checkbox u-mr-sm",
+                            attrs: { type: "checkbox" },
+                            domProps: {
+                              value: crypto.id,
+                              checked: Array.isArray(_vm.selectedCryptoIds)
+                                ? _vm._i(_vm.selectedCryptoIds, crypto.id) > -1
+                                : _vm.selectedCryptoIds
+                            },
+                            on: {
+                              change: function($event) {
+                                var $$a = _vm.selectedCryptoIds,
+                                  $$el = $event.target,
+                                  $$c = $$el.checked ? true : false
+                                if (Array.isArray($$a)) {
+                                  var $$v = crypto.id,
+                                    $$i = _vm._i($$a, $$v)
+                                  if ($$el.checked) {
+                                    $$i < 0 &&
+                                      (_vm.selectedCryptoIds = $$a.concat([
+                                        $$v
+                                      ]))
+                                  } else {
+                                    $$i > -1 &&
+                                      (_vm.selectedCryptoIds = $$a
+                                        .slice(0, $$i)
+                                        .concat($$a.slice($$i + 1)))
+                                  }
                                 } else {
-                                  $$i > -1 &&
-                                    (_vm.selectedCryptoIds = $$a
-                                      .slice(0, $$i)
-                                      .concat($$a.slice($$i + 1)))
+                                  _vm.selectedCryptoIds = $$c
                                 }
-                              } else {
-                                _vm.selectedCryptoIds = $$c
                               }
                             }
-                          }
-                        }),
-                        _vm._v(_vm._s(crypto.crypto))
-                      ])
-                    ]
-                  )
-                })
-              ],
-              2
+                          }),
+                          _vm._v(_vm._s(crypto.crypto))
+                        ])
+                      ]
+                    )
+                  })
+                ],
+                2
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "c-button c-button-peace",
+                attrs: { type: "button" },
+                on: { click: _vm.reloadTrendData }
+              },
+              [_vm._v("表示")]
             )
-          ]),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "c-button c-button-peace",
-              attrs: { type: "button" },
-              on: { click: _vm.reloadTrendData }
-            },
-            [_vm._v("表示")]
-          )
-        ])
-      ]),
+          ])
+        ]
+      ),
       _vm._v(" "),
       _c(
         "div",

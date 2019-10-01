@@ -3,16 +3,17 @@
     <h1 class="c-title_main">仮想通貨トレンドランキング</h1>
     <div class="u-ta-c">
         <p class="u-mb-sm">データ取得時間：{{ gotTime }}</p>
+        <button type="button" class="c-button c-button-peace c-search_button" @click="searchClick">表示条件</button>
     </div>
     <div class="p-trendRanking">
 
         <!-- search -->
-        <div class="c-search u-ta-c p-trendRanking_child">
+        <div class="c-search-lg u-ta-c p-trendRanking_child" :class="{'c-search': searchActive}">
             <h3 class="c-title_article u-mb-lg">表示条件</h3>
             <form action="">
                 <div class="c-search_mono u-mb-lg">
                     <label for="searchTime" class="c-form-title c-title_sub u-mb-sm">対象時間</label>
-                    <select name="" id="searchTime" v-model="selectedSearchTerm" class="c-input_select u-w50p u-mx-a">
+                    <select name="" id="searchTime" v-model="selectedSearchTerm" class="c-input_select u-w80p u-mx-a">
                         <option :value=0>1時間</option>
                         <option :value=1>1日</option>
                         <option :value=2>1週間</option>
@@ -62,7 +63,8 @@
                 cryptoList: [],
                 gotTime: '',
                 selectedCryptoIds: [],
-                selectedSearchTerm: 0
+                selectedSearchTerm: 0,
+                searchActive: false,
             }
         },
         mounted() {
@@ -101,6 +103,8 @@
                         this.selectedCryptoIds.push(crypto.id)
                     }
                     this.display()
+                    this.searchActive = false
+
                 })
             },
             display: function() {
@@ -130,6 +134,9 @@
                         }
                     })
                 })
+            },
+            searchClick: function() {
+                this.searchActive = true
             }
         }
     }

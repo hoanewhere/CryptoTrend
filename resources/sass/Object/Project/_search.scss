@@ -1,12 +1,31 @@
-.c-search {
+.c-search-lg {
     display: none;
-    position: absolute;
+    @include mq(lg) {
+        display: block;
+        position: relative;
+        max-width: $layout-width-innerSub;
+        margin: 1rem;
+        color: $co-base99;
+        background-color: $co-base0;
+        border: 1px solid $co-base2;
+        border-radius: 0.35rem;
+        padding: 3rem 1rem;
+        z-index: 50;
+    }
+}
+
+.c-search {
+    position: fixed;
     z-index: 50;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 100vw;
+    height: 100vh;
     background-color: rgba($color: $co-base99, $alpha: .8);
-    padding: 3rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
     color: $co-base0;
     @include mq(lg) {
         display: block;
@@ -17,6 +36,7 @@
         background-color: $co-base0;
         border: 1px solid $co-base2;
         border-radius: 0.35rem;
+        padding: 3rem 1rem;
     }
 }
 
@@ -33,4 +53,11 @@
 .c-search_chk {
     text-align: center;
     display: flex;
+}
+
+.c-search_button {
+    display: inline-block;
+    @include mq(lg) {
+        display: none;
+    }
 }
