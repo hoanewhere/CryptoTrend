@@ -39,7 +39,7 @@ class Kernel extends ConsoleKernel
         // 一日に一回、対象のツイッターアカウントを取得する
         $schedule->call(function() {
             $account_list1 = New AccountListController();
-            $account_list1->getUsers();
+            $account_list1->getUsersAllAcounts();
         })->daily()
         ->name('task-getUsers')
         ->withoutOverlapping();

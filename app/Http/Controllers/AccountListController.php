@@ -40,8 +40,9 @@ class AccountListController extends Controller
 
 
         // test
+        // $this->getUsersAllAcounts();
         // $this->toFollowAutoLimitFifteen();
-        self::clearFollowCntOfDayLimit();
+        // self::clearFollowCntOfDayLimit();
 
         $this->getUsers();
         return view('crypto.accountList');
@@ -103,6 +104,41 @@ class AccountListController extends Controller
 
         // ユーザデータ保存
         $this->saveUsers($users, $login_user_id);
+    }
+
+    public function getUsersAllAcounts() {
+        Log::debug('getUsersAllAcounts(関数呼び出し)');
+        $today = date('Y-m-d');
+        $targetUsers = User::whereNotNull('access_token')->get();
+        
+        foreach($targetUsers as $targetUser) {
+            $updated_time_result = UpdatedTime::where('time_index', '2')->where('login_user_id', $targetUser->id)->where('created_at', 'LIKE', "$today%")->get(); 
+
+            // 今日、すでにアカウント取得が実施されているユーザに対しては何もしない
+            if(count($updated_time_result)) {
+                if($updated_time_result[0]->complete_flg) {
+                    continue;
+                }
+            }
+
+            $user_id = $targetUser->id;
+            $access_token = json_decode($targetUser->access_token, true);
+
+            // UpdatedTimeテーブルにレコード追加
+            $updated_time = New UpdatedTime();
+            $updated_time->fill([
+                'time_index' => 2,
+                'complete_flg' => false,
+                'login_user_id' => $user_id
+            ]);
+            $updated_time->save();
+
+            // ユーザ検索
+            $users = $this->searchUsers($access_token);
+
+            // ユーザデータ保存
+            $this->saveUsers($users, $user_id);
+        }
     }
 
 
