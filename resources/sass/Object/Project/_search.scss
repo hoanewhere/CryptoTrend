@@ -2,7 +2,8 @@
     display: none;
     @include mq(lg) {
         display: block;
-        position: relative;
+        position: sticky;
+        top: 4rem;
         max-width: $layout-width-innerSub;
         margin: 1rem;
         color: $co-base99;
@@ -29,7 +30,8 @@
     color: $co-base0;
     @include mq(lg) {
         display: block;
-        position: relative;
+        position: sticky;
+        top: 4rem;
         max-width: $layout-width-innerSub;
         margin: 1rem;
         color: $co-base99;
