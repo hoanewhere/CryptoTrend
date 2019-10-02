@@ -217,6 +217,16 @@ h6 {
   font-weight: 500;
 }
 
+input,
+button,
+select,
+textarea {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
 .l-body {
   display: flex;
   flex-flow: column;

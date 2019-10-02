@@ -27,3 +27,10 @@ img {
 h1, h2, h3, h4, h5, h6 {
     font-weight: 500;
 }
+
+input, button, select, textarea {
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
