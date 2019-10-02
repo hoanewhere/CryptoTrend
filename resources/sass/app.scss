@@ -1,12 +1,8 @@
 
+// ==========================================================================
 // Fonts
+// ==========================================================================
 @import url('https://fonts.googleapis.com/css?family=Nunito');
-
-// Variables
-@import 'variables';
-
-// Bootstrap TBC:Cryptoページできたら削除
-@import '~bootstrap/scss/bootstrap';
 
 // ==========================================================================
 // Foundation
@@ -27,9 +23,8 @@
 // ==========================================================================
 // Object
 // ==========================================================================
-
 // -----------------------------------------------------------------
-// Component
+// Object - Component
 // -----------------------------------------------------------------
 @import 'Object/Component/nav';
 @import 'Object/Component/form';
@@ -40,7 +35,7 @@
 @import 'Object/Component/pagination';
 
 // -----------------------------------------------------------------
-// Project
+// Object - Project
 // -----------------------------------------------------------------
 @import 'Object/Project/ranks';
 @import 'Object/Project/search';
@@ -49,17 +44,9 @@
 @import 'Object/Project/news';
 
 // -----------------------------------------------------------------
-// Utility
+// Object - Utility
 // -----------------------------------------------------------------
 @import 'Object/Utility/all';
 @import 'Object/Utility/margin';
 @import 'Object/Utility/padding';
 @import 'Object/Utility/font';
-
-
-// .navbar-laravel {
-//   background-color: #fff;
-//   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-// }
-
-

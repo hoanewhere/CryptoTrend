@@ -1,21 +1,21 @@
-.c-search-lg {
+.p-search-lg {
     display: none;
     @include mq(lg) {
         display: block;
         position: sticky;
-        top: 4rem;
+        top: 5rem;
         max-width: $layout-width-innerSub;
         margin: 1rem;
         color: $co-base99;
         background-color: $co-base0;
         border: 1px solid $co-base2;
         border-radius: 0.35rem;
-        padding: 3rem 1rem;
+        padding: 2rem 1rem;
         z-index: 50;
     }
 }
 
-.c-search {
+.p-search {
     position: fixed;
     z-index: 50;
     top: 0;
@@ -42,22 +42,22 @@
     }
 }
 
-.c-search_mono {
+.p-search_mono {
     text-align: center;
     display: flex;
     flex-direction: column;
 }
 
-.c-search_chks {
+.p-search_chks {
     margin: 0 auto;
 }
 
-.c-search_chk {
+.p-search_chk {
     text-align: center;
     display: flex;
 }
 
-.c-search_button {
+.p-search_button {
     display: inline-block;
     @include mq(lg) {
         display: none;

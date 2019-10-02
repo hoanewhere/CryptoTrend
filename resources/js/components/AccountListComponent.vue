@@ -9,17 +9,17 @@
         <button v-else type="button" class="c-button c-button-dark" @click="toggleAutoFollow">自動フォロー OFF</button>
     </div>
     <pagination-component :data="accountsPaginate" @move-page="movePage($event)"></pagination-component>
-    <div class="accounts">
-        <div class="account" v-for="account in accounts" :key="account.id">
-            <div class="account_inner">
-                <img :src="account.account_data.profile_image_url" alt="" class="account_inner-img">
-                <div class="account_inner-btn u-mb-md">
+    <div class="p-accounts">
+        <div class="p-account" v-for="account in accounts" :key="account.id">
+            <div class="p-account_inner">
+                <img :src="account.account_data.profile_image_url" alt="" class="p-account_inner-img">
+                <div class="p-account_inner-btn u-mb-md">
                     <button v-if="account.account_data.following === false" type="button" class="c-button c-button-peace" @click="toFollow(account)">フォローする</button>
                     <button v-else type="button" class="c-button c-button-dark" @click="unfollow(account)">フォロー済</button>
                 </div>
                 <p class="u-mb-sm">{{ account.account_data.name }}</p>
                 <p class="u-mb-sm">{{ account.account_data.screen_name }}</p>
-                <div class="account_inner-row u-mb-sm">
+                <div class="p-account_inner-row u-mb-sm">
                     <p class="u-mr-lg">フォロー<span>{{ account.account_data.friends_count }}</span></p>
                     <p>フォロワー<span>{{ account.account_data.followers_count }}</span></p>
                 </div>

@@ -1,18 +1,22 @@
 .c-title_main {
     font-size: 1.5rem;
+    line-height: 1.5rem;
     margin: 1rem;
     text-align: center;
     @include mq(md) {
         font-size: 3rem;
+        line-height: 3rem;
     }
 }
 
 .c-title_article {
     font-size: 2rem;
+    line-height: 2rem;
     text-align: center;
 }
 
 .c-title_sub {
     font-size: 1.2rem;
+    line-height: 1.2rem;
     text-align: center;
 }

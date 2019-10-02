@@ -1,16 +1,16 @@
-.accounts {
+.p-accounts {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
 }
 
-.account {
+.p-account {
     padding: 3rem 1rem 1rem;
     width: 100%;
     max-width: $layout-width-innerAccount;
 }
 
-.account_inner {
+.p-account_inner {
     position: relative;
     width: 100%;
     background-color: $co-base0;
@@ -19,7 +19,7 @@
     padding: .5rem 1rem 1rem;
 }
 
-.account_inner-img {
+.p-account_inner-img {
     position: absolute;
     width: 5rem;
     height: 5rem;
@@ -27,11 +27,11 @@
     top: -2rem;
 }
 
-.account_inner-btn {
+.p-account_inner-btn {
     text-align: right;
 }
 
-.account_inner-row {
+.p-account_inner-row {
     display: flex;
     
 }

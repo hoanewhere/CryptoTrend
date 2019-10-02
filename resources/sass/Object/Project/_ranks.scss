@@ -1,6 +1,5 @@
-.c-ranks {
+.p-ranks {
     margin: 1rem;
-    // padding: 1rem 0;
     max-width: $layout-width-innerMain;
     @include mq(md) {
         margin: 1rem auto;
@@ -10,12 +9,10 @@
     }
 }
 
-.c-rank {
+.p-rank {
     position: relative;
     display: flex;
     flex-direction: column;
-    // justify-content: center;
-    // align-items: center;
     background-color: $co-base0;
     border: 1px solid $co-base2;
     border-radius: 0.35rem;
@@ -23,7 +20,11 @@
     padding: 1rem;
 }
 
-.c-rank:before {
+.p-rank:last-of-type {
+    margin-bottom: 0;
+}
+
+.p-rank:before {
     content: attr(rank-cnt)"";
     position: absolute;
     width: 3rem;
@@ -45,19 +46,19 @@
     }
 }
 
-.c-rank:nth-of-type(1):before {
+.p-rank:nth-of-type(1):before {
     border: 1px solid $co-rank1;
     background-color: $co-rank1;
     color: $co-base0;
 }
 
-.c-rank:nth-of-type(2):before {
+.p-rank:nth-of-type(2):before {
     border: 1px solid $co-rank2;
     background-color: $co-rank2;
     color: $co-base0;
 }
 
-.c-rank:nth-of-type(3):before {
+.p-rank:nth-of-type(3):before {
     border: 1px solid $co-rank3;
     background-color: $co-rank3;
     color: $co-base0;

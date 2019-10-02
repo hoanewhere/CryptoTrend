@@ -37585,16 +37585,16 @@ var render = function() {
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "accounts" },
+        { staticClass: "p-accounts" },
         _vm._l(_vm.accounts, function(account) {
-          return _c("div", { key: account.id, staticClass: "account" }, [
-            _c("div", { staticClass: "account_inner" }, [
+          return _c("div", { key: account.id, staticClass: "p-account" }, [
+            _c("div", { staticClass: "p-account_inner" }, [
               _c("img", {
-                staticClass: "account_inner-img",
+                staticClass: "p-account_inner-img",
                 attrs: { src: account.account_data.profile_image_url, alt: "" }
               }),
               _vm._v(" "),
-              _c("div", { staticClass: "account_inner-btn u-mb-md" }, [
+              _c("div", { staticClass: "p-account_inner-btn u-mb-md" }, [
                 account.account_data.following === false
                   ? _c(
                       "button",
@@ -37632,7 +37632,7 @@ var render = function() {
                 _vm._v(_vm._s(account.account_data.screen_name))
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "account_inner-row u-mb-sm" }, [
+              _c("div", { staticClass: "p-account_inner-row u-mb-sm" }, [
                 _c("p", { staticClass: "u-mr-lg" }, [
                   _vm._v("フォロー"),
                   _c("span", [
@@ -38005,7 +38005,7 @@ var render = function() {
       _c(
         "button",
         {
-          staticClass: "c-button c-button-peace c-search_button",
+          staticClass: "c-button c-button-peace p-search_button",
           attrs: { type: "button" },
           on: { click: _vm.searchClick }
         },
@@ -38017,8 +38017,8 @@ var render = function() {
       _c(
         "div",
         {
-          staticClass: "c-search-lg u-ta-c p-trendRanking_child",
-          class: { "c-search": _vm.searchActive }
+          staticClass: "p-search-lg u-ta-c p-trendRanking_child",
+          class: { "p-search": _vm.searchActive }
         },
         [
           _c("h3", { staticClass: "c-title_article u-mb-lg" }, [
@@ -38026,7 +38026,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("form", { attrs: { action: "" } }, [
-            _c("div", { staticClass: "c-search_mono u-mb-lg" }, [
+            _c("div", { staticClass: "p-search_mono u-mb-lg" }, [
               _c(
                 "label",
                 {
@@ -38075,7 +38075,7 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "c-search_mono u-mb-lg" }, [
+            _c("div", { staticClass: "p-search_mono u-mb-lg" }, [
               _c(
                 "label",
                 {
@@ -38087,9 +38087,9 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "div",
-                { staticClass: "c-search_chks" },
+                { staticClass: "p-search_chks" },
                 [
-                  _c("div", { staticClass: "c-search_chk u-mb-xs" }, [
+                  _c("div", { staticClass: "p-search_chk u-mb-xs" }, [
                     _c("label", [
                       _c("input", {
                         directives: [
@@ -38140,7 +38140,7 @@ var render = function() {
                   _vm._l(_vm.cryptoList, function(crypto) {
                     return _c(
                       "div",
-                      { key: crypto.id, staticClass: "c-search_chk u-mb-xs" },
+                      { key: crypto.id, staticClass: "p-search_chk u-mb-xs" },
                       [
                         _c("label", [
                           _c("input", {
@@ -38210,17 +38210,17 @@ var render = function() {
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "c-ranks p-trendRanking_child" },
+        { staticClass: "p-ranks p-trendRanking_child" },
         _vm._l(_vm.filteredTrends, function(trend) {
           return _c(
             "div",
             {
               key: trend.id,
-              staticClass: "c-rank",
+              staticClass: "p-rank",
               attrs: { "rank-cnt": trend.rank }
             },
             [
-              _c("div", { staticClass: "c-rank_top u-ta-c u-mb-md" }, [
+              _c("div", { staticClass: "p-rank_top u-ta-c u-mb-md" }, [
                 _c("h3", { staticClass: "c-title_article" }, [
                   _vm._v(_vm._s(trend.crypto.crypto))
                 ]),
@@ -38231,7 +38231,7 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "c-rank_buttom u-ta-c" }, [
+              _c("div", { staticClass: "p-rank_buttom u-ta-c" }, [
                 _c("p", { staticClass: "u-mb-sm" }, [
                   _vm._v("取引価格(過去24時間/単位：円)")
                 ]),
