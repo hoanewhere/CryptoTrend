@@ -38089,7 +38089,7 @@ var render = function() {
                 "div",
                 { staticClass: "p-search_chks" },
                 [
-                  _c("div", { staticClass: "p-search_chk u-mb-xs" }, [
+                  _c("div", { staticClass: "p-search_chk u-mb-sm" }, [
                     _c("label", [
                       _c("input", {
                         directives: [
@@ -38140,7 +38140,7 @@ var render = function() {
                   _vm._l(_vm.cryptoList, function(crypto) {
                     return _c(
                       "div",
-                      { key: crypto.id, staticClass: "p-search_chk u-mb-xs" },
+                      { key: crypto.id, staticClass: "p-search_chk u-mb-sm" },
                       [
                         _c("label", [
                           _c("input", {

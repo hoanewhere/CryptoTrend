@@ -404,6 +404,11 @@ h6 {
           appearance: none;
 }
 
+.c-input_checkbox {
+  margin: 0;
+  vertical-align: middle;
+}
+
 .c-button {
   display: inline-block;
   font-weight: 400;

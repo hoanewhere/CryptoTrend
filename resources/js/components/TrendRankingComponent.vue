@@ -22,10 +22,10 @@
                 <div class="p-search_mono u-mb-lg">
                     <label for="" class="c-form-title c-title_sub u-mb-sm">表示銘柄</label>
                     <div class="p-search_chks">
-                        <div class="p-search_chk u-mb-xs">
+                        <div class="p-search_chk u-mb-sm">
                             <label><input type="checkbox" id="showCryptoAll" value="全て" class="c-input_checkbox u-mr-sm" v-model="selectAll">全て</label>
                         </div>
-                        <div v-for="crypto in cryptoList" :key="crypto.id" class="p-search_chk u-mb-xs">
+                        <div v-for="crypto in cryptoList" :key="crypto.id" class="p-search_chk u-mb-sm">
                             <label><input type="checkbox" :value="crypto.id" v-model="selectedCryptoIds" class="c-input_checkbox u-mr-sm">{{ crypto.crypto }}</label>
                         </div>
                     </div>
