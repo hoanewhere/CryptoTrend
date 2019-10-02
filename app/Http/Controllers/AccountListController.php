@@ -150,7 +150,7 @@ class AccountListController extends Controller
         $updated_time = UpdatedTime::where('time_index', 2)->where('complete_flg', true)->where('login_user_id', $login_user->id)->orderby('created_at', 'desc')->first();
 
         // アカウント取得
-        $accounts = SearchedAccount::select(['id', 'account_data'])->where('update_time_id', $updated_time->id)->orderby('account_data->following', 'asc')->paginate(12);
+        $accounts = SearchedAccount::select(['id', 'account_data'])->where('update_time_id', $updated_time->id)->orderby('account_data->following', 'asc')->paginate(2);
         // Log::debug('未アカウントフォロー:'. print_r($accounts[0]->account_data, true));
 
         // 自動フォローフラグ取得

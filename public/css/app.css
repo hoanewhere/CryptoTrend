@@ -11126,7 +11126,7 @@ img {
   align-items: center;
   list-style: none;
   color: #ffffff;
-  padding: 1rem;
+  padding: 1rem 0;
 }
 
 .c-pagination_item {
@@ -11152,7 +11152,7 @@ img {
 .c-pagination_link {
   position: relative;
   display: block;
-  padding: 1rem;
+  padding: 0.8rem;
 }
 
 .c-ranks {

@@ -4,7 +4,7 @@
     align-items: center;
     list-style:none;
     color:$co-base0;
-    padding: 1rem;
+    padding: 1rem 0;
 }
 
 .c-pagination_item {
@@ -29,5 +29,5 @@
 .c-pagination_link {
     position: relative;
     display: block;
-    padding: 1rem;
+    padding: 0.8rem;
 }
