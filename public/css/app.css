@@ -11120,6 +11120,41 @@ img {
   color: #e3342f;
 }
 
+.c-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  color: #ffffff;
+  padding: 1rem;
+}
+
+.c-pagination_item {
+  border: 1px solid black;
+  border-right: none;
+}
+
+.c-pagination_item-active {
+  background-color: #048DFF;
+}
+
+.c-pagination_item:first-of-type {
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+
+.c-pagination_item:last-of-type {
+  border-right: 1px solid black;
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.c-pagination_link {
+  position: relative;
+  display: block;
+  padding: 1rem;
+}
+
 .c-ranks {
   margin: 1rem;
   max-width: 600px;

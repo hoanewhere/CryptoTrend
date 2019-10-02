@@ -8,6 +8,7 @@
         <button v-if="autoFollowFlg == true" type="button" class="c-button c-button-peace" @click="toggleAutoFollow">自動フォロー ON</button>
         <button v-else type="button" class="c-button c-button-dark" @click="toggleAutoFollow">自動フォロー OFF</button>
     </div>
+    <pagination-component :data="accountsPaginate" @move-page="movePage($event)"></pagination-component>
     <div class="accounts">
         <div class="account" v-for="account in accounts" :key="account.id">
             <div class="account_inner">
@@ -29,6 +30,7 @@
             </div>
         </div>
     </div>
+    <pagination-component :data="accountsPaginate" @move-page="movePage($event)"></pagination-component>
 </div>
 </template>
 
@@ -37,8 +39,10 @@
         data: function () {
             return {
                 accounts: {},
+                accountsPaginate: {},
                 gotTime: '',
-                autoFollowFlg: false
+                autoFollowFlg: false,
+                page: 1,
             }
         },
         mounted() {
@@ -55,9 +59,12 @@
         },
         methods: {
             reloadData: function() {
-                axios.get('/accountList/reloadTweetData/')
+                const url = "/accountList/reloadTweetData?page=" + this.page
+
+                axios.get(url)
                 .then((res) => {
-                    this.accounts = res.data.accounts
+                    this.accounts = res.data.accounts.data
+                    this.accountsPaginate = res.data.accounts
                     this.gotTime = res.data.got_time
                     this.autoFollowFlg = res.data.auto_follow_flg
 
@@ -95,6 +102,10 @@
                 }).then((res) => {
                     console.log('toggleautofollow完了')
                 })
+            },
+            movePage(page) {
+                this.page = page
+                this.reloadData()
             }
         }
     }
