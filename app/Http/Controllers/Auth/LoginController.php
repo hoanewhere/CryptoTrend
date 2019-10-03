@@ -40,6 +40,12 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+
+    /**
+     * ログアウト後の遷移先を指定
+     *
+     * @return void
+     */
     public function logout(Request $request)
     {
         Auth::logout();
@@ -48,7 +54,7 @@ class LoginController extends Controller
 
         $request->session()->invalidate();
 
-        // /homeに変更
+        // indexに変更
         return $this->loggedOut($request) ?: redirect('/index');
     }
 }

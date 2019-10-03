@@ -24,10 +24,14 @@ class TrendRankingController extends Controller
     |
     */
 
-    public function index() {
-        // $hogehoge =  $this->searchTrends(1);
-        // Log::debug('$trends: '.print_r($hogehoge, true));
 
+    /**
+     * トレンドランキング画面を表示する。
+     * 
+     * @return view 'トレンドランキング画面'
+     */
+    public function index() {
+        Log::debug('TrendRanking index(関数呼び出し)');
         // $this->aggregateTweetTrend();
         // $this->aggregateCryptoPrice();
         return view('crypto.trendRanking');
@@ -35,11 +39,12 @@ class TrendRankingController extends Controller
 
 
     /**
-     * 仮想通貨の取引価格（24時間での最大、最小額）を集計してDB更新する。
-     * 
+     * 仮想通貨の取引価格（24時間での最大、最小額）を集計してDBを更新する。
+     * @param int $id
      * @return void
      */
     public function aggregateCryptoPrice(int $id) {
+        Log::debug('aggregateCryptoPrice(関数呼び出し)');
         // 現状はBTCのみの価格を取得
         $result = CoinCheckController::getTransactionPrice();
         
@@ -54,9 +59,8 @@ class TrendRankingController extends Controller
     }
 
 
-
     /**
-     * トレンドワードのツイート数を集計してDB更新する。
+     * トレンドワードのツイート数を集計してDBを更新する。
      * 
      * @return void
      */
@@ -101,7 +105,6 @@ class TrendRankingController extends Controller
             
             // UpdatedTimeテーブルに追加したレコードの時刻を読み出し
             $updated_time_result = UpdatedTime::where('time_index', '1')->where('created_at', 'LIKE', "$today%")->get(); 
-            // Log::debug('タイムテーブルの取得データ: '.print_r($updated_time_result, true));
             $start_day = date("Y-m-d H:i:s", strtotime($updated_time_result[0]->created_at));
             $start_id = $updated_time_result[0]->id;
 
@@ -139,8 +142,11 @@ class TrendRankingController extends Controller
     }
 
 
-    
-    // 集計が完了している最新データを取得する
+    /**
+     * 画面からの要求時、集計が完了している最新データを取得し、渡す。
+     * @param Request $request
+     * @return array $res_data
+     */
     public function reloadTrendData( Request $request) {
         Log::debug('reloadTrendData(関数呼び出し)');
         Log::debug('reloadTrendData時の$request: '.$request);
@@ -181,7 +187,6 @@ class TrendRankingController extends Controller
 
         // トレンドが取得できない場合は、空で返す
         $res_data = array();
-
         if(count($trends) === count($crypto_list)) {
             $res_data = [
                 'trends' => $trends,
@@ -192,10 +197,6 @@ class TrendRankingController extends Controller
         // Log::debug('初期表示データ：' . print_r($res_data, true));
         return $res_data;
     }
-
-
-
-
 
 
     // **
@@ -210,9 +211,8 @@ class TrendRankingController extends Controller
     private function startSearch(string $start_day, int $start_id) {
         Log::debug('startSearch(関数呼び出し)');
 
-         // crypto_data作成
+        // crypto_data作成
         $crypto_data = $this->createCryptoData();
-        // Log::debug('作成データ: '.print_r($crypto_data, true));
 
         // 作成したデータでtrendテーブルにレコードを新規追加する
         foreach($crypto_data as $key => $data) {
@@ -237,7 +237,7 @@ class TrendRankingController extends Controller
     }
 
     /**
-     * 前回の続きから集計データを取得する（前回のデータはDBから読み出す。）。
+     * 前回の続きから集計データを取得する（前回のデータはDBから読み出す）。
      * @param string $start_day, int $start_id
      * @return array $cyrpto_data
      */

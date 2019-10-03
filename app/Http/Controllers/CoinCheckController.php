@@ -18,6 +18,12 @@ class CoinCheckController extends Controller
     |
     */
 
+
+    /**
+     * 仮想通貨の取引価格（24時間での最大、最小額）を取得し、返す。（現状はBTCのみ）
+     * 
+     * @return array $res
+     */
     public static function getTransactionPrice() {
         $config = config('coincheck');
         $coincheck = new Coincheck($config['access_key'], $config['secret_key']);

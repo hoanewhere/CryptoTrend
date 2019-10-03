@@ -18,25 +18,33 @@ class TwitterController extends Controller
     |
     */
 
-    const MAX_TWEET_SEARCH = 450;
-    const MAX_USER_SEARCH = 900;
 
-    private static $searchd_tweet_cnt = 0;
-    public static $searchd_tweet_limit_flg = false;
+    const MAX_TWEET_SEARCH = 450; // twitterAPIのツイート検索時の上限(450/15min)
+    const MAX_USER_SEARCH = 900; // twitterAPIのユーザ検索時の上限(900/15min)
+    const USER_SEARCH_WORD = '憚る'; // ユーザ検索時のキーワード
+
+    private static $searchd_tweet_cnt = 0; // ツイート検索数
+    public static $searchd_tweet_limit_flg = false; // ツイート検索の上限フラグ
     
+
     /**
      * 指定されたワードの検索数を１時間、１日、１週間でそれぞれ計測する。
-     * @param string $word
-     * @return array $tweet_cnt
+     * @param string $word, string $start_day, array $data
+     * @return array $data
      */
     public static function countTweet(string $word, string $start_day, array $data) {
         // twitterAPIのパラメータ初期化
         $params = array();
 
         // 計測用のunixtime, date取得
+        $ut_one_hour_ago = strtotime($start_day . " -1 hour"); // 検索開始時間の１時間前のunixtime
+        $ut_a_day_ago = strtotime($start_day . " -1 day"); // 検索開始時間の１日前のunixtime
         $ut_a_week_ago = strtotime($start_day . " -1 week"); // 検索開始時間の１週間前のunixtime
+        $string_since_day = date("Y-m-d_H:i:s", strtotime($start_day . " -7 day")); // 検索期間の最初の時刻
+        $string_until_day = date("Y-m-d_H:i:s", strtotime($start_day)); // 検索期間の最後の時刻
 
         // アプリケーション認証
+        $config = config('twitter');
         $twitter = new TwitterOAuth($config['api_key'], $config['secret_key']);
         $access_token = $twitter->oauth2('oauth2/token', ['grant_type' => 'client_credentials']);
         $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], null, $access_token->access_token);
@@ -54,7 +62,6 @@ class TwitterController extends Controller
             Log::debug('twitter接続時のパラメータ:'. print_r($params, true));
             $result_std = $connection->get('search/tweets', $params);
             $result = json_decode(json_encode($result_std), true);
-            // Log::debug('ツイートresult:'. print_r($result, true));
 
             // レスポンスがエラーで返ってきた場合、limit_flgを立ててループを抜ける
             if (isset($result['errors'])) {
@@ -67,9 +74,6 @@ class TwitterController extends Controller
             // 各期間毎にツイートを集計
             foreach ($result['statuses'] as $arr) {
                 $ut_result = strtotime($arr['created_at']); // 取得データの日時をunixtimeに変換
-
-                // Log::debug('ut_result(取得データの生成時間):'. $ut_result);
-
                 if ($ut_result >= $ut_one_hour_ago) {
                     // Log::debug('ut_one_hour_ago(１時間前の時間):'. $ut_one_hour_ago);
                     $data['hour_cnt']++;
@@ -117,7 +121,12 @@ class TwitterController extends Controller
         return $data;
     }
 
-    
+
+    /**
+     * ログインユーザに紐づくツイッターアカウントでキーワードに関連するアカウントを取得し、返す。
+     * @param array $access_token
+     * @return array $result_arr
+     */
     public static function searchTweetUsers(array $access_token) {
         // 返り値の配列を初期化
         $result_arr = array();
@@ -127,7 +136,7 @@ class TwitterController extends Controller
         $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], $access_token['oauth_token'], $access_token['oauth_token_secret']);
 
         // パラメータを設定
-        $params = ['q' => '憚る', 'page' => 0, 'count' => 20];
+        $params = ['q' => self::USER_SEARCH_WORD, 'page' => 0, 'count' => 20];
 
         for($i=1; $i<=50; $i++) {
             // パラメータを更新してユーザを検索
@@ -175,11 +184,15 @@ class TwitterController extends Controller
                 $result_arr[] = $user_arr;
             }
         }
-
         return $result_arr;
     }
 
 
+    /**
+     * 引数からツイートの埋め込みhtmlを取得し、返す。
+     * @param TwitterOAuth $connection, string $screen_name, int $id
+     * @return string $html
+     */
     public static function getOembed(TwitterOAuth $connection, string $screen_name, int $id) {
         // 取得したいツイートのurlを作成
         $url = 'https://twitter.com/' . $screen_name . '/status/' . $id;
@@ -188,13 +201,15 @@ class TwitterController extends Controller
         $oembed = $connection->get('statuses/oembed', $params);
         $html = $oembed->html;
 
-        Log::debug('$oembedの結果:'. print_r($oembed, true));
-        Log::debug('htmlは？:'. $html);
-
         return $html;
     }
 
 
+    /**
+     * リクエストトークンを発行し、ツイッター連携の確認画面の表示URLを返す。
+     * 
+     * @return redirect($url)
+     */
     public static function authenticateUser() {
         Log::debug('authenticateUser(関数呼び出し)');
 
@@ -220,6 +235,12 @@ class TwitterController extends Controller
         return redirect($url);
     }
 
+
+    /**
+     * アクセストークンを発行し、返す。
+     * @param Request $request
+     * @return array $access_token
+     */
     public static function getAccessToken(Request $request) {
         Log::debug('callback後のリクエスト：'. $request);
 
@@ -244,6 +265,12 @@ class TwitterController extends Controller
         return $access_token;
     }
 
+
+    /**
+     * 対象アカウントをフォローする。
+     * @param array $access_token, string $screen_name
+     * @return void
+     */
     public static function createFriendships(array $access_token, string $screen_name) {
         // ログインユーザにひもづくアクセストークンで認証する
         $config = config('twitter');
@@ -254,6 +281,12 @@ class TwitterController extends Controller
         return;
     }
 
+
+    /**
+     * 対象アカウントをフォロー解除する。
+     * @param array $access_token, string $screen_name
+     * @return void
+     */
     public static function destroyFriendships(array $access_token, string $screen_name) {
         // ログインユーザにひもづくアクセストークンで認証する
         $config = config('twitter');

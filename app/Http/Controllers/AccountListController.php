@@ -25,29 +25,44 @@ class AccountListController extends Controller
     |
     */
 
-    const MAX_FOLLOW_DAY_LIMIT = 1000;
 
+    const MAX_FOLLOW_DAY_LIMIT = 1000; // twitterAPIの一日でのフォロー人数制限
+
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->middleware('auth');
     }
 
+
+    /**
+     * ツイッターアカウントとの連携を確認し、アカウント一覧画面を表示する。（一覧データ未取得の場合は取得処理も実施）
+     * 
+     * @return view 'アカウント一覧画面'
+     */
     public function index() {
         $login_user = Auth::user();
         if(empty($login_user->access_token)) {
             return TwitterController::authenticateUser();
         }
 
-
-        // test
-        // $this->getUsersAllAcounts();
-        // $this->toFollowAutoLimitFifteen();
-        // self::clearFollowCntOfDayLimit();
-
+        // アカウント取得実施(既に実施している場合は何もしない)
         $this->getUsers();
+
         return view('crypto.accountList');
     }
 
+
+    /**
+     * ツイッター連携でのコールバック時に呼ばれる処理(アクセストークンを取得、DB保存し、一覧画面に戻る)
+     * 
+     * @return view 'アカウント一覧画面'
+     */
     public function callback(Request $request) {
         Log::debug('callback後のメソッド呼び出し');
         // アクセストークンを取得する
@@ -70,7 +85,7 @@ class AccountListController extends Controller
     
 
     /**
-     * 仮想通貨に関連するユーザを取得し、DBに保存する。
+     * ログインユーザにひもづくアカウントで仮想通貨に関連するユーザを取得し、DBに保存する。
      * 
      * @return void
      */
@@ -106,6 +121,12 @@ class AccountListController extends Controller
         $this->saveUsers($users, $login_user_id);
     }
 
+
+    /**
+     * ツイッター連携してる全ユーザに対して仮想通貨に関連するユーザを取得し、DBに保存する。
+     * 
+     * @return void
+     */
     public function getUsersAllAcounts() {
         Log::debug('getUsersAllAcounts(関数呼び出し)');
         $today = date('Y-m-d');
@@ -142,6 +163,11 @@ class AccountListController extends Controller
     }
 
 
+    /**
+     * ログインユーザにひもづくアカウントをDBから読み出し、渡す。
+     * 
+     * @return array $res_data
+     */
     public function reloadTweetData() {
         Log::debug('reloadTweetData(関数呼び出し)');
         $login_user = Auth::user();
@@ -171,11 +197,17 @@ class AccountListController extends Controller
     }
 
 
+    /**
+     * 自動フォローフラグがONのユーザに対して、自動フォローを実施する。(15人/15minの制限あり)
+     * 
+     * @return void
+     */
     public function toFollowAutoLimitFifteen() {
         Log::debug('toFollowAutoLimitFifteen(関数呼び出し)');
 
+        // 自動フォローフラグONのユーザを取得
         $auto_flg_users = FollowManagement::where('auto_follow_flg', true)->get();
-        Log::debug('autoflgが立っているuser: ' . print_r($auto_flg_users, true));
+        
         foreach($auto_flg_users as $auto_flg_user) { // auto_flgが立っているuserに対して処理を実施
             // 未フォローのアカウントを15件取得
             $login_user_id = $auto_flg_user->login_user_id;
@@ -200,10 +232,22 @@ class AccountListController extends Controller
         }
     }
 
+
+    /**
+     * ツイッターフォロー数の一日の制限数をクリアする。(1000人/1dayの制限あり)
+     * 
+     * @return void
+     */
     public static function clearFollowCntOfDayLimit() {
         $follow_management = FollowManagement::where('id', '>=', 1)->update(['day_cnt' => 0]);
     }
 
+
+    /**
+     * 自動フォローでフォローしたユーザの内部データの情報（フォロー）を更新する。
+     * @param int $record_id, string $screen_name, int $user_id
+     * @return void
+     */
     public static function toFollowAuto( int $record_id, string $screen_name, int $user_id) {
         Log::debug('toFollowAuto(関数呼び出し)'); 
 
@@ -215,6 +259,12 @@ class AccountListController extends Controller
         $searched_account = SearchedAccount::where('id', $record_id)->update(['account_data->following' => true]);
     }
 
+
+    /**
+     * ユーザ操作でフォローしたユーザの内部データの情報（フォロー）を更新する。
+     * @param Request $request
+     * @return void
+     */
     public function toFollow( Request $request) {
         Log::debug('toFollow(関数呼び出し)');
         $request->validate([
@@ -233,6 +283,11 @@ class AccountListController extends Controller
     }
 
 
+    /**
+     * ユーザ操作でフォロー解除したユーザの内部データの情報（フォロー解除）を更新する。
+     * @param Request $request
+     * @return void
+     */
     public function unfollow( Request $request) {
         Log::debug('unfollow(関数呼び出し)');
         $request->validate([
@@ -248,6 +303,12 @@ class AccountListController extends Controller
         $searched_account = SearchedAccount::where('id', $request->record_id)->update(['account_data->following' => false]);
     }
 
+
+    /**
+     * 自動フォロー情報を制御する（追加、変更）。
+     * @param Request $request
+     * @return void
+     */
     public function toggleAutoFollow( Request $request ) {
         Log::debug('toggleAutoFollow(関数呼び出し)');
         $request->validate([
@@ -262,16 +323,13 @@ class AccountListController extends Controller
     }
 
 
-
     // **
     // 以下 private関数
     // **
 
-
-
     /**
      * 仮想通貨に関連するユーザを取得する。
-     * 
+     * @param array $access_token
      * @return array $result_arr
      */
     private function searchUsers(array $access_token) {
@@ -302,7 +360,7 @@ class AccountListController extends Controller
             $searched_account->fill([
                 'account_data' => $user_json,
                 'update_time_id' => $updated_time[0]->id,
-                'login_user_id' => $login_id // 不要？
+                'login_user_id' => $login_id
             ]);
             $searched_account->save();
         }

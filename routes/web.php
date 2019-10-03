@@ -20,8 +20,6 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 // 全体
-// Route::get('/crypto/login', 'CryptoController@test_login');
-Route::get('/crypto/register', 'CryptoController@test_register');
 Route::get('/crypto/reloadNavData', 'CryptoController@reloadNavData');
 
 // トレンドランキング

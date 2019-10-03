@@ -7,6 +7,21 @@ use Illuminate\Support\Facades\Auth;
 
 class CryptoController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Crypto Controller
+    |--------------------------------------------------------------------------
+    |
+    | 全画面に共通する情報をview側に渡すコントローラ
+    |
+    */
+
+
+    /**
+     * Navgation bar に表示する情報を取得し、返す。
+     * 
+     * @return array $nav_list
+     */
     public function reloadNavData() {
         // 返り値宣言
         $nav_list = array();
@@ -83,28 +98,5 @@ class CryptoController extends Controller
             }
         }
         return $nav_list;
-    }
-
-    public function index() {
-        return view('crypto.trendRanking');
-    }
-
-    public function accountList() {
-        return view('crypto.accountList');
-    }
-
-    public function test_login() {
-        return view('crypto.tmp_login');
-    }
-
-    public function test_register() {
-        return view('crypto.tmp_register');
-    }
-
-
-
-
-    public function test() {
-        return view('crypto.test');
     }
 }
