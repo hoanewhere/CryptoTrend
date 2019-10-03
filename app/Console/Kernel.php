@@ -36,7 +36,7 @@ class Kernel extends ConsoleKernel
         ->name('task-aggregateTweetTrend')
         ->withoutOverlapping();
 
-        // 一日に一回、対象のツイッターアカウントを取得する
+        // 一日に一回、アカウント連携している全ユーザに対して、対象のツイッターアカウントを取得する
         $schedule->call(function() {
             $account_list1 = New AccountListController();
             $account_list1->getUsersAllAcounts();
