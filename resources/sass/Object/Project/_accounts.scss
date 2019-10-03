@@ -1,0 +1,37 @@
+.p-accounts {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.p-account {
+    padding: 3rem 1rem 1rem;
+    width: 100%;
+    max-width: $layout-width-innerAccount;
+}
+
+.p-account_inner {
+    position: relative;
+    width: 100%;
+    background-color: $co-base0;
+    border: 1px solid $co-base2;
+    border-radius: 0.35rem;
+    padding: .5rem 1rem 1rem;
+}
+
+.p-account_inner-img {
+    position: absolute;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    top: -2rem;
+}
+
+.p-account_inner-btn {
+    text-align: right;
+}
+
+.p-account_inner-row {
+    display: flex;
+    
+}

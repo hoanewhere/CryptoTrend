@@ -1,0 +1,23 @@
+.c-form {
+    background-color: $co-base0;
+    margin: 1rem;
+    padding: 0 1.5rem;
+    max-width: $layout-width-innerForm;
+    border: 1px solid $co-base2;
+    border-radius: 5px;
+    @include mq(md) {
+        margin: 1rem auto;
+    }
+}
+
+.c-form_title {
+    text-align: center;
+    padding: 1rem;
+}
+
+.c-form_content-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+

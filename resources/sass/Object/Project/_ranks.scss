@@ -1,0 +1,66 @@
+.p-ranks {
+    margin: 1rem;
+    max-width: $layout-width-innerMain;
+    @include mq(md) {
+        margin: 1rem auto;
+    }
+    @include mq(lg) {
+        margin: 1rem;
+    }
+}
+
+.p-rank {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: $co-base0;
+    border: 1px solid $co-base2;
+    border-radius: 0.35rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+.p-rank:last-of-type {
+    margin-bottom: 0;
+}
+
+.p-rank:before {
+    content: attr(rank-cnt)"";
+    position: absolute;
+    width: 3rem;
+    height: 3rem;
+    line-height: 3rem;
+    font-size: 2rem;
+    border-radius: 0.35rem;
+    border: 1px solid $co-base99;
+    background-color: $co-base99;
+    color: $co-base0;
+    text-align: center;
+    top: -1px;
+    left: -1px;
+    @include mq(lg) {
+        width: 4rem;
+        height: 4rem;
+        line-height: 4rem;
+        font-size: 3rem;
+    }
+}
+
+.p-rank:nth-of-type(1):before {
+    border: 1px solid $co-rank1;
+    background-color: $co-rank1;
+    color: $co-base0;
+}
+
+.p-rank:nth-of-type(2):before {
+    border: 1px solid $co-rank2;
+    background-color: $co-rank2;
+    color: $co-base0;
+}
+
+.p-rank:nth-of-type(3):before {
+    border: 1px solid $co-rank3;
+    background-color: $co-rank3;
+    color: $co-base0;
+}
+
