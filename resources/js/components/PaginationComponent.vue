@@ -1,14 +1,21 @@
 <template>
 <ul class="c-pagination">
+
+    <!-- prevボタン -->
     <li class="c-pagination_item" v-if="hasPrev">
         <a class="c-pagination_link" href="" @click.prevent="move(data.current_page-1)">前へ</a>
     </li>
+
+    <!-- ページボタン -->
     <li :class="getPageClass(page)" v-for="(page, index) in pages" :key="index">
         <a class="c-pagination_link" href="" @click.prevent="move(page)" v-text="page"></a>
     </li>
+
+    <!-- nextボタン -->
     <li class="c-pagination_item" v-if="hasNext">
         <a class="c-pagination_link" href="" @click.prevent="move(data.current_page+1)">次へ</a>
     </li>
+
 </ul>
 </template>
 
@@ -30,12 +37,12 @@
         mounted() {
         },
         methods: {
-            move(page) {
+            move(page) { // 各ボタン押下時、親側に処理を通知する
                 if(this.data.current_page != page) {
                     this.$emit('move-page', page)
                 }
             },
-            getPageClass(page) {
+            getPageClass(page) { // 現在のページ番号にactiveをつける
                 let classes = ['c-pagination_item'];
 
                 if(this.data.current_page == page) {
@@ -45,13 +52,13 @@
             }
         },
         computed: {
-            hasPrev() {
+            hasPrev() { // prevボタンの表示、非表示
                 return (this.data.prev_page_url != null);
             },
-            hasNext() {
+            hasNext() { // nextボタンの表示、非表示
                 return (this.data.next_page_url != null);
             },
-            pages() {
+            pages() { // 表示するpage番号を取得
                 let pages = [];
 
                 if(this.data.last_page <= MAX_SHOW_PAGE) {

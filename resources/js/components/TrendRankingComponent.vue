@@ -10,7 +10,7 @@
         <!-- search -->
         <div class="p-search-lg u-ta-c p-trendRanking_child" :class="{'p-search': searchActive}">
             <h3 class="c-title_article u-mb-lg">表示条件</h3>
-            <form action="">
+            <form>
                 <div class="p-search_mono u-mb-lg">
                     <label for="searchTime" class="c-form-title c-title_sub u-mb-sm">対象時間</label>
                     <select name="" id="searchTime" v-model="selectedSearchTerm" class="c-input_select u-w80p u-mx-a">
@@ -50,6 +50,7 @@
                 </div>
             </div>
         </div>
+        
     </div>
 </div>
 </template>
@@ -92,7 +93,7 @@
             }
         },
         methods: {
-            reloadTrendData: function() {
+            reloadTrendData: function() { // トレンドデータを取得
                 axios.get('/index/reloadTrendData/' + this.selectedSearchTerm)
                 .then((res) => {
                     this.trends = res.data.trends
@@ -107,7 +108,7 @@
 
                 })
             },
-            display: function() {
+            display: function() {　// 選択された対象期間で表示するツイート数を切り替える
                 this.filteredTrends = []
                 let trendCnt = 0
 
@@ -135,7 +136,7 @@
                     })
                 })
             },
-            searchClick: function() {
+            searchClick: function() { // 検索画面の表示
                 this.searchActive = true
             }
         }

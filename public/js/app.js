@@ -1733,6 +1733,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1757,6 +1764,7 @@ __webpack_require__.r(__webpack_exports__);
     reloadData: function reloadData() {
       var _this = this;
 
+      // アカウントデータ取得
       var url = "/accountList/reloadTweetData?page=" + this.page;
       axios.get(url).then(function (res) {
         _this.accounts = res.data.accounts.data;
@@ -1771,6 +1779,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     toFollow: function toFollow(account) {
+      // アカウントフォロー処理
       axios.post('accountList/toFollow', {
         record_id: account.id,
         screen_name: account.account_data.screen_name
@@ -1779,6 +1788,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     unfollow: function unfollow(account) {
+      // アカウントフォロー解除処理
       axios.post('accountList/unfollow', {
         record_id: account.id,
         screen_name: account.account_data.screen_name
@@ -1787,6 +1797,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     toggleAutoFollow: function toggleAutoFollow() {
+      // 自動フォローの切り替え処理
       if (this.autoFollowFlg == true) {
         this.autoFollowFlg = false;
       } else {
@@ -1800,6 +1811,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     movePage: function movePage(page) {
+      // ページネーションのページ移動処理
       this.page = page;
       this.reloadData();
     }
@@ -1876,6 +1888,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1890,11 +1909,13 @@ __webpack_require__.r(__webpack_exports__);
     reloadData: function reloadData() {
       var _this = this;
 
+      // ログイン状態や画面毎に異なるNavのデータを取得
       axios.get('/crypto/reloadNavData').then(function (res) {
         _this.navList = res.data;
       });
     },
     navClick: function navClick() {
+      // ハンバーガーアイコン押下時の処理
       this.navActive = !this.navActive;
     }
   }
@@ -1926,6 +1947,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1940,6 +1963,7 @@ __webpack_require__.r(__webpack_exports__);
     reloadNewsData: function reloadNewsData() {
       var _this = this;
 
+      // ニュースデータ取得
       axios.get('/newsList/reloadNewsData').then(function (res) {
         _this.newsList = res.data;
       });
@@ -1972,6 +1996,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 var MAX_SHOW_PAGE = 5;
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -1988,11 +2019,13 @@ var MAX_SHOW_PAGE = 5;
   mounted: function mounted() {},
   methods: {
     move: function move(page) {
+      // 各ボタン押下時、親側に処理を通知する
       if (this.data.current_page != page) {
         this.$emit('move-page', page);
       }
     },
     getPageClass: function getPageClass(page) {
+      // 現在のページ番号にactiveをつける
       var classes = ['c-pagination_item'];
 
       if (this.data.current_page == page) {
@@ -2004,12 +2037,15 @@ var MAX_SHOW_PAGE = 5;
   },
   computed: {
     hasPrev: function hasPrev() {
+      // prevボタンの表示、非表示
       return this.data.prev_page_url != null;
     },
     hasNext: function hasNext() {
+      // nextボタンの表示、非表示
       return this.data.next_page_url != null;
     },
     pages: function pages() {
+      // 表示するpage番号を取得
       var pages = [];
 
       if (this.data.last_page <= MAX_SHOW_PAGE) {
@@ -2052,6 +2088,7 @@ var MAX_SHOW_PAGE = 5;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -2168,6 +2205,7 @@ __webpack_require__.r(__webpack_exports__);
     reloadTrendData: function reloadTrendData() {
       var _this = this;
 
+      // トレンドデータを取得
       axios.get('/index/reloadTrendData/' + this.selectedSearchTerm).then(function (res) {
         _this.trends = res.data.trends;
         _this.cryptoList = res.data.crypto_list;
@@ -2206,6 +2244,7 @@ __webpack_require__.r(__webpack_exports__);
     display: function display() {
       var _this2 = this;
 
+      // 選択された対象期間で表示するツイート数を切り替える
       this.filteredTrends = [];
       var trendCnt = 0;
       this.trends.forEach(function (trend) {
@@ -2238,6 +2277,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     searchClick: function searchClick() {
+      // 検索画面の表示
       this.searchActive = true;
     }
   }
@@ -38025,7 +38065,7 @@ var render = function() {
             _vm._v("表示条件")
           ]),
           _vm._v(" "),
-          _c("form", { attrs: { action: "" } }, [
+          _c("form", [
             _c("div", { staticClass: "p-search_mono u-mb-lg" }, [
               _c(
                 "label",

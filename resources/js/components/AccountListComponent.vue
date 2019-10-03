@@ -8,7 +8,11 @@
         <button v-if="autoFollowFlg == true" type="button" class="c-button c-button-peace" @click="toggleAutoFollow">自動フォロー ON</button>
         <button v-else type="button" class="c-button c-button-dark" @click="toggleAutoFollow">自動フォロー OFF</button>
     </div>
+
+    <!-- ページネーション -->
     <pagination-component :data="accountsPaginate" @move-page="movePage($event)"></pagination-component>
+    
+    <!-- アカウント一覧 -->
     <div class="p-accounts">
         <div class="p-account" v-for="account in accounts" :key="account.id">
             <div class="p-account_inner">
@@ -30,7 +34,10 @@
             </div>
         </div>
     </div>
+
+    <!-- ページネーション -->
     <pagination-component :data="accountsPaginate" @move-page="movePage($event)"></pagination-component>
+
 </div>
 </template>
 
@@ -58,7 +65,7 @@
 
         },
         methods: {
-            reloadData: function() {
+            reloadData: function() { // アカウントデータ取得
                 const url = "/accountList/reloadTweetData?page=" + this.page
 
                 axios.get(url)
@@ -75,7 +82,7 @@
                     }
                 })
             },
-            toFollow: function(account) {
+            toFollow: function(account) { // アカウントフォロー処理
                 axios.post('accountList/toFollow', {
                     record_id: account.id,
                     screen_name: account.account_data.screen_name
@@ -83,7 +90,7 @@
                     account.account_data.following = true;
                 })
             },
-            unfollow: function(account) {
+            unfollow: function(account) { // アカウントフォロー解除処理
                 axios.post('accountList/unfollow', {
                     record_id: account.id,
                     screen_name: account.account_data.screen_name
@@ -91,7 +98,7 @@
                     account.account_data.following = false;
                 })
             },
-            toggleAutoFollow: function() {
+            toggleAutoFollow: function() { // 自動フォローの切り替え処理
                 if(this.autoFollowFlg == true) {
                     this.autoFollowFlg = false
                 } else {
@@ -103,7 +110,7 @@
                     console.log('toggleautofollow完了')
                 })
             },
-            movePage(page) {
+            movePage(page) { // ページネーションのページ移動処理
                 this.page = page
                 this.reloadData()
             }

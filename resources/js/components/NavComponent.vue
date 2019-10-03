@@ -1,10 +1,14 @@
 <template>
 <nav class="c-nav">
+
+    <!-- ハンバーガーアイコン -->
     <div class="c-nav_trigger" @click="navClick">
         <span class="c-nav_trigger-parts" :class="{'is-active': navActive}"></span>
         <span class="c-nav_trigger-parts" :class="{'is-active': navActive}"></span>
         <span class="c-nav_trigger-parts" :class="{'is-active': navActive}"></span>
     </div>
+
+    <!-- スマホ時のNav -->
     <div class="c-nav-sm" v-show="navActive">
         <ul class="c-nav_ul">
             <li class="c-nav_li" v-for="(nav, index) in navList" :key="index">
@@ -13,6 +17,8 @@
             </li>
         </ul>
     </div>
+
+    <!-- タブレット、PC時のNav -->
     <div class="c-nav-md">
         <ul class="c-nav_ul-md">
             <li class="c-nav_li" v-for="(nav, index) in navList" :key="index">
@@ -21,6 +27,7 @@
             </li>
         </ul>
     </div>
+
 </nav>
 </template>
 
@@ -36,13 +43,13 @@
             this.reloadData()
         },
         methods: {
-            reloadData: function() {
+            reloadData: function() { // ログイン状態や画面毎に異なるNavのデータを取得
                 axios.get('/crypto/reloadNavData')
                 .then((res) => {
                     this.navList = res.data
                 })
             },
-            navClick: function() {
+            navClick: function() { // ハンバーガーアイコン押下時の処理
                 this.navActive = !this.navActive
             }
         }
