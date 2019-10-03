@@ -34,15 +34,7 @@ class TwitterController extends Controller
         $params = array();
 
         // 計測用のunixtime, date取得
-        $ut_one_hour_ago = strtotime($start_day . " -1 hour");
-        $ut_a_day_ago = strtotime($start_day . " -1 day");
-        $string_since_day = date("Y-m-d_H:i:s", strtotime($start_day . " -7 day"));
-        $string_until_day = date("Y-m-d_H:i:s", strtotime($start_day));
-
-        $config = config('twitter');
-
-        // クライアントIDでツイッター認証
-        // $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], $config['access_token'], $config['access_token_secret']);
+        $ut_a_week_ago = strtotime($start_day . " -1 week"); // 検索開始時間の１週間前のunixtime
 
         // アプリケーション認証
         $twitter = new TwitterOAuth($config['api_key'], $config['secret_key']);
@@ -84,11 +76,14 @@ class TwitterController extends Controller
                     $data['day_cnt']++;
                     $data['week_cnt']++;
                 } else if ($ut_result >= $ut_a_day_ago) {
-                    // Log::debug('ut_one_hour_ago(１日前の時間):'. $ut_a_day_ago);
+                    // Log::debug('ut_a_day_ago(１日前の時間):'. $ut_a_day_ago);
                     $data['day_cnt']++;
                     $data['week_cnt']++;
-                } else {
+                } else if ($ut_result >= $ut_a_week_ago) {
+                    // Log::debug('ut_a_week_ago(１週間前の時間):'. $ut_a_week_ago);
                     $data['week_cnt']++;
+                } else {
+                    // 何もしない
                 }
             }
 
