@@ -11,18 +11,19 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/home', 'HomeController@index')->name('home');
 
 // 全体
 Route::get('/crypto/reloadNavData', 'CryptoController@reloadNavData');
 
 // トレンドランキング
+Route::get('/', 'TrendRankingController@index');
 Route::get('/index', 'TrendRankingController@index');
 Route::get('/index/reloadTrendData/{term}', 'TrendRankingController@reloadTrendData');
 
