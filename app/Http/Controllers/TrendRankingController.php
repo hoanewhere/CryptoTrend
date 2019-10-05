@@ -86,8 +86,10 @@ class TrendRankingController extends Controller
 
         if($time_flg) { //現在日付のレコードがある場合
             if ($complete_flg) { // 現在日付の情報取得が完了している場合
+                Log::info('集計済み');
                 return;
             } else { // 現在日付の情報収集が未完了の場合
+                Log::info('集計途中');
                 $start_day = date("Y-m-d H:i:s", strtotime($updated_time_result[0]->created_at)); //timestampからstringに変換。右記参照 $start_day = date('Y-m-d_H:i:s', strtotime(timeテーブルのtimestamp));
                 $start_id = $updated_time_result[0]->id;
 
@@ -95,6 +97,7 @@ class TrendRankingController extends Controller
                 $crypto_data = $this->resumeSearch($start_day, $start_id);
             }
         } else { //現在日付のレコードがない場合
+            Log::info('集計未実施');
             // UpdatedTimeテーブルにレコード追加
             $updated_time = New UpdatedTime();
             $updated_time->fill([
@@ -130,6 +133,7 @@ class TrendRankingController extends Controller
         foreach($crypto_data as $item) {
             if($item['complete_flg'] == false) {
                 Log::debug('集計完了(１５分後に再開):');
+                Log::info('集計完了(１0分後に再開):');
                 return; // 一つでも未完了のものがあれば処理終了。15分後に処理再開。
             }
         }
@@ -139,6 +143,7 @@ class TrendRankingController extends Controller
         ]);
         $updated_time_result[0]->save();
         Log::debug('集計完了:');
+        Log::info('集計完了');
     }
 
 
