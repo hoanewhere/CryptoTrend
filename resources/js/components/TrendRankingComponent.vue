@@ -38,7 +38,7 @@
         <div class="p-ranks p-trendRanking_child">
             <div class="p-rank" :rank-cnt="trend.rank" v-for="trend in filteredTrends" :key="trend.id">
                 <div class="p-rank_top u-ta-c u-mb-md">
-                    <h3 class="c-title_article">{{ trend.crypto.crypto }}</h3>
+                    <h3 class="c-title_article u-mb-sm">{{ trend.crypto.crypto }}</h3>
                     <p>ツイート数：<span>{{ trend.tweet_cnt }}</span></p>
                 </div>
                 <div class="p-rank_buttom u-ta-c">
