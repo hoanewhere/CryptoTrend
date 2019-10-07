@@ -278,6 +278,9 @@ class TrendRankingController extends Controller
         Log::debug('引数:start_day:' . $start_day);
         // Log::debug('引数:crypto_data:' . print_r($crypto_data, true));
 
+        // タイムアウト用に現在時刻を取得
+        $started_time = time();
+
         // 仮想通貨の数だけループする
         foreach($crypto_data as $key => &$data) {
             // Log::debug('ループのdata:' . print_r($data, true));
@@ -288,7 +291,7 @@ class TrendRankingController extends Controller
 
             // 集計が完了していない単語のツイート数を取得
             if ($data['complete_flg'] == false) {
-                $data = TwitterController::countTweet($word, $start_day, $data);
+                $data = TwitterController::countTweet($word, $start_day, $data, $started_time);
             }
 
             // twitterの制限状態を確認(フラグが立っている場合、下ろしてループ抜ける)

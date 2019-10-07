@@ -29,10 +29,10 @@ class TwitterController extends Controller
 
     /**
      * 指定されたワードの検索数を１時間、１日、１週間でそれぞれ計測する。
-     * @param string $word, string $start_day, array $data
+     * @param string $word, string $start_day, array $data, int $started_time
      * @return array $data
      */
-    public static function countTweet(string $word, string $start_day, array $data) {
+    public static function countTweet(string $word, string $start_day, array $data, int $started_time) {
         // twitterAPIのパラメータ初期化
         $params = array();
 
@@ -48,6 +48,7 @@ class TwitterController extends Controller
         $twitter = new TwitterOAuth($config['api_key'], $config['secret_key']);
         $access_token = $twitter->oauth2('oauth2/token', ['grant_type' => 'client_credentials']);
         $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], null, $access_token->access_token);
+        $connection->setTimeouts(10, 10);
         
         // パラメータを設定
         if ($data['next_params']){
@@ -58,8 +59,16 @@ class TwitterController extends Controller
         
         // 全件取得 or アクセス制限の上限までループ
         for($i=0; $i<self::MAX_TWEET_SEARCH; $i++) {
-            // Log::debug('twitter接続開始:');
-            Log::debug('twitter接続時のパラメータ:'. print_r($params, true));
+            // タイムアウトチェック
+            $now = time();
+            if($now - $started_time >= 600) {
+                Log::debug('タイムアウト(countTweet):');
+                self::$searchd_tweet_limit_flg = true;
+                self::$searchd_tweet_cnt = 0;
+                break;
+            }
+
+            // Log::debug('twitter接続時のパラメータ:'. print_r($params, true));
             $result_std = $connection->get('search/tweets', $params);
             $result = json_decode(json_encode($result_std), true);
 
@@ -134,6 +143,7 @@ class TwitterController extends Controller
         // ログインユーザにひもづくアクセストークンで認証する
         $config = config('twitter');
         $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], $access_token['oauth_token'], $access_token['oauth_token_secret']);
+        $connection->setTimeouts(10, 10);
 
         // パラメータを設定
         $params = ['q' => self::USER_SEARCH_WORD, 'page' => 0, 'count' => 20];
@@ -217,6 +227,7 @@ class TwitterController extends Controller
         $config = config('twitter');
         Log::debug('コールバックurl'.$config['call_back_url']);
         $connection = new TwitterOAuth($config['api_key'], $config['secret_key']);
+        $connection->setTimeouts(10, 10);
         $request_token = $connection->oauth("oauth/request_token", array("oauth_callback" => $config['call_back_url']));
 
         Log::debug('リクエストトークン'.$request_token['oauth_token']);
@@ -256,6 +267,7 @@ class TwitterController extends Controller
             $oauth_token,
             $oauth_token_secret
         );
+        $connection->setTimeouts(10, 10);
         $access_token = $connection->oauth('oauth/access_token', array(
             'oauth_verifier' => $request->oauth_verifier,
             'oauth_token' => $request->oauth_token,
@@ -275,6 +287,7 @@ class TwitterController extends Controller
         // ログインユーザにひもづくアクセストークンで認証する
         $config = config('twitter');
         $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], $access_token['oauth_token'], $access_token['oauth_token_secret']);
+        $connection->setTimeouts(10, 10);
 
         // 対象IDをフォローする
         $connection->post('friendships/create', array('screen_name' => $screen_name));
@@ -291,6 +304,7 @@ class TwitterController extends Controller
         // ログインユーザにひもづくアクセストークンで認証する
         $config = config('twitter');
         $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], $access_token['oauth_token'], $access_token['oauth_token_secret']);
+        $connection->setTimeouts(10, 10);
 
         // 対象IDをフォローする
         $connection->post('friendships/destroy', array('screen_name' => $screen_name));
