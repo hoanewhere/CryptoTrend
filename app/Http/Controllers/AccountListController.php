@@ -202,8 +202,8 @@ class AccountListController extends Controller
      * 
      * @return void
      */
-    public function toFollowAutoLimitFifteen() {
-        Log::debug('toFollowAutoLimitFifteen(関数呼び出し)');
+    public function toFollowAutoLimit() {
+        Log::debug('toFollowAutoLimit(関数呼び出し)');
 
         // 自動フォローフラグONのユーザを取得
         $auto_flg_users = FollowManagement::where('auto_follow_flg', true)->get();
