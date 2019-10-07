@@ -171,11 +171,6 @@ hr {
   padding: 0;
 }
 
-input,
-select {
-  vertical-align: middle;
-}
-
 *,
 *::before,
 *::after {
@@ -416,7 +411,6 @@ textarea {
 
 .c-input_checkbox {
   margin: 0;
-  vertical-align: middle;
 }
 
 .c-button {
