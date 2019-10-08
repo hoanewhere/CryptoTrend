@@ -32,8 +32,6 @@ class TrendRankingController extends Controller
      */
     public function index() {
         Log::debug('TrendRanking index(関数呼び出し)');
-        // $this->aggregateTweetTrend();
-        // $this->aggregateCryptoPrice();
         return view('crypto.trendRanking');
     }
 
