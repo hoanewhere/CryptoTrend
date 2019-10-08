@@ -38,6 +38,14 @@
 
         {{-- main --}}
         <main class="l-header_pt l-body_main">
+            <div>
+                @if (session('status'))
+                    <div class="c-alert c-alert-success" role="alert">
+                        {{ session('status') }}
+                    </div>
+                @endif
+            </div>
+
             @yield('content')
         </main>
 
