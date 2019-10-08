@@ -1740,6 +1740,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2088,6 +2090,8 @@ var MAX_SHOW_PAGE = 5;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
 //
 //
 //
@@ -37637,78 +37641,88 @@ var render = function() {
         "div",
         { staticClass: "p-accounts" },
         _vm._l(_vm.accounts, function(account) {
-          return _c("div", { key: account.id, staticClass: "p-account" }, [
-            _c("div", { staticClass: "p-account_inner" }, [
-              _c("img", {
-                staticClass: "p-account_inner-img",
-                attrs: { src: account.account_data.profile_image_url, alt: "" }
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "p-account_inner-btn u-mb-md" }, [
-                account.account_data.following === false
-                  ? _c(
-                      "button",
-                      {
-                        staticClass: "c-button c-button-peace",
-                        attrs: { type: "button" },
-                        on: {
-                          click: function($event) {
-                            return _vm.toFollow(account)
-                          }
-                        }
-                      },
-                      [_vm._v("フォローする")]
-                    )
-                  : _c(
-                      "button",
-                      {
-                        staticClass: "c-button c-button-dark",
-                        attrs: { type: "button" },
-                        on: {
-                          click: function($event) {
-                            return _vm.unfollow(account)
-                          }
-                        }
-                      },
-                      [_vm._v("フォロー済")]
-                    )
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "u-mb-sm" }, [
-                _vm._v(_vm._s(account.account_data.name))
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "u-mb-sm" }, [
-                _vm._v(_vm._s(account.account_data.screen_name))
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "p-account_inner-row u-mb-sm" }, [
-                _c("p", { staticClass: "u-mr-lg" }, [
-                  _vm._v("フォロー"),
-                  _c("span", [
-                    _vm._v(_vm._s(account.account_data.friends_count))
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("p", [
-                  _vm._v("フォロワー"),
-                  _c("span", [
-                    _vm._v(_vm._s(account.account_data.followers_count))
-                  ])
+          return _c(
+            "div",
+            { key: account.id, staticClass: "p-account" },
+            [
+              _c("transition", { attrs: { name: "c-tra-fade", appear: "" } }, [
+                _c("div", { staticClass: "p-account_inner" }, [
+                  _c("img", {
+                    staticClass: "p-account_inner-img",
+                    attrs: {
+                      src: account.account_data.profile_image_url,
+                      alt: ""
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "p-account_inner-btn u-mb-md" }, [
+                    account.account_data.following === false
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "c-button c-button-peace",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                return _vm.toFollow(account)
+                              }
+                            }
+                          },
+                          [_vm._v("フォローする")]
+                        )
+                      : _c(
+                          "button",
+                          {
+                            staticClass: "c-button c-button-dark",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                return _vm.unfollow(account)
+                              }
+                            }
+                          },
+                          [_vm._v("フォロー済")]
+                        )
+                  ]),
+                  _vm._v(" "),
+                  _c("p", { staticClass: "u-mb-sm" }, [
+                    _vm._v(_vm._s(account.account_data.name))
+                  ]),
+                  _vm._v(" "),
+                  _c("p", { staticClass: "u-mb-sm" }, [
+                    _vm._v(_vm._s(account.account_data.screen_name))
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "p-account_inner-row u-mb-sm" }, [
+                    _c("p", { staticClass: "u-mr-lg" }, [
+                      _vm._v("フォロー"),
+                      _c("span", [
+                        _vm._v(_vm._s(account.account_data.friends_count))
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("p", [
+                      _vm._v("フォロワー"),
+                      _c("span", [
+                        _vm._v(_vm._s(account.account_data.followers_count))
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "u-mb-sm" }, [
+                    _c("p", [_vm._v(_vm._s(account.account_data.description))])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", {
+                    domProps: {
+                      innerHTML: _vm._s(account.account_data.latest_html)
+                    }
+                  })
                 ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "u-mb-sm" }, [
-                _c("p", [_vm._v(_vm._s(account.account_data.description))])
-              ]),
-              _vm._v(" "),
-              _c("div", {
-                domProps: {
-                  innerHTML: _vm._s(account.account_data.latest_html)
-                }
-              })
-            ])
-          ])
+              ])
+            ],
+            1
+          )
         }),
         0
       ),
@@ -38263,52 +38277,63 @@ var render = function() {
       _c(
         "div",
         { staticClass: "p-ranks p-trendRanking_child" },
-        _vm._l(_vm.filteredTrends, function(trend) {
-          return _c(
-            "div",
-            {
-              key: trend.id,
-              staticClass: "p-rank",
-              attrs: { "rank-cnt": trend.rank }
-            },
-            [
-              _c("div", { staticClass: "p-rank_top u-ta-c u-mb-md" }, [
-                _c("h3", { staticClass: "c-title_article u-mb-sm" }, [
-                  _vm._v(_vm._s(trend.crypto.crypto))
-                ]),
-                _vm._v(" "),
-                _c("p", [
-                  _vm._v("ツイート数："),
-                  _c("span", [_vm._v(_vm._s(trend.tweet_cnt))])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "p-rank_buttom u-ta-c" }, [
-                _c("p", { staticClass: "u-mb-sm" }, [
-                  _vm._v("取引価格(過去24時間/単位：円)")
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "u-d-fx u-jc-c" }, [
-                  _c("p", { staticClass: "u-mr-lg" }, [
-                    _vm._v("最高："),
-                    _c("span", [_vm._v(_vm._s(trend.transaction_price_max))])
+        [
+          _c(
+            "transition-group",
+            { attrs: { name: "c-tra-slide-fade", appear: "" } },
+            _vm._l(_vm.filteredTrends, function(trend) {
+              return _c(
+                "div",
+                {
+                  key: trend.id,
+                  staticClass: "p-rank",
+                  attrs: { "rank-cnt": trend.rank }
+                },
+                [
+                  _c("div", { staticClass: "p-rank_top u-ta-c u-mb-md" }, [
+                    _c("h3", { staticClass: "c-title_article u-mb-sm" }, [
+                      _vm._v(_vm._s(trend.crypto.crypto))
+                    ]),
+                    _vm._v(" "),
+                    _c("p", [
+                      _vm._v("ツイート数："),
+                      _c("span", [_vm._v(_vm._s(trend.tweet_cnt))])
+                    ])
                   ]),
                   _vm._v(" "),
-                  _c("p", [
-                    _vm._v("最低："),
-                    _c("span", [_vm._v(_vm._s(trend.transaction_price_min))])
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("a", {
-                staticClass: "p-rank-link",
-                attrs: { href: trend.search_url }
-              })
-            ]
+                  _c("div", { staticClass: "p-rank_buttom u-ta-c" }, [
+                    _c("p", { staticClass: "u-mb-sm" }, [
+                      _vm._v("取引価格(過去24時間/単位：円)")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "u-d-fx u-jc-c" }, [
+                      _c("p", { staticClass: "u-mr-lg" }, [
+                        _vm._v("最高："),
+                        _c("span", [
+                          _vm._v(_vm._s(trend.transaction_price_max))
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("p", [
+                        _vm._v("最低："),
+                        _c("span", [
+                          _vm._v(_vm._s(trend.transaction_price_min))
+                        ])
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("a", {
+                    staticClass: "p-rank-link",
+                    attrs: { href: trend.search_url }
+                  })
+                ]
+              )
+            }),
+            0
           )
-        }),
-        0
+        ],
+        1
       )
     ])
   ])

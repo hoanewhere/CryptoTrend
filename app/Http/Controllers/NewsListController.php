@@ -60,7 +60,7 @@ class NewsListController extends Controller
         $data = $array['channel']['item'];
         Log::debug('XML->item：'.print_r($data, true));
 
-        //記事のタイトルやURLを取り出して配列に格納
+        //記事のタイトルやURLを取り出してs配列に格納
         $list = array();
         for ($i = 0; $i < count($data); $i++) {
             if($i >= self::MAX_SHOWED_NEWS) {

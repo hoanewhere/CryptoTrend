@@ -23,7 +23,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/crypto/reloadNavData', 'CryptoController@reloadNavData');
 
 // トレンドランキング
-// Route::get('/', 'TrendRankingController@index');
 Route::get('/index', 'TrendRankingController@index');
 Route::get('/index/reloadTrendData/{term}', 'TrendRankingController@reloadTrendData');
 
@@ -38,8 +37,3 @@ Route::post('/accountList/toggleAutoFollow', 'AccountListController@toggleAutoFo
 // ニュース一覧
 Route::get('/newsList', 'NewsListController@index');
 Route::get('/newsList/reloadNewsData', 'NewsListController@reloadNews');
-
-
-// test
-Route::get('/test', 'CryptoController@test');
-

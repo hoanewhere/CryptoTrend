@@ -51,10 +51,6 @@ class AccountListController extends Controller
         if(empty($login_user->access_token)) {
             return TwitterController::authenticateUser();
         }
-
-        // test
-        // $this->getUsers();
-
         return view('crypto.accountList');
     }
 

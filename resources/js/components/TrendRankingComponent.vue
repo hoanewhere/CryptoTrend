@@ -36,22 +36,24 @@
 
         <!-- ranking -->
         <div class="p-ranks p-trendRanking_child">
-            <div class="p-rank" :rank-cnt="trend.rank" v-for="trend in filteredTrends" :key="trend.id">
-                <div class="p-rank_top u-ta-c u-mb-md">
-                    <h3 class="c-title_article u-mb-sm">{{ trend.crypto.crypto }}</h3>
-                    <p>ツイート数：<span>{{ trend.tweet_cnt }}</span></p>
-                </div>
-                <div class="p-rank_buttom u-ta-c">
-                    <p class="u-mb-sm">取引価格(過去24時間/単位：円)</p>
-                    <div class="u-d-fx u-jc-c">
-                        <p class="u-mr-lg">最高：<span>{{ trend.transaction_price_max }}</span></p>
-                        <p>最低：<span>{{ trend.transaction_price_min }}</span></p>
+            <transition-group name="c-tra-slide-fade" appear>
+                <div class="p-rank" :rank-cnt="trend.rank" v-for="trend in filteredTrends" :key="trend.id">
+                    <div class="p-rank_top u-ta-c u-mb-md">
+                        <h3 class="c-title_article u-mb-sm">{{ trend.crypto.crypto }}</h3>
+                        <p>ツイート数：<span>{{ trend.tweet_cnt }}</span></p>
                     </div>
+                    <div class="p-rank_buttom u-ta-c">
+                        <p class="u-mb-sm">取引価格(過去24時間/単位：円)</p>
+                        <div class="u-d-fx u-jc-c">
+                            <p class="u-mr-lg">最高：<span>{{ trend.transaction_price_max }}</span></p>
+                            <p>最低：<span>{{ trend.transaction_price_min }}</span></p>
+                        </div>
+                    </div>
+                    <a :href="trend.search_url" class="p-rank-link"></a>
                 </div>
-                <a :href="trend.search_url" class="p-rank-link"></a>
-            </div>
+            </transition-group>
         </div>
-        
+
     </div>
 </div>
 </template>
