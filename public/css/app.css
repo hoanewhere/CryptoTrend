@@ -745,6 +745,7 @@ textarea {
   border: 1px solid #b7b7b7;
   border-radius: 0.35rem;
   padding: 0.5rem 1rem 1rem;
+  word-wrap: break-word;
 }
 
 .p-account_inner-img {

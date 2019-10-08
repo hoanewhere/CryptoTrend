@@ -193,9 +193,9 @@ class AccountListController extends Controller
         $updated_time = UpdatedTime::where('time_index', 2)->where('complete_flg', true)->where('login_user_id', $login_user->id)->orderby('created_at', 'desc')->first();
         if($updated_time) {
             $accounts = SearchedAccount::select(['id', 'account_data'])->where('update_time_id', $updated_time->id)->orderby('account_data->following', 'asc')->paginate(24);
-            $got_time = date("Y-m-d H:i:s", strtotime($updated_time->updated_at));
+            $got_time = 'データ取得時間：' . date("Y-m-d H:i:s", strtotime($updated_time->updated_at));
         } else {
-            $got_time = "もうしばらくお待ちください（データ取得中）";
+            $got_time = "データ取得中(最大待ち時間:100分)";
         }
 
         // 自動フォローフラグ取得
