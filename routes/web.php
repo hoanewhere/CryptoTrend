@@ -17,7 +17,7 @@
 
 Auth::routes();
 
-// Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home');
 
 // 全体
 Route::get('/crypto/reloadNavData', 'CryptoController@reloadNavData');

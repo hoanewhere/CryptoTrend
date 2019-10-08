@@ -38,7 +38,7 @@
         <div class="p-ranks p-trendRanking_child">
             <div class="p-rank" :rank-cnt="trend.rank" v-for="trend in filteredTrends" :key="trend.id">
                 <div class="p-rank_top u-ta-c u-mb-md">
-                    <h3 class="c-title_article">{{ trend.crypto.crypto }}</h3>
+                    <h3 class="c-title_article u-mb-sm">{{ trend.crypto.crypto }}</h3>
                     <p>ツイート数：<span>{{ trend.tweet_cnt }}</span></p>
                 </div>
                 <div class="p-rank_buttom u-ta-c">
@@ -69,7 +69,7 @@
             }
         },
         mounted() {
-            this.reloadTrendData()
+            this.reloadTrendData(true)
         },
         computed: {
             selectAll: {
@@ -93,19 +93,22 @@
             }
         },
         methods: {
-            reloadTrendData: function() { // トレンドデータを取得
+            reloadTrendData: function(first = false) { // トレンドデータを取得
                 axios.get('/index/reloadTrendData/' + this.selectedSearchTerm)
                 .then((res) => {
                     this.trends = res.data.trends
                     this.cryptoList = res.data.crypto_list
                     this.gotTime = res.data.got_time
-                    this.selectedCryptoIds = []
-                    for(var crypto of this.cryptoList) {
-                        this.selectedCryptoIds.push(crypto.id)
+
+                    if(first === true) {
+                        this.selectedCryptoIds = []
+                        for(var crypto of this.cryptoList) {
+                            this.selectedCryptoIds.push(crypto.id)
+                        }
                     }
+                    
                     this.display()
                     this.searchActive = false
-
                 })
             },
             display: function() {　// 選択された対象期間で表示するツイート数を切り替える

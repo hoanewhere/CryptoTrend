@@ -4,7 +4,7 @@
     <div class="u-ta-c u-mb-lg">
         <p class="u-mb-sm">データ取得時間：{{ gotTime }}</p>
     </div>
-    <div class="u-ta-c u-mb-lg">
+    <div class="u-ta-c u-mb-lg" v-if="accounts">
         <button v-if="autoFollowFlg == true" type="button" class="c-button c-button-peace" @click="toggleAutoFollow">自動フォロー ON</button>
         <button v-else type="button" class="c-button c-button-dark" @click="toggleAutoFollow">自動フォロー OFF</button>
     </div>

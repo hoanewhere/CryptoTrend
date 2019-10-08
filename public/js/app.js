@@ -2007,7 +2007,7 @@ var MAX_SHOW_PAGE = 5;
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     data: {
-      required: true
+      required: false
     }
   },
   data: function data() {
@@ -2158,7 +2158,7 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
-    this.reloadTrendData();
+    this.reloadTrendData(true);
   },
   computed: {
     selectAll: {
@@ -2205,33 +2205,37 @@ __webpack_require__.r(__webpack_exports__);
     reloadTrendData: function reloadTrendData() {
       var _this = this;
 
+      var first = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
       // トレンドデータを取得
       axios.get('/index/reloadTrendData/' + this.selectedSearchTerm).then(function (res) {
         _this.trends = res.data.trends;
         _this.cryptoList = res.data.crypto_list;
         _this.gotTime = res.data.got_time;
-        _this.selectedCryptoIds = [];
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
 
-        try {
-          for (var _iterator2 = _this.cryptoList[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var crypto = _step2.value;
+        if (first === true) {
+          _this.selectedCryptoIds = [];
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
 
-            _this.selectedCryptoIds.push(crypto.id);
-          }
-        } catch (err) {
-          _didIteratorError2 = true;
-          _iteratorError2 = err;
-        } finally {
           try {
-            if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-              _iterator2["return"]();
+            for (var _iterator2 = _this.cryptoList[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var crypto = _step2.value;
+
+              _this.selectedCryptoIds.push(crypto.id);
             }
+          } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
           } finally {
-            if (_didIteratorError2) {
-              throw _iteratorError2;
+            try {
+              if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+                _iterator2["return"]();
+              }
+            } finally {
+              if (_didIteratorError2) {
+                throw _iteratorError2;
+              }
             }
           }
         }
@@ -37592,27 +37596,29 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "u-ta-c u-mb-lg" }, [
-        _vm.autoFollowFlg == true
-          ? _c(
-              "button",
-              {
-                staticClass: "c-button c-button-peace",
-                attrs: { type: "button" },
-                on: { click: _vm.toggleAutoFollow }
-              },
-              [_vm._v("自動フォロー ON")]
-            )
-          : _c(
-              "button",
-              {
-                staticClass: "c-button c-button-dark",
-                attrs: { type: "button" },
-                on: { click: _vm.toggleAutoFollow }
-              },
-              [_vm._v("自動フォロー OFF")]
-            )
-      ]),
+      _vm.accounts
+        ? _c("div", { staticClass: "u-ta-c u-mb-lg" }, [
+            _vm.autoFollowFlg == true
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "c-button c-button-peace",
+                    attrs: { type: "button" },
+                    on: { click: _vm.toggleAutoFollow }
+                  },
+                  [_vm._v("自動フォロー ON")]
+                )
+              : _c(
+                  "button",
+                  {
+                    staticClass: "c-button c-button-dark",
+                    attrs: { type: "button" },
+                    on: { click: _vm.toggleAutoFollow }
+                  },
+                  [_vm._v("自動フォロー OFF")]
+                )
+          ])
+        : _vm._e(),
       _vm._v(" "),
       _c("pagination-component", {
         attrs: { data: _vm.accountsPaginate },
@@ -37949,66 +37955,68 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "ul",
-    { staticClass: "c-pagination" },
-    [
-      _vm.hasPrev
-        ? _c("li", { staticClass: "c-pagination_item" }, [
-            _c(
-              "a",
-              {
+  return _vm.data
+    ? _c(
+        "ul",
+        { staticClass: "c-pagination" },
+        [
+          _vm.hasPrev
+            ? _c("li", { staticClass: "c-pagination_item" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "c-pagination_link",
+                    attrs: { href: "" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.move(_vm.data.current_page - 1)
+                      }
+                    }
+                  },
+                  [_vm._v("前へ")]
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm._l(_vm.pages, function(page, index) {
+            return _c("li", { key: index, class: _vm.getPageClass(page) }, [
+              _c("a", {
                 staticClass: "c-pagination_link",
                 attrs: { href: "" },
+                domProps: { textContent: _vm._s(page) },
                 on: {
                   click: function($event) {
                     $event.preventDefault()
-                    return _vm.move(_vm.data.current_page - 1)
+                    return _vm.move(page)
                   }
                 }
-              },
-              [_vm._v("前へ")]
-            )
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _vm._l(_vm.pages, function(page, index) {
-        return _c("li", { key: index, class: _vm.getPageClass(page) }, [
-          _c("a", {
-            staticClass: "c-pagination_link",
-            attrs: { href: "" },
-            domProps: { textContent: _vm._s(page) },
-            on: {
-              click: function($event) {
-                $event.preventDefault()
-                return _vm.move(page)
-              }
-            }
-          })
-        ])
-      }),
-      _vm._v(" "),
-      _vm.hasNext
-        ? _c("li", { staticClass: "c-pagination_item" }, [
-            _c(
-              "a",
-              {
-                staticClass: "c-pagination_link",
-                attrs: { href: "" },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.move(_vm.data.current_page + 1)
-                  }
-                }
-              },
-              [_vm._v("次へ")]
-            )
-          ])
-        : _vm._e()
-    ],
-    2
-  )
+              })
+            ])
+          }),
+          _vm._v(" "),
+          _vm.hasNext
+            ? _c("li", { staticClass: "c-pagination_item" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "c-pagination_link",
+                    attrs: { href: "" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.move(_vm.data.current_page + 1)
+                      }
+                    }
+                  },
+                  [_vm._v("次へ")]
+                )
+              ])
+            : _vm._e()
+        ],
+        2
+      )
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -38261,7 +38269,7 @@ var render = function() {
             },
             [
               _c("div", { staticClass: "p-rank_top u-ta-c u-mb-md" }, [
-                _c("h3", { staticClass: "c-title_article" }, [
+                _c("h3", { staticClass: "c-title_article u-mb-sm" }, [
                   _vm._v(_vm._s(trend.crypto.crypto))
                 ]),
                 _vm._v(" "),

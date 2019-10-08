@@ -133,12 +133,12 @@ class TwitterController extends Controller
 
     /**
      * ログインユーザに紐づくツイッターアカウントでキーワードに関連するアカウントを取得し、返す。
-     * @param array $access_token
-     * @return array $result_arr
+     * @param array $access_token, int $next_page, string $search_word
+     * @return array $users_arr
      */
-    public static function searchTweetUsers(array $access_token) {
-        // 返り値の配列を初期化
-        $result_arr = array();
+    public static function searchTweetUsers(array $access_token, int $next_page, string $search_word) {
+        // ユーザ情報の配列を初期化
+        $users_arr = array();
         
         // ログインユーザにひもづくアクセストークンで認証する
         $config = config('twitter');
@@ -146,12 +146,16 @@ class TwitterController extends Controller
         $connection->setTimeouts(10, 10);
 
         // パラメータを設定
-        $params = ['q' => self::USER_SEARCH_WORD, 'page' => 0, 'count' => 20];
+        $params = ['q' => $search_word, 'page' => $next_page, 'count' => 20];
 
-        for($i=1; $i<=50; $i++) {
-            // パラメータを更新してユーザを検索
-            $params['page'] = $i;
+        for($i=0; $i<5; $i++) {
             Log::debug('パラメータ：'. print_r($params, true));
+
+            if($params['page'] > 50) {
+                Log::debug('取得件数最大:　page='. $params['page']);
+                break;
+            }
+
             $users = $connection->get('users/search', $params);
             Log::debug('取得データ（apiの返り値）：'. print_r($users, true));
 
@@ -163,21 +167,24 @@ class TwitterController extends Controller
                 // レスポンスがエラーで返ってきた場合、処理を終了する
                 if (isset($user_arr[0]['code'])) {
                 Log::debug('resultエラー:'. print_r($user_arr, true));
-                return $result_arr;
+                    break 2;
                 }
 
-                // 取得データに重複がないかチェック
-                foreach($result_arr as $result) {
-                    if($result['id'] === $user_arr['id']) { // 重複している場合、処理終了して上位に配列を返す
-                        Log::debug('重複データあり(処理終了)：');
-                        return $result_arr;
-                    }
-                }
+                // // 取得データに重複がないかチェック → 上位で判断する
+                // foreach($users_arr as $result) {
+                //     if($result['id'] === $user_arr['id']) { // 重複している場合、処理終了して上位に配列を返す
+                //         Log::debug('重複データあり(処理終了)：');
+                //         return $users_arr;
+                //     }
+                // }
 
-                // 重複していなければ最新ツイートの埋め込みhtmlを取得
+                // 最新ツイートの埋め込みhtmlを取得
                 $latest_html = "";
                 if(!empty($user_arr['status'])) {
                     $latest_html = self::getOembed($connection, $user_arr['screen_name'], $user_arr['status']['id']);
+                    if(empty($latest_html)) {
+                        break 2;
+                    }
                 }
                 $user_arr['latest_html'] = $latest_html;
                 Log::debug('latest_htmlの結果:'. $latest_html);
@@ -191,9 +198,13 @@ class TwitterController extends Controller
                 $user_arr['profile_image_url'] = preg_replace($pattern2, $replace2, $user_arr['profile_image_url']);
 
                 // 返り値の配列にデータを追加
-                $result_arr[] = $user_arr;
+                $users_arr[] = $user_arr;
             }
+
+            // パラメータを更新して次のユーザを検索
+            $params['page'] ++;
         }
+        $result_arr = ['users_arr' => $users_arr, 'next_page' =>$params['page']];
         return $result_arr;
     }
 
@@ -209,6 +220,11 @@ class TwitterController extends Controller
 
         $params = ['url' => $url, 'maxwidth' => 284, 'omit_script' => true];
         $oembed = $connection->get('statuses/oembed', $params);
+        if (empty($oembed->html)) {
+            Log::debug('html取得失敗時の結果：' . print_r($oembed, true));
+            $html = "";
+            return $html;
+        }
         $html = $oembed->html;
 
         return $html;

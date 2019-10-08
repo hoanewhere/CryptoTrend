@@ -132,9 +132,8 @@ class TrendRankingController extends Controller
         // 集計が完了したか確認する
         foreach($crypto_data as $item) {
             if($item['complete_flg'] == false) {
-                Log::debug('集計完了(１５分後に再開):');
-                Log::info('集計完了(１0分後に再開):');
-                return; // 一つでも未完了のものがあれば処理終了。15分後に処理再開。
+                Log::info('集計完了(次のタスクで処理再開):');
+                return; // 一つでも未完了のものがあれば処理終了。次のタスクで処理再開。
             }
         }
         // 全て完了の場合、timeテーブルのcomplete_flgを完了にして処理終了

@@ -41,6 +41,6 @@ class AutoFollowCommand extends Command
     {
         Log::info('command:autoFollow 実施');
         $account_list = New AccountListController();
-        $account_list->toFollowAutoLimitFifteen();
+        $account_list->toFollowAutoLimit();
     }
 }
