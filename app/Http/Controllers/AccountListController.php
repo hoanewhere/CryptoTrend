@@ -192,7 +192,7 @@ class AccountListController extends Controller
         // 更新日付取得
         $updated_time = UpdatedTime::where('time_index', 2)->where('complete_flg', true)->where('login_user_id', $login_user->id)->orderby('created_at', 'desc')->first();
         if($updated_time) {
-            $accounts = SearchedAccount::select(['id', 'account_data'])->where('update_time_id', $updated_time->id)->orderby('account_data->following', 'asc')->paginate(2);
+            $accounts = SearchedAccount::select(['id', 'account_data'])->where('update_time_id', $updated_time->id)->orderby('account_data->following', 'asc')->paginate(24);
             $got_time = date("Y-m-d H:i:s", strtotime($updated_time->updated_at));
         } else {
             $got_time = "もうしばらくお待ちください（データ取得中）";
