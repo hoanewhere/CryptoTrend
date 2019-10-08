@@ -19,7 +19,7 @@
                         <option :value=2>1週間</option>
                     </select>
                 </div>
-                <div class="p-search_mono u-mb-lg">
+                <div class="p-search_mono u-mb-sm">
                     <label for="" class="c-form-title c-title_sub u-mb-sm">表示銘柄</label>
                     <div class="p-search_chks">
                         <div class="p-search_chk u-mb-sm">

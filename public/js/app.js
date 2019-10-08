@@ -38141,7 +38141,7 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "p-search_mono u-mb-lg" }, [
+            _c("div", { staticClass: "p-search_mono u-mb-sm" }, [
               _c(
                 "label",
                 {
