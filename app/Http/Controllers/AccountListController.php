@@ -27,6 +27,7 @@ class AccountListController extends Controller
 
 
     const MAX_FOLLOW_DAY_LIMIT = 1000; // twitterAPIの一日でのフォロー人数制限
+    const USER_SEARCH_WORD = '仮想通貨'; // ユーザ検索時のキーワード
 
 
     /**
@@ -51,7 +52,7 @@ class AccountListController extends Controller
             return TwitterController::authenticateUser();
         }
 
-        // アカウント取得実施(既に実施している場合は何もしない)
+        // test
         $this->getUsers();
 
         return view('crypto.accountList');
@@ -92,8 +93,11 @@ class AccountListController extends Controller
     public function getUsers() {
         Log::debug('getUsers(関数呼び出し)');
 
-        // 今日、すでにgetUsers()が実施されている場合は何もしない
         $today = date('Y-m-d');
+        $login_user = Auth::user();
+        $login_user_id = $login_user->id;
+        $access_token = json_decode($login_user->access_token, true);
+        $next_page = 1;
         $updated_time_result = UpdatedTime::where('time_index', '2')->where('created_at', 'LIKE', "$today%")->get(); 
         if(count($updated_time_result)) {
             if($updated_time_result[0]->complete_flg) {
@@ -101,24 +105,31 @@ class AccountListController extends Controller
             }
         }
 
-        $login_user = Auth::user();
-        $login_user_id = $login_user->id;
-        $access_token = json_decode($login_user->access_token, true);
-
-        // UpdatedTimeテーブルにレコード追加
-        $updated_time = New UpdatedTime();
-        $updated_time->fill([
-            'time_index' => 2,
-            'complete_flg' => false,
-            'login_user_id' => $login_user_id
-        ]);
-        $updated_time->save();
+        // データ取得状況確認
+        if(count($updated_time_result)) {
+            if($updated_time_result[0]->complete_flg) {
+                return;
+            } else {
+                $next_page = $updated_time_result[0]->next_page;
+            }
+        } else {
+            // UpdatedTimeテーブルにレコード追加
+            $updated_time = New UpdatedTime();
+            $updated_time->fill([
+                'time_index' => 2,
+                'complete_flg' => false,
+                'login_user_id' => $login_user_id
+            ]);
+            $updated_time->save();
+        }
 
         // ユーザ検索
-        $users = $this->searchUsers($access_token);
+        $result_arr = $this->searchUsers($access_token, $next_page);
+        $users = $result_arr['users_arr'];
+        $next_page = $result_arr['next_page'];
 
         // ユーザデータ保存
-        $this->saveUsers($users, $login_user_id);
+        $this->saveUsers($users, $login_user_id, $next_page);
     }
 
 
@@ -133,32 +144,36 @@ class AccountListController extends Controller
         $targetUsers = User::whereNotNull('access_token')->get();
         
         foreach($targetUsers as $targetUser) {
+            $user_id = $targetUser->id;
+            $access_token = json_decode($targetUser->access_token, true);
+            $next_page = 1;
             $updated_time_result = UpdatedTime::where('time_index', '2')->where('login_user_id', $targetUser->id)->where('created_at', 'LIKE', "$today%")->get(); 
 
-            // 今日、すでにアカウント取得が実施されているユーザに対しては何もしない
+            // データ取得状況確認
             if(count($updated_time_result)) {
                 if($updated_time_result[0]->complete_flg) {
                     continue;
+                } else {
+                    $next_page = $updated_time_result[0]->next_page;
                 }
+            } else {
+                // UpdatedTimeテーブルにレコード追加
+                $updated_time = New UpdatedTime();
+                $updated_time->fill([
+                    'time_index' => 2,
+                    'complete_flg' => false,
+                    'login_user_id' => $user_id
+                ]);
+                $updated_time->save();
             }
 
-            $user_id = $targetUser->id;
-            $access_token = json_decode($targetUser->access_token, true);
-
-            // UpdatedTimeテーブルにレコード追加
-            $updated_time = New UpdatedTime();
-            $updated_time->fill([
-                'time_index' => 2,
-                'complete_flg' => false,
-                'login_user_id' => $user_id
-            ]);
-            $updated_time->save();
-
             // ユーザ検索
-            $users = $this->searchUsers($access_token);
+            $result_arr = $this->searchUsers($access_token, $next_page);
+            $users = $result_arr['users_arr'];
+            $next_page = $result_arr['next_page'];
 
             // ユーザデータ保存
-            $this->saveUsers($users, $user_id);
+            $this->saveUsers($users, $user_id, $next_page);
         }
     }
 
@@ -171,13 +186,17 @@ class AccountListController extends Controller
     public function reloadTweetData() {
         Log::debug('reloadTweetData(関数呼び出し)');
         $login_user = Auth::user();
+        $got_time = "";
+        $accounts = array();
 
         // 更新日付取得
         $updated_time = UpdatedTime::where('time_index', 2)->where('complete_flg', true)->where('login_user_id', $login_user->id)->orderby('created_at', 'desc')->first();
-
-        // アカウント取得
-        $accounts = SearchedAccount::select(['id', 'account_data'])->where('update_time_id', $updated_time->id)->orderby('account_data->following', 'asc')->paginate(2);
-        // Log::debug('未アカウントフォロー:'. print_r($accounts[0]->account_data, true));
+        if($updated_time) {
+            $accounts = SearchedAccount::select(['id', 'account_data'])->where('update_time_id', $updated_time->id)->orderby('account_data->following', 'asc')->paginate(2);
+            $got_time = date("Y-m-d H:i:s", strtotime($updated_time->updated_at));
+        } else {
+            $got_time = "もうしばらくお待ちください（データ取得中）";
+        }
 
         // 自動フォローフラグ取得
         $auto_follow_flg = false;
@@ -188,11 +207,11 @@ class AccountListController extends Controller
 
         $res_data = [
             'accounts' => $accounts,
-            'got_time' => date("Y-m-d H:i:s", strtotime($updated_time->created_at)),
+            'got_time' => $got_time,
             'auto_follow_flg' => $auto_follow_flg
         ];
     
-        // Log::debug('初期表示データ：' . print_r($res_data, true));
+        Log::debug('初期表示データ：' . print_r($res_data, true));
         return $res_data;
     }
 
@@ -329,15 +348,14 @@ class AccountListController extends Controller
 
     /**
      * 仮想通貨に関連するユーザを取得する。
-     * @param array $access_token
+     * @param array $access_token, int $next_page
      * @return array $result_arr
      */
-    private function searchUsers(array $access_token) {
+    private function searchUsers(array $access_token, int $next_page) {
         Log::debug('serachUsers(関数呼び出し)');
 
-        $result_arr = TwitterController::searchTweetUsers($access_token);
+        $result_arr = TwitterController::searchTweetUsers($access_token, $next_page, self::USER_SEARCH_WORD);
         Log::debug('取得データ(result_arr)：'. print_r($result_arr, true));
-        Log::debug('取得データの数：'. count($result_arr));
         return $result_arr;
     }
 
@@ -345,30 +363,49 @@ class AccountListController extends Controller
     /**
      * 仮想通貨に関連するユーザをDBに保存する。
      * 
-     * @param array $users, int $login_id
+     * @param array $users, int $login_id, int $next_page
      * @return void
      */
-    private function saveUsers(array $users, int $login_id) {
+    private function saveUsers(array $users, int $login_id, int $next_page) {
         Log::debug('saveUsers(関数呼び出し)');
 
+        $complete_flg = false;
         $today = date('Y-m-d');
-        $updated_time = UpdatedTime::where('time_index', '2')->where('login_user_id', $login_id)->where('created_at', 'LIKE', "$today%")->get(); 
+        $updated_time = UpdatedTime::where('time_index', '2')->where('login_user_id', $login_id)->where('created_at', 'LIKE', "$today%")->first(); 
+        $saved_users = SearchedAccount::where('update_time_id', $updated_time->id)->get();
 
         foreach($users as $user) {
+            // 重複チェック
+            foreach($saved_users as $saved_user) {
+                if($saved_user->id === $user['id']) {
+                    $complete_flg = true;
+                    $next_page = 0;
+                    break 2;
+                }
+            }
+
+            // 重複していなければDBに保存する
             $user_json = json_encode($user);
             $searched_account = New SearchedAccount();
             $searched_account->fill([
                 'account_data' => $user_json,
-                'update_time_id' => $updated_time[0]->id,
+                'update_time_id' => $updated_time->id,
                 'login_user_id' => $login_id
             ]);
             $searched_account->save();
         }
 
-        // timeテーブルの完了フラグを更新
-        $updated_time[0]->fill([
-            'complete_flg' => true
+        // 完了確認
+        if($next_page > 50) {
+            $complete_flg = true;
+            $next_page = 0;
+        }
+
+        // timeテーブルを更新
+        $updated_time->fill([
+            'complete_flg' => $complete_flg,
+            'next_page' => $next_page
         ]);
-        $updated_time[0]->save();
+        $updated_time->save();
     }
 }

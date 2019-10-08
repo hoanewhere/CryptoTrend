@@ -31,7 +31,7 @@ class CryptoTableseeder extends Seeder
                 'crypto' => 'Ripple',
             ],
             [
-                'crypto' => 'NEM',
+                'crypto' => 'XEM',
             ],
             [
                 'crypto' => 'Litecoin',

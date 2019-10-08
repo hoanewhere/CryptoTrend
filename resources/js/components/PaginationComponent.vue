@@ -1,5 +1,5 @@
 <template>
-<ul class="c-pagination">
+<ul class="c-pagination" v-if="data">
 
     <!-- prevボタン -->
     <li class="c-pagination_item" v-if="hasPrev">
@@ -25,7 +25,7 @@
     export default {
         props: {
             data: {
-                required: true
+                required: false
             },
         },
         data: function () {
