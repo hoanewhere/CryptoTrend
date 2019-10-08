@@ -53,7 +53,7 @@ class AccountListController extends Controller
         }
 
         // test
-        $this->getUsers();
+        // $this->getUsers();
 
         return view('crypto.accountList');
     }
