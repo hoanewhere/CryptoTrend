@@ -48,6 +48,7 @@
                         <p>最低：<span>{{ trend.transaction_price_min }}</span></p>
                     </div>
                 </div>
+                <a :href="trend.search_url" class="p-rank-link"></a>
             </div>
         </div>
         
@@ -112,14 +113,24 @@
                 })
             },
             display: function() {　// 選択された対象期間で表示するツイート数を切り替える
-                this.filteredTrends = []
+                const search_url_front = 'https://twitter.com/search?q='
+                const search_url_back = '&src=typed_query&f=live'
                 let trendCnt = 0
+                this.filteredTrends = []
+                
 
                 this.trends.forEach((trend) => {
                     this.selectedCryptoIds.forEach((cryptoId) => {
                         if(cryptoId === trend.crypto.id) {
                             this.filteredTrends[trendCnt] = trend
+
+                            // ランク設定
                             this.filteredTrends[trendCnt]['rank'] = trendCnt + 1
+
+                            // 検索先のurl設定
+                            this.filteredTrends[trendCnt]['search_url'] = search_url_front + trend.crypto.crypto + search_url_back
+
+                            //表示するツイート数設定
                             switch (this.selectedSearchTerm) {
                                 case 0:
                                     this.filteredTrends[trendCnt]['tweet_cnt'] = trend.hour_cnt

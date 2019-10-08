@@ -2145,6 +2145,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2249,13 +2250,18 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       // 選択された対象期間で表示するツイート数を切り替える
-      this.filteredTrends = [];
+      var search_url_front = 'https://twitter.com/search?q=';
+      var search_url_back = '&src=typed_query&f=live';
       var trendCnt = 0;
+      this.filteredTrends = [];
       this.trends.forEach(function (trend) {
         _this2.selectedCryptoIds.forEach(function (cryptoId) {
           if (cryptoId === trend.crypto.id) {
-            _this2.filteredTrends[trendCnt] = trend;
-            _this2.filteredTrends[trendCnt]['rank'] = trendCnt + 1;
+            _this2.filteredTrends[trendCnt] = trend; // ランク設定
+
+            _this2.filteredTrends[trendCnt]['rank'] = trendCnt + 1; // 検索先のurl設定
+
+            _this2.filteredTrends[trendCnt]['search_url'] = search_url_front + trend.crypto.crypto + search_url_back; //表示するツイート数設定
 
             switch (_this2.selectedSearchTerm) {
               case 0:
@@ -38295,7 +38301,12 @@ var render = function() {
                     _c("span", [_vm._v(_vm._s(trend.transaction_price_min))])
                   ])
                 ])
-              ])
+              ]),
+              _vm._v(" "),
+              _c("a", {
+                staticClass: "p-rank-link",
+                attrs: { href: trend.search_url }
+              })
             ]
           )
         }),
