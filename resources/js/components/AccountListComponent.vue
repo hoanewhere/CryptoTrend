@@ -2,7 +2,7 @@
 <div>
     <h1 class="c-title_main">仮想通貨アカウント一覧</h1>
     <div class="u-ta-c u-mb-lg">
-        <p class="u-mb-sm">データ取得時間：{{ gotTime }}</p>
+        <p class="u-mb-sm">{{ gotTime }}</p>
     </div>
     <div class="u-ta-c u-mb-lg" v-if="accounts">
         <button v-if="autoFollowFlg == true" type="button" class="c-button c-button-peace" @click="toggleAutoFollow">自動フォロー ON</button>

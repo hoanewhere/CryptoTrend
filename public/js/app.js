@@ -37597,9 +37597,7 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "u-ta-c u-mb-lg" }, [
-        _c("p", { staticClass: "u-mb-sm" }, [
-          _vm._v("データ取得時間：" + _vm._s(_vm.gotTime))
-        ])
+        _c("p", { staticClass: "u-mb-sm" }, [_vm._v(_vm._s(_vm.gotTime))])
       ]),
       _vm._v(" "),
       _vm.accounts
