@@ -37837,7 +37837,7 @@ var render = function() {
             expression: "navActive"
           }
         ],
-        staticClass: "c-nav-sm"
+        staticClass: "c-nav_body"
       },
       [
         _c(
@@ -37869,7 +37869,7 @@ var render = function() {
       ]
     ),
     _vm._v(" "),
-    _c("div", { staticClass: "c-nav-md" }, [
+    _c("div", { staticClass: "c-nav_body-md" }, [
       _c(
         "ul",
         { staticClass: "c-nav_ul-md" },
@@ -38071,7 +38071,7 @@ var render = function() {
       _c(
         "button",
         {
-          staticClass: "c-button c-button-peace p-search_button",
+          staticClass: "c-button c-button-peace p-search_button-dispaly",
           attrs: { type: "button" },
           on: { click: _vm.searchClick }
         },
@@ -38083,8 +38083,8 @@ var render = function() {
       _c(
         "div",
         {
-          staticClass: "p-search-lg u-ta-c p-trendRanking_child",
-          class: { "p-search": _vm.searchActive }
+          staticClass: "p-search u-ta-c p-trendRanking_child",
+          class: { "is-active": _vm.searchActive }
         },
         [
           _c("h3", { staticClass: "c-title_article u-mb-lg" }, [
@@ -38155,7 +38155,7 @@ var render = function() {
                 "div",
                 { staticClass: "p-search_chks" },
                 [
-                  _c("div", { staticClass: "p-search_chk u-mb-sm" }, [
+                  _c("div", { staticClass: "p-search_chk u-mb-md" }, [
                     _c("label", [
                       _c("input", {
                         directives: [
@@ -38206,7 +38206,7 @@ var render = function() {
                   _vm._l(_vm.cryptoList, function(crypto) {
                     return _c(
                       "div",
-                      { key: crypto.id, staticClass: "p-search_chk u-mb-sm" },
+                      { key: crypto.id, staticClass: "p-search_chk u-mb-md" },
                       [
                         _c("label", [
                           _c("input", {
@@ -38264,7 +38264,8 @@ var render = function() {
             _c(
               "button",
               {
-                staticClass: "c-button c-button-peace",
+                staticClass:
+                  "c-button c-button-peace p-search_button-search u-mb-md",
                 attrs: { type: "button" },
                 on: { click: _vm.reloadTrendData }
               },

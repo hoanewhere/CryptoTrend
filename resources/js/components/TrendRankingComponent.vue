@@ -3,12 +3,12 @@
     <h1 class="c-title_main">仮想通貨トレンドランキング</h1>
     <div class="u-ta-c">
         <p class="u-mb-sm">データ取得時間：{{ gotTime }}</p>
-        <button type="button" class="c-button c-button-peace p-search_button" @click="searchClick">表示条件</button>
+        <button type="button" class="c-button c-button-peace p-search_button-dispaly" @click="searchClick">表示条件</button>
     </div>
     <div class="p-trendRanking">
 
         <!-- search -->
-        <div class="p-search-lg u-ta-c p-trendRanking_child" :class="{'p-search': searchActive}">
+        <div class="p-search u-ta-c p-trendRanking_child" :class="{'is-active': searchActive}">
             <h3 class="c-title_article u-mb-lg">表示条件</h3>
             <form>
                 <div class="p-search_mono u-mb-lg">
@@ -22,15 +22,15 @@
                 <div class="p-search_mono u-mb-sm">
                     <label for="" class="c-form-title c-title_sub u-mb-sm">表示銘柄</label>
                     <div class="p-search_chks">
-                        <div class="p-search_chk u-mb-sm">
+                        <div class="p-search_chk u-mb-md">
                             <label><input type="checkbox" id="showCryptoAll" value="全て" class="c-input_checkbox u-mr-sm" v-model="selectAll">全て</label>
                         </div>
-                        <div v-for="crypto in cryptoList" :key="crypto.id" class="p-search_chk u-mb-sm">
+                        <div v-for="crypto in cryptoList" :key="crypto.id" class="p-search_chk u-mb-md">
                             <label><input type="checkbox" :value="crypto.id" v-model="selectedCryptoIds" class="c-input_checkbox u-mr-sm">{{ crypto.crypto }}</label>
                         </div>
                     </div>
                 </div>
-                <button type="button" class="c-button c-button-peace" @click="reloadTrendData">表示</button>
+                <button type="button" class="c-button c-button-peace p-search_button-search u-mb-md" @click="reloadTrendData">表示</button>
             </form>
         </div>
 

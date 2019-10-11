@@ -5,10 +5,9 @@
     border: 1px solid transparent;
     border-radius: 0.25rem;
     text-align: center;
-}
-
-.c-alert-success {
-    color: $co-success;
-    background-color: $co-ba-success;
-    border-color: $co-bo-success;
+    &-success {
+        color: $co-success;
+        background-color: $co-ba-success;
+        border-color: $co-bo-success;
+    }
 }

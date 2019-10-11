@@ -242,7 +242,7 @@ textarea {
   text-align: center;
   position: fixed;
   width: 100%;
-  z-index: 999;
+  z-index: 300;
 }
 
 .l-header_pt {
@@ -263,7 +263,7 @@ textarea {
   position: relative;
   width: 40px;
   height: 34px;
-  z-index: 50;
+  z-index: 500;
 }
 
 @media screen and (min-width: 768px) {
@@ -311,14 +311,24 @@ textarea {
 }
 
 @media screen and (min-width: 768px) {
-  .c-nav-sm {
+  .c-nav_body {
     display: none;
   }
 }
 
+.c-nav_body-md {
+  display: none;
+}
+
+@media screen and (min-width: 768px) {
+  .c-nav_body-md {
+    display: block;
+  }
+}
+
 .c-nav_ul {
-  position: absolute;
-  top: 0;
+  position: fixed;
+  top: 3rem;
   left: 0;
   width: 100vw;
   height: 100vh;
@@ -327,6 +337,11 @@ textarea {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  z-index: 499;
+}
+
+.c-nav_ul-md {
+  display: flex;
 }
 
 .c-nav_li {
@@ -338,20 +353,6 @@ textarea {
     margin-bottom: 0;
     margin-left: 1rem;
   }
-}
-
-.c-nav-md {
-  display: none;
-}
-
-@media screen and (min-width: 768px) {
-  .c-nav-md {
-    display: block;
-  }
-}
-
-.c-nav_ul-md {
-  display: flex;
 }
 
 .c-form {
@@ -378,6 +379,10 @@ textarea {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+}
+
+.c-input_checkbox {
+  margin: 0;
 }
 
 .c-input_text {
@@ -407,10 +412,6 @@ textarea {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
-}
-
-.c-input_checkbox {
-  margin: 0;
 }
 
 .c-button {
@@ -447,7 +448,6 @@ textarea {
 }
 
 .c-button_link {
-  font-weight: 400;
   color: #048DFF;
   text-decoration: none;
 }
@@ -455,7 +455,7 @@ textarea {
 .c-title_main {
   font-size: 1.5rem;
   line-height: 1.5rem;
-  margin: 1rem;
+  margin: 1rem auto;
   text-align: center;
 }
 
@@ -467,9 +467,16 @@ textarea {
 }
 
 .c-title_article {
-  font-size: 2rem;
+  font-size: 1.5rem;
   line-height: 1.5rem;
   text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  .c-title_article {
+    font-size: 2rem;
+    line-height: 2rem;
+  }
 }
 
 .c-title_sub {
@@ -478,22 +485,21 @@ textarea {
   text-align: center;
 }
 
-.c-invalid_input-text {
-  border-color: #e3342f;
-}
-
-.c-invalid_input-text:focus {
-  border-color: #e3342f;
-  box-shadow: 0 0 0 0.2rem rgba(227, 52, 47, 0.25);
-  outline: 0;
-}
-
 .c-invalid_text {
   display: block;
   width: 100%;
   margin-top: 0.25rem;
   font-size: 80%;
   color: #e3342f;
+}
+
+.c-invalid_input-text {
+  border-color: #e3342f;
+}
+
+.c-invalid_input-text:focus {
+  box-shadow: 0 0 0 0.2rem rgba(227, 52, 47, 0.25);
+  outline: 0;
 }
 
 .c-pagination {
@@ -510,7 +516,7 @@ textarea {
   border-right: none;
 }
 
-.c-pagination_item-active {
+.c-pagination_item.c-pagination_item-active {
   background-color: #048DFF;
 }
 
@@ -547,7 +553,7 @@ textarea {
 }
 
 .c-tra-fade-enter-active,
-.c-tra-fade-leave-active {
+.c-tra-fade--leave-active {
   transition: opacity 1s;
 }
 
@@ -560,7 +566,7 @@ textarea {
   transition: all 0.8s ease;
 }
 
-.c-tra-slide-fade-leave-active {
+.c-tra-slide-fade--leave-active {
   transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
@@ -572,16 +578,10 @@ textarea {
 
 .p-ranks {
   margin: 1rem;
-  max-width: 600px;
+  max-width: 480px;
 }
 
 @media screen and (min-width: 768px) {
-  .p-ranks {
-    margin: 1rem auto;
-  }
-}
-
-@media screen and (min-width: 1024px) {
   .p-ranks {
     margin: 1rem;
   }
@@ -618,7 +618,7 @@ textarea {
   left: -1px;
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 768px) {
   .p-rank:before {
     width: 4rem;
     height: 4rem;
@@ -653,55 +653,41 @@ textarea {
   width: 100%;
 }
 
-.p-search-lg {
-  display: none;
-}
-
-@media screen and (min-width: 1024px) {
-  .p-search-lg {
-    display: block;
-    position: -webkit-sticky;
-    position: sticky;
-    top: 5rem;
-    max-width: 330px;
-    margin: 1rem;
-    color: #000000;
-    background-color: #ffffff;
-    border: 1px solid #b7b7b7;
-    border-radius: 0.35rem;
-    padding: 2rem 1rem;
-    z-index: 50;
-  }
-}
-
 .p-search {
+  display: none;
   position: fixed;
-  z-index: 50;
-  top: 2rem;
+  z-index: 200;
+  top: 3rem;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 3rem);
+  overflow: auto;
+  padding: 1rem;
   background-color: rgba(0, 0, 0, 0.8);
-  display: flex;
   align-items: center;
-  justify-content: center;
   flex-direction: column;
   color: #ffffff;
 }
 
-@media screen and (min-width: 1024px) {
+.p-search.is-active {
+  display: flex;
+}
+
+@media screen and (min-width: 768px) {
   .p-search {
-    display: block;
-    position: -webkit-sticky;
-    position: sticky;
-    top: 4rem;
-    max-width: 330px;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    top: 0;
+    height: auto;
+    max-width: 300px;
     margin: 1rem;
     color: #000000;
     background-color: #ffffff;
     border: 1px solid #b7b7b7;
     border-radius: 0.35rem;
-    padding: 3rem 1rem;
+    z-index: 50;
   }
 }
 
@@ -720,17 +706,29 @@ textarea {
   display: flex;
 }
 
-.p-search_button {
+.p-search_button-dispaly {
   display: inline-block;
 }
 
-@media screen and (min-width: 1024px) {
-  .p-search_button {
+@media screen and (min-width: 768px) {
+  .p-search_button-dispaly {
     display: none;
   }
 }
 
-@media screen and (min-width: 1024px) {
+.p-search_button-search {
+  position: fixed;
+  bottom: 0;
+  left: 0.5rem;
+}
+
+@media screen and (min-width: 768px) {
+  .p-search_button-search {
+    position: relative;
+  }
+}
+
+@media screen and (min-width: 768px) {
   .p-trendRanking {
     display: flex;
     justify-content: center;
@@ -738,13 +736,13 @@ textarea {
   }
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 768px) {
   .p-trendRanking_child:nth-of-type(1) {
     flex: 0 0 30%;
   }
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 768px) {
   .p-trendRanking_child:nth-of-type(2) {
     flex: 0 0 70%;
   }
@@ -790,7 +788,7 @@ textarea {
 
 .p-news {
   margin: 1rem;
-  max-width: 600px;
+  max-width: 480px;
 }
 
 @media screen and (min-width: 768px) {

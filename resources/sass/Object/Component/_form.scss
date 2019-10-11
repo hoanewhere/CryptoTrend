@@ -8,16 +8,13 @@
     @include mq(md) {
         margin: 1rem auto;
     }
+    &_title {
+        text-align: center;
+        padding: 1rem;
+    }
+    &_content-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
 }
-
-.c-form_title {
-    text-align: center;
-    padding: 1rem;
-}
-
-.c-form_content-row {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-}
-

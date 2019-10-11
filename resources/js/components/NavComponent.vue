@@ -9,7 +9,7 @@
     </div>
 
     <!-- スマホ時のNav -->
-    <div class="c-nav-sm" v-show="navActive">
+    <div class="c-nav_body" v-show="navActive">
         <ul class="c-nav_ul">
             <li class="c-nav_li" v-for="(nav, index) in navList" :key="index">
                 <a v-if="nav.title != 'ログアウト'" :href="nav.url" class="c-button c-button-warning">{{ nav.title }}</a>
@@ -19,7 +19,7 @@
     </div>
 
     <!-- タブレット、PC時のNav -->
-    <div class="c-nav-md">
+    <div class="c-nav_body-md">
         <ul class="c-nav_ul-md">
             <li class="c-nav_li" v-for="(nav, index) in navList" :key="index">
                 <a v-if="nav.title != 'ログアウト'" :href="nav.url" class="c-button c-button-warning">{{ nav.title }}</a>

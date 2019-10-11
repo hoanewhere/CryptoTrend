@@ -11,29 +11,23 @@
     border: 1px solid transparent;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     line-height: 1.6;
+    &-peace {
+        color: $co-base0;
+        background-color:$co-peace;
+        border-color: $co-peace;
+    }
+    &-warning {
+        color: $co-base99;
+        background-color:$co-warning;
+        border-color: $co-warning;
+    }
+    &-dark {
+        color: $co-base0;
+        background-color:$co-base3;
+        border-color: $co-base3;
+    }
+    &_link{
+        color: $co-peace;
+        text-decoration: none;
+    }
 }
-
-.c-button-peace {
-    color: $co-base0;
-    background-color:$co-peace;
-    border-color: $co-peace;
-}
-
-.c-button-warning {
-    color: $co-base99;
-    background-color:$co-warning;
-    border-color: $co-warning;
-}
-
-.c-button-dark {
-    color: $co-base0;
-    background-color:$co-base3;
-    border-color: $co-base3;
-}
-
-.c-button_link{
-    font-weight: 400;
-    color: $co-peace;
-    text-decoration: none;
-}
-    

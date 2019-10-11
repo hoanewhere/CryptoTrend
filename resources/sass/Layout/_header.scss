@@ -8,9 +8,8 @@
     text-align: center;
     position: fixed;
     width: 100%;
-    z-index: 999;
-}
-
-.l-header_pt {
-    padding-top: 3rem;
+    z-index: 300;
+    &_pt {
+        padding-top: 3rem;
+    }
 }
