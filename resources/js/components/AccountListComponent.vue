@@ -5,8 +5,12 @@
         <p class="u-mb-sm">{{ gotTime }}</p>
     </div>
     <div class="u-ta-c u-mb-lg" v-if="accounts">
-        <button v-if="autoFollowFlg == true" type="button" class="c-button c-button-peace" @click="toggleAutoFollow">自動フォロー ON</button>
+        <button v-if="autoFollowFlg == true" type="button" class="c-button c-button-peace" @click="toggleAutoFollow">自動フォロー ON中</button>
         <button v-else type="button" class="c-button c-button-dark" @click="toggleAutoFollow">自動フォロー OFF</button>
+    </div>
+    <div class="u-ta-c u-mb-lg" v-if="accounts">
+        <button v-if="connectedTwitterFlg == true" type="button" class="c-button c-button-peace" @click="toggleConnectedTwitter">twitter連携中</button>
+        <button v-else type="button" class="c-button c-button-dark" @click="toggleConnectedTwitter">twitter連携</button>
     </div>
 
     <!-- ページネーション -->
@@ -51,6 +55,7 @@
                 accountsPaginate: {},
                 gotTime: '',
                 autoFollowFlg: false,
+                connectedTwitterFlg: false,
                 page: 1,
             }
         },
@@ -76,6 +81,7 @@
                     this.accountsPaginate = res.data.accounts
                     this.gotTime = res.data.got_time
                     this.autoFollowFlg = res.data.auto_follow_flg
+                    this.connectedTwitterFlg = res.data.connected_twitter_flg
 
                     // acocuntデータをjsonにパース
                     for(let i in this.accounts) {
@@ -111,6 +117,21 @@
                 }).then((res) => {
                     console.log('toggleautofollow完了')
                 })
+            },
+            toggleConnectedTwitter: function() {
+                if(this.connectedTwitterFlg == true) { // 連携解除
+                    axios.post('accountList/connectStop')
+                    .then((res) => {
+                        this.connectedTwitterFlg = false
+                    })
+                } else { // 連携開始
+                    this.connectedTwitterFlg = true
+                    axios.post('accountList/connectStart')
+                    .then((res) => {
+                        this.connectedTwitterFlg = true
+                        location.href = res.data
+                    })
+                }
             },
             movePage(page) { // ページネーションのページ移動処理
                 this.page = page

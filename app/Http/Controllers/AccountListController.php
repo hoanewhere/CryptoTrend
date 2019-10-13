@@ -11,6 +11,7 @@ use App\Http\Controllers\TwitterController;
 use App\UpdatedTime;
 use App\SearchedAccount;
 use App\FollowManagement;
+use App\TwitterFollowing;
 use App\User;
 
 class AccountListController extends Controller
@@ -48,9 +49,9 @@ class AccountListController extends Controller
      */
     public function index() {
         $login_user = Auth::user();
-        if(empty($login_user->access_token)) {
-            return TwitterController::authenticateUser();
-        }
+        // if(empty($login_user->access_token)) {
+        //     return TwitterController::authenticateUser();
+        // }
         return view('crypto.accountList');
     }
 
@@ -76,7 +77,9 @@ class AccountListController extends Controller
         ]);
         $login_user->save();
 
-        $this->getUsers();
+        // 連携ユーザとのフォロー状態を確認して保存する
+        $this->saveFollowingData($login_user);
+
         return redirect('accountList');
     }
     
@@ -201,10 +204,29 @@ class AccountListController extends Controller
             $auto_follow_flg = $follow_management->auto_follow_flg;
         }
 
+        // twitter連携状態確認
+        $connected_twitter_flg = false;
+        if(!empty($login_user->access_token)) {
+            $connected_twitter_flg = true;
+        }
+
+        // フォロー状態取得 TBD::未連携時の画面表示処理追加したらコメント解除
+        // if ($connected_twitter_flg) {
+        //     Log::debug('accountsデータ' . print_r($accounts, true));
+        //     foreach ($accounts as $account) {
+        //         $account_data = json_decode($account->account_data, true);
+        //         Log::debug('accountデータ' . print_r($account_data['id'], true));
+        //         $twitter_following = TwitterFollowing::where('login_user_id', $login_user->id)->where('searched_account_id', $account_data['id'])->first();
+        //         Log::debug('twitter_followingデータ' . print_r($twitter_following, true));
+        //         $account['following'] = $twitter_following->following;
+        //     }
+        // }
+
         $res_data = [
             'accounts' => $accounts,
             'got_time' => $got_time,
-            'auto_follow_flg' => $auto_follow_flg
+            'auto_follow_flg' => $auto_follow_flg,
+            'connected_twitter_flg' => $connected_twitter_flg
         ];
     
         Log::debug('初期表示データ：' . print_r($res_data, true));
@@ -337,6 +359,69 @@ class AccountListController extends Controller
         );
     }
 
+    public function connectStart() {
+        Log::debug('connect開始');
+        $login_user = Auth::user();
+        if(empty($login_user->access_token)) {
+            // return redirect(TwitterController::authenticateUser());
+            return TwitterController::authenticateUser();
+        }
+    }
+
+
+    public function connectStop() {
+        Log::debug('connect停止');
+        $login_user = Auth::user();
+        $follow_management = FollowManagement::where('login_user_id', $login_user->id)->first();
+        $twitter_followings = TwitterFollowing::where('login_user_id', $login_user->id)->get();
+        if(!empty($login_user->access_token)) {
+            $login_user->fill([
+                'access_token' => null,
+            ]);
+            $login_user->save();
+
+            if(!empty($follow_management)) {
+                $follow_management->fill([
+                    'auto_follow_flg' => false,
+                ]);
+                $follow_management->save();
+            }
+            
+            if(!empty($twitter_followings)) {
+                foreach($twitter_followings as $twitter_following) {
+                    $twitter_following->delete();
+                }
+            }
+        }
+        // データ再取得
+        $this->reloadTweetData();
+    }
+
+
+    public function saveFollowingData(User $user) {
+        // パラメータ初期化
+        $params['user_id'] = '';
+        $cnt = 0;
+
+        // $login_user = Auth::user();
+        $access_token = json_decode($user->access_token, true);
+        $updated_time = UpdatedTime::where('time_index', 2)->where('complete_flg', true)->orderby('created_at', 'desc')->first();
+        $searched_accounts = SearchedAccount::select('id', 'account_data->id as twitter_id')->where('update_time_id', $updated_time->id)->get();
+        foreach($searched_accounts as $searched_account) {
+            $cnt++;
+            $params['user_id'] = $params['user_id'] . $searched_account->twitter_id . ',';
+            Log::debug('friendsips/lokupのパラメータ:' . $params['user_id']);
+
+            if($cnt == 100) { // パラメータに１００件のidが貯まったら以下処理実施
+                $this->saveFollowingDataDetail($user->id, $params, $access_token);
+                $cnt = 0;
+                $params['user_id'] = '';
+            }
+        }
+        if($cnt !== 0) { // 100件ずつのループで最後に溢れたIDに対しての処理
+            $this->saveFollowingDataDetail($user->id, $params, $access_token);
+        }
+    }
 
     // **
     // 以下 private関数
@@ -403,5 +488,25 @@ class AccountListController extends Controller
             'next_page' => $next_page
         ]);
         $updated_time->save();
+    }
+
+    private function saveFollowingDataDetail (int $login_user_id, array $params, array $access_token) {
+        // twitterapi friendships/lookup実施
+        $following_states = TwitterController::lookupFriendships($access_token, $params);
+
+        if($following_states == "") { // lookupFriendships処理が失敗した場合、何もしない（表示時の処理でフォロー状態をマスクする）
+            return;
+        }
+
+        foreach($following_states as $state) {
+            $following = false;
+            if($state['connections'][0] == 'following') {
+                $following = true;
+            }
+            $twitter_following = TwitterFollowing::updateOrCreate(
+                ['login_user_id' => $login_user_id, 'searched_account_id' => $state['id']],
+                ['following' => $following]
+            );
+        }
     }
 }

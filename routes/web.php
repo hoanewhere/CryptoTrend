@@ -33,6 +33,8 @@ Route::get('/accountList/callback', 'AccountListController@callback');
 Route::post('/accountList/toFollow', 'AccountListController@toFollow');
 Route::post('/accountList/unfollow', 'AccountListController@unfollow');
 Route::post('/accountList/toggleAutoFollow', 'AccountListController@toggleAutoFollow');
+Route::post('/accountList/connectStart', 'AccountListController@connectStart');
+Route::post('/accountList/connectStop', 'AccountListController@connectStop');
 
 // ニュース一覧
 Route::get('/newsList', 'NewsListController@index');

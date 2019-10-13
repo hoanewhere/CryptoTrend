@@ -259,7 +259,7 @@ class TwitterController extends Controller
         ));
         Log::debug('飛び先'.$url);
 
-        return redirect($url);
+        return $url;
     }
 
 
@@ -325,5 +325,33 @@ class TwitterController extends Controller
         // 対象IDをフォローする
         $connection->post('friendships/destroy', array('screen_name' => $screen_name));
         return;
+    }
+
+
+    /**
+     * ログインユーザと対象アカウントのフォロー状態を取得する
+     * @param array $access_token, array $params
+     * @return void
+     */
+    public static function lookupFriendships(array $access_token, array $params) {
+        // ログインユーザにひもづくアクセストークンで認証する
+        $config = config('twitter');
+        $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], $access_token['oauth_token'], $access_token['oauth_token_secret']);
+        $connection->setTimeouts(10, 10);
+
+
+        $result_std = $connection->get('friendships/lookup', $params);
+        $result = json_decode(json_encode($result_std), true);
+        Log::debug('lookupFriendships取得データ(配列):' . print_r($result, true));
+
+        // レスポンスがエラーで返ってきた場合、
+        if (isset($result['errors'])) {
+            Log::debug('resultエラー:'. print_r($result['errors'], true));
+            return "";
+        } else if (empty($result)) {
+            Log::debug('resultエラー:返り値null');
+            return "";
+        }
+        return $result;
     }
 }
