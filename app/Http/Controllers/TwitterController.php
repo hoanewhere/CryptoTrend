@@ -274,7 +274,9 @@ class TwitterController extends Controller
         $oauth_token = session('oauth_token');
         $oauth_token_secret = session('oauth_token_secret');
 
-        if ($request->has('oauth_token') && $oauth_token !== $request->oauth_token) {
+        if( !($request->has('oauth_token')) ) {
+            return null;
+        } else if ($request->has('oauth_token') && $oauth_token !== $request->oauth_token) {
             return null;
         }
 

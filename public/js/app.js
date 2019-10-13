@@ -1746,6 +1746,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -37629,30 +37631,6 @@ var render = function() {
       _vm._v(" "),
       _vm.accounts
         ? _c("div", { staticClass: "u-ta-c u-mb-lg" }, [
-            _vm.autoFollowFlg == true
-              ? _c(
-                  "button",
-                  {
-                    staticClass: "c-button c-button-peace",
-                    attrs: { type: "button" },
-                    on: { click: _vm.toggleAutoFollow }
-                  },
-                  [_vm._v("自動フォロー ON中")]
-                )
-              : _c(
-                  "button",
-                  {
-                    staticClass: "c-button c-button-dark",
-                    attrs: { type: "button" },
-                    on: { click: _vm.toggleAutoFollow }
-                  },
-                  [_vm._v("自動フォロー OFF")]
-                )
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.accounts
-        ? _c("div", { staticClass: "u-ta-c u-mb-lg" }, [
             _vm.connectedTwitterFlg == true
               ? _c(
                   "button",
@@ -37670,7 +37648,40 @@ var render = function() {
                     attrs: { type: "button" },
                     on: { click: _vm.toggleConnectedTwitter }
                   },
-                  [_vm._v("twitter連携")]
+                  [_vm._v("twitter連携　開始")]
+                )
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.accounts
+        ? _c("div", { staticClass: "u-ta-c u-mb-lg" }, [
+            _vm.connectedTwitterFlg == false
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "c-button c-button-dark",
+                    attrs: { type: "button", disabled: "" }
+                  },
+                  [_vm._v("連携後、機能解放")]
+                )
+              : _vm.autoFollowFlg == true
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "c-button c-button-peace",
+                    attrs: { type: "button" },
+                    on: { click: _vm.toggleAutoFollow }
+                  },
+                  [_vm._v("自動フォロー ON中")]
+                )
+              : _c(
+                  "button",
+                  {
+                    staticClass: "c-button c-button-dark",
+                    attrs: { type: "button" },
+                    on: { click: _vm.toggleAutoFollow }
+                  },
+                  [_vm._v("自動フォロー OFF")]
                 )
           ])
         : _vm._e(),
@@ -37703,7 +37714,16 @@ var render = function() {
                   }),
                   _vm._v(" "),
                   _c("div", { staticClass: "p-account_inner-btn u-mb-md" }, [
-                    account.account_data.following === false
+                    _vm.connectedTwitterFlg === false
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "c-button c-button-dark",
+                            attrs: { type: "button", disabled: "" }
+                          },
+                          [_vm._v("連携後、機能解放")]
+                        )
+                      : account.account_data.following === false
                       ? _c(
                           "button",
                           {

@@ -210,7 +210,7 @@ class AccountListController extends Controller
             $connected_twitter_flg = true;
         }
 
-        // フォロー状態取得 TBD::未連携時の画面表示処理追加したらコメント解除
+        // フォロー状態取得 TBD::followingテーブルとsearched_accountテーブルにズレがあるため、両テーブルを再取得した時コメント解除する
         // if ($connected_twitter_flg) {
         //     Log::debug('accountsデータ' . print_r($accounts, true));
         //     foreach ($accounts as $account) {

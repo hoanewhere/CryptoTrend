@@ -5,12 +5,13 @@
         <p class="u-mb-sm">{{ gotTime }}</p>
     </div>
     <div class="u-ta-c u-mb-lg" v-if="accounts">
-        <button v-if="autoFollowFlg == true" type="button" class="c-button c-button-peace" @click="toggleAutoFollow">自動フォロー ON中</button>
-        <button v-else type="button" class="c-button c-button-dark" @click="toggleAutoFollow">自動フォロー OFF</button>
+        <button v-if="connectedTwitterFlg == true" type="button" class="c-button c-button-peace" @click="toggleConnectedTwitter">twitter連携中</button>
+        <button v-else type="button" class="c-button c-button-dark" @click="toggleConnectedTwitter">twitter連携　開始</button>
     </div>
     <div class="u-ta-c u-mb-lg" v-if="accounts">
-        <button v-if="connectedTwitterFlg == true" type="button" class="c-button c-button-peace" @click="toggleConnectedTwitter">twitter連携中</button>
-        <button v-else type="button" class="c-button c-button-dark" @click="toggleConnectedTwitter">twitter連携</button>
+        <button v-if="connectedTwitterFlg == false" type="button" disabled class="c-button c-button-dark">連携後、機能解放</button>
+        <button v-else-if="autoFollowFlg == true" type="button" class="c-button c-button-peace" @click="toggleAutoFollow">自動フォロー ON中</button>
+        <button v-else type="button" class="c-button c-button-dark" @click="toggleAutoFollow">自動フォロー OFF</button>
     </div>
 
     <!-- ページネーション -->
@@ -23,7 +24,8 @@
                 <div class="p-account_inner">
                     <img :src="account.account_data.profile_image_url" alt="" class="p-account_inner-img">
                     <div class="p-account_inner-btn u-mb-md">
-                        <button v-if="account.account_data.following === false" type="button" class="c-button c-button-peace" @click="toFollow(account)">フォローする</button>
+                        <button v-if="connectedTwitterFlg === false" type="button" disabled class="c-button c-button-dark">連携後、機能解放</button>
+                        <button v-else-if="account.account_data.following === false" type="button" class="c-button c-button-peace" @click="toFollow(account)">フォローする</button>
                         <button v-else type="button" class="c-button c-button-dark" @click="unfollow(account)">フォロー済</button>
                     </div>
                     <p class="u-mb-sm">{{ account.account_data.name }}</p>
