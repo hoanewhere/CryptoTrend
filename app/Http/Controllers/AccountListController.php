@@ -264,8 +264,12 @@ class AccountListController extends Controller
         foreach($auto_flg_users as $auto_flg_user) { // auto_flgが立っているuserに対して処理を実施
             // 未フォローのアカウントを15件取得
             $login_user_id = $auto_flg_user->login_user_id;
-            $updated_time_id = UpdatedTime::select('id')->where('login_user_id', $login_user_id)->where('time_index', 2)->where('complete_flg', true)->latest()->first();
-            $accounts = SearchedAccount::select('id', 'account_data->screen_name as screen_name')->where('update_time_id', $updated_time_id->id)->where('account_data->following', false)->limit(15)->get();
+            $updated_time_id = UpdatedTime::select('id')->where('time_index', 2)->where('complete_flg', true)->latest()->first();
+            $accounts = SearchedAccount::select('account_data->screen_name as screen_name', 'twitter_followings.id as following_id')
+                                        ->leftJoin('twitter_followings', 'searched_accounts.account_data->id_str', '=', 'twitter_followings.searched_twitter_id_str')
+                                        ->where('update_time_id', $updated_time_id->id)
+                                        ->where('twitter_followings.login_user_id', $login_user_id)
+                                        ->where('twitter_followings.following', false)->limit(15)->get();
 
             foreach($accounts as $account) { // 最大15人に対してフォロー処理を実施
                 // day_cnt確認
@@ -273,7 +277,7 @@ class AccountListController extends Controller
                 $day_cnt = $follow_management->day_cnt;
                 Log::debug('アカウント名前: ' . print_r($account, true));
                 if($day_cnt < self::MAX_FOLLOW_DAY_LIMIT) {
-                    self::toFollowAuto($account->id, $account->screen_name, $login_user_id);
+                    self::toFollowAuto($account->following_id, $account->screen_name, $login_user_id);
 
                     $follow_management->fill([
                         'day_cnt' => ++$day_cnt
@@ -309,7 +313,8 @@ class AccountListController extends Controller
         TwitterController::createFriendships($access_token, $screen_name);
 
         //DB更新
-        $searched_account = SearchedAccount::where('id', $record_id)->update(['account_data->following' => true]);
+        // $searched_account = SearchedAccount::where('id', $record_id)->update(['account_data->following' => true]);
+        $twitter_following = TwitterFollowing::where('id', $record_id)->update(['following' => true]);
     }
 
 
@@ -332,7 +337,7 @@ class AccountListController extends Controller
         TwitterController::createFriendships($access_token, $request->screen_name);
 
         //DB更新
-        $searched_account = SearchedAccount::where('id', $request->record_id)->update(['account_data->following' => true]);
+        $twitter_following = TwitterFollowing::where('id', $request->record_id)->update(['following' => true]);
     }
 
 
@@ -353,7 +358,7 @@ class AccountListController extends Controller
         TwitterController::destroyFriendships($access_token, $request->screen_name);
 
         //DB更新
-        $searched_account = SearchedAccount::where('id', $request->record_id)->update(['account_data->following' => false]);
+        $twitter_following = TwitterFollowing::where('id', $request->record_id)->update(['following' => false]);
     }
 
 
