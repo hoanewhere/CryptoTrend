@@ -21,7 +21,6 @@ class TwitterController extends Controller
 
     const MAX_TWEET_SEARCH = 450; // twitterAPIのツイート検索時の上限(450/15min)
     const MAX_USER_SEARCH = 900; // twitterAPIのユーザ検索時の上限(900/15min)
-    const USER_SEARCH_WORD = '憚る'; // ユーザ検索時のキーワード
 
     private static $searchd_tweet_cnt = 0; // ツイート検索数
     public static $searchd_tweet_limit_flg = false; // ツイート検索の上限フラグ
@@ -132,17 +131,16 @@ class TwitterController extends Controller
 
 
     /**
-     * ログインユーザに紐づくツイッターアカウントでキーワードに関連するアカウントを取得し、返す。
-     * @param array $access_token, int $next_page, string $search_word
+     * キーワードに関連するユーザを取得し、返す。
+     * @param int $next_page, string $search_word
      * @return array $users_arr
      */
-    public static function searchTweetUsers(array $access_token, int $next_page, string $search_word) {
+    public static function searchTweetUsers(int $next_page, string $search_word) {
         // ユーザ情報の配列を初期化
         $users_arr = array();
         
-        // ログインユーザにひもづくアクセストークンで認証する
         $config = config('twitter');
-        $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], $access_token['oauth_token'], $access_token['oauth_token_secret']);
+        $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], $config['access_token'], $config['access_token_secret']);
         $connection->setTimeouts(10, 10);
 
         // パラメータを設定

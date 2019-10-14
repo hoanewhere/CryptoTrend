@@ -48,10 +48,11 @@ class AccountListController extends Controller
      * @return view 'アカウント一覧画面'
      */
     public function index() {
-        $login_user = Auth::user();
-        // if(empty($login_user->access_token)) {
-        //     return TwitterController::authenticateUser();
-        // }
+        // test
+        // $this->saveFollowingData($login_user);
+        // $this->getUsers();
+        // $this->toFollowAutoLimit();
+
         return view('crypto.accountList');
     }
 
@@ -93,16 +94,8 @@ class AccountListController extends Controller
         Log::debug('getUsers(関数呼び出し)');
 
         $today = date('Y-m-d');
-        $login_user = Auth::user();
-        $login_user_id = $login_user->id;
-        $access_token = json_decode($login_user->access_token, true);
         $next_page = 1;
-        $updated_time_result = UpdatedTime::where('time_index', '2')->where('created_at', 'LIKE', "$today%")->get(); 
-        if(count($updated_time_result)) {
-            if($updated_time_result[0]->complete_flg) {
-                return;
-            }
-        }
+        $updated_time_result = UpdatedTime::where('time_index', '2')->where('created_at', 'LIKE', "$today%")->get();
 
         // データ取得状況確認
         if(count($updated_time_result)) {
@@ -117,63 +110,17 @@ class AccountListController extends Controller
             $updated_time->fill([
                 'time_index' => 2,
                 'complete_flg' => false,
-                'login_user_id' => $login_user_id
             ]);
             $updated_time->save();
         }
 
         // ユーザ検索
-        $result_arr = $this->searchUsers($access_token, $next_page);
+        $result_arr = $this->searchUsers($next_page);
         $users = $result_arr['users_arr'];
         $next_page = $result_arr['next_page'];
 
         // ユーザデータ保存
-        $this->saveUsers($users, $login_user_id, $next_page);
-    }
-
-
-    /**
-     * ツイッター連携してる全ユーザに対して仮想通貨に関連するユーザを取得し、DBに保存する。
-     * 
-     * @return void
-     */
-    public function getUsersAllAcounts() {
-        Log::debug('getUsersAllAcounts(関数呼び出し)');
-        $today = date('Y-m-d');
-        $targetUsers = User::whereNotNull('access_token')->get();
-        
-        foreach($targetUsers as $targetUser) {
-            $user_id = $targetUser->id;
-            $access_token = json_decode($targetUser->access_token, true);
-            $next_page = 1;
-            $updated_time_result = UpdatedTime::where('time_index', '2')->where('login_user_id', $targetUser->id)->where('created_at', 'LIKE', "$today%")->get(); 
-
-            // データ取得状況確認
-            if(count($updated_time_result)) {
-                if($updated_time_result[0]->complete_flg) {
-                    continue;
-                } else {
-                    $next_page = $updated_time_result[0]->next_page;
-                }
-            } else {
-                // UpdatedTimeテーブルにレコード追加
-                $updated_time = New UpdatedTime();
-                $updated_time->fill([
-                    'time_index' => 2,
-                    'complete_flg' => false,
-                    'login_user_id' => $user_id
-                ]);
-                $updated_time->save();
-            }
-
-            // ユーザ検索
-            $result_arr = $this->searchUsers($access_token, $next_page);
-            $users = $result_arr['users_arr'];
-            $next_page = $result_arr['next_page'];
-
-            // ユーザデータ保存
-            $this->saveUsers($users, $user_id, $next_page);
-        }
+        $this->saveUsers($users, $next_page);
     }
 
 
@@ -433,7 +380,7 @@ class AccountListController extends Controller
             Log::debug('friendsips/lokupの単品パラメータ:' . $searched_account->twitter_id_str);
             $params['user_id'] = $params['user_id'] . ($searched_account->twitter_id_str) . ',';
             Log::debug('friendsips/lokupのパラメータ:' . $params['user_id']);
-
+            
             if($cnt == 100) { // パラメータに１００件のidが貯まったら以下処理実施
                 $this->saveFollowingDataDetail($user->id, $params, $access_token);
                 $cnt = 0;
@@ -451,13 +398,13 @@ class AccountListController extends Controller
 
     /**
      * 仮想通貨に関連するユーザを取得する。
-     * @param array $access_token, int $next_page
+     * @param int $next_page
      * @return array $result_arr
      */
-    private function searchUsers(array $access_token, int $next_page) {
+    private function searchUsers(int $next_page) {
         Log::debug('serachUsers(関数呼び出し)');
 
-        $result_arr = TwitterController::searchTweetUsers($access_token, $next_page, self::USER_SEARCH_WORD);
+        $result_arr = TwitterController::searchTweetUsers($next_page, self::USER_SEARCH_WORD);
         Log::debug('取得データ(result_arr)：'. print_r($result_arr, true));
         return $result_arr;
     }
@@ -466,21 +413,22 @@ class AccountListController extends Controller
     /**
      * 仮想通貨に関連するユーザをDBに保存する。
      * 
-     * @param array $users, int $login_id, int $next_page
+     * @param array $users, int $next_page
      * @return void
      */
-    private function saveUsers(array $users, int $login_id, int $next_page) {
+    private function saveUsers(array $users, int $next_page) {
         Log::debug('saveUsers(関数呼び出し)');
 
         $complete_flg = false;
         $today = date('Y-m-d');
-        $updated_time = UpdatedTime::where('time_index', '2')->where('login_user_id', $login_id)->where('created_at', 'LIKE', "$today%")->first(); 
+        $updated_time = UpdatedTime::where('time_index', '2')->where('created_at', 'LIKE', "$today%")->first(); 
         $saved_users = SearchedAccount::where('update_time_id', $updated_time->id)->get();
 
         foreach($users as $user) {
             // 重複チェック
             foreach($saved_users as $saved_user) {
-                if($saved_user->id === $user['id']) {
+                if($saved_user->id === $user['id']) { //tbd:$saved_user->account_data['id']じゃない？　あと比較するならid_strでする
+                    Log::debug('重複ありのため終了');
                     $complete_flg = true;
                     $next_page = 0;
                     break 2;
@@ -492,8 +440,7 @@ class AccountListController extends Controller
             $searched_account = New SearchedAccount();
             $searched_account->fill([
                 'account_data' => $user_json,
-                'update_time_id' => $updated_time->id,
-                'login_user_id' => $login_id
+                'update_time_id' => $updated_time->id
             ]);
             $searched_account->save();
         }
