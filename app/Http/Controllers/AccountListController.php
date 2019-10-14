@@ -188,13 +188,29 @@ class AccountListController extends Controller
         $got_time = "";
         $accounts = array();
 
+        // twitter連携状態確認
+        $connected_twitter_flg = false;
+        if(!empty($login_user->access_token)) {
+            $connected_twitter_flg = true;
+        }
+
         // 更新日付取得
-        $updated_time = UpdatedTime::where('time_index', 2)->where('complete_flg', true)->where('login_user_id', $login_user->id)->orderby('created_at', 'desc')->first();
+        $updated_time = UpdatedTime::where('time_index', 2)->where('complete_flg', true)->orderby('created_at', 'desc')->first();
+
+        // twitterユーザ取得
         if($updated_time) {
-            $accounts = SearchedAccount::select(['id', 'account_data'])->where('update_time_id', $updated_time->id)->orderby('account_data->following', 'asc')->paginate(24);
+            if ($connected_twitter_flg) {
+                $accounts = SearchedAccount::leftJoin('twitter_followings', 'searched_accounts.account_data->id_str', '=', 'twitter_followings.searched_twitter_id_str')
+                                            ->where('update_time_id', $updated_time->id)
+                                            ->where('twitter_followings.login_user_id', $login_user->id)
+                                            ->orderby('twitter_followings.following', 'asc')->paginate(24);
+            } else {
+                $accounts = SearchedAccount::where('update_time_id', $updated_time->id)->paginate(24);
+            }
+
             $got_time = 'データ取得時間：' . date("Y-m-d H:i:s", strtotime($updated_time->updated_at));
         } else {
-            $got_time = "データ取得中(最大待ち時間:100分)";
+            $got_time = "データ取得中";
         }
 
         // 自動フォローフラグ取得
@@ -216,7 +232,7 @@ class AccountListController extends Controller
         //     foreach ($accounts as $account) {
         //         $account_data = json_decode($account->account_data, true);
         //         Log::debug('accountデータ' . print_r($account_data['id'], true));
-        //         $twitter_following = TwitterFollowing::where('login_user_id', $login_user->id)->where('searched_account_id', $account_data['id'])->first();
+        //         $twitter_following = TwitterFollowing::where('login_user_id', $login_user->id)->where('searched_twitter_id_str', $account_data['id_str'])->first();
         //         Log::debug('twitter_followingデータ' . print_r($twitter_following, true));
         //         $account['following'] = $twitter_following->following;
         //     }
@@ -406,10 +422,11 @@ class AccountListController extends Controller
         // $login_user = Auth::user();
         $access_token = json_decode($user->access_token, true);
         $updated_time = UpdatedTime::where('time_index', 2)->where('complete_flg', true)->orderby('created_at', 'desc')->first();
-        $searched_accounts = SearchedAccount::select('id', 'account_data->id as twitter_id')->where('update_time_id', $updated_time->id)->get();
+        $searched_accounts = SearchedAccount::select('id', 'account_data->id_str as twitter_id_str')->where('update_time_id', $updated_time->id)->get();
         foreach($searched_accounts as $searched_account) {
             $cnt++;
-            $params['user_id'] = $params['user_id'] . $searched_account->twitter_id . ',';
+            Log::debug('friendsips/lokupの単品パラメータ:' . $searched_account->twitter_id_str);
+            $params['user_id'] = $params['user_id'] . ($searched_account->twitter_id_str) . ',';
             Log::debug('friendsips/lokupのパラメータ:' . $params['user_id']);
 
             if($cnt == 100) { // パラメータに１００件のidが貯まったら以下処理実施
@@ -504,7 +521,7 @@ class AccountListController extends Controller
                 $following = true;
             }
             $twitter_following = TwitterFollowing::updateOrCreate(
-                ['login_user_id' => $login_user_id, 'searched_account_id' => $state['id']],
+                ['login_user_id' => $login_user_id, 'searched_twitter_id_str' => $state['id_str']],
                 ['following' => $following]
             );
         }

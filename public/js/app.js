@@ -1794,7 +1794,7 @@ __webpack_require__.r(__webpack_exports__);
         record_id: account.id,
         screen_name: account.account_data.screen_name
       }).then(function (res) {
-        account.account_data.following = true;
+        account.following = true;
       });
     },
     unfollow: function unfollow(account) {
@@ -1803,7 +1803,7 @@ __webpack_require__.r(__webpack_exports__);
         record_id: account.id,
         screen_name: account.account_data.screen_name
       }).then(function (res) {
-        account.account_data.following = false;
+        account.following = false;
       });
     },
     toggleAutoFollow: function toggleAutoFollow() {
@@ -37714,7 +37714,7 @@ var render = function() {
                   }),
                   _vm._v(" "),
                   _c("div", { staticClass: "p-account_inner-btn u-mb-md" }, [
-                    _vm.connectedTwitterFlg === false
+                    _vm.connectedTwitterFlg == false
                       ? _c(
                           "button",
                           {
@@ -37723,7 +37723,7 @@ var render = function() {
                           },
                           [_vm._v("連携後、機能解放")]
                         )
-                      : account.account_data.following === false
+                      : account.following == false
                       ? _c(
                           "button",
                           {

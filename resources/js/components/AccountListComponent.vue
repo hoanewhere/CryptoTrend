@@ -24,8 +24,8 @@
                 <div class="p-account_inner">
                     <img :src="account.account_data.profile_image_url" alt="" class="p-account_inner-img">
                     <div class="p-account_inner-btn u-mb-md">
-                        <button v-if="connectedTwitterFlg === false" type="button" disabled class="c-button c-button-dark">連携後、機能解放</button>
-                        <button v-else-if="account.account_data.following === false" type="button" class="c-button c-button-peace" @click="toFollow(account)">フォローする</button>
+                        <button v-if="connectedTwitterFlg == false" type="button" disabled class="c-button c-button-dark">連携後、機能解放</button>
+                        <button v-else-if="account.following == false" type="button" class="c-button c-button-peace" @click="toFollow(account)">フォローする</button>
                         <button v-else type="button" class="c-button c-button-dark" @click="unfollow(account)">フォロー済</button>
                     </div>
                     <p class="u-mb-sm">{{ account.account_data.name }}</p>
@@ -97,7 +97,7 @@
                     record_id: account.id,
                     screen_name: account.account_data.screen_name
                 }).then((res) => {
-                    account.account_data.following = true;
+                    account.following = true;
                 })
             },
             unfollow: function(account) { // アカウントフォロー解除処理
@@ -105,7 +105,7 @@
                     record_id: account.id,
                     screen_name: account.account_data.screen_name
                 }).then((res) => {
-                    account.account_data.following = false;
+                    account.following = false;
                 })
             },
             toggleAutoFollow: function() { // 自動フォローの切り替え処理
