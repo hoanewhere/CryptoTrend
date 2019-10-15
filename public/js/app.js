@@ -1922,25 +1922,48 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+var URL_ORIGIN = location.origin;
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    auth: {
+      required: false
+    }
+  },
   data: function data() {
     return {
       navList: {},
-      navActive: false
+      navActive: false,
+      urlIndex: {
+        url: URL_ORIGIN + '/index',
+        title: 'トレンド'
+      },
+      urlAccount: {
+        url: URL_ORIGIN + '/accountList',
+        title: 'アカウント一覧'
+      },
+      urlNews: {
+        url: URL_ORIGIN + '/newsList',
+        title: 'ニュース一覧'
+      },
+      urlLogin: {
+        url: URL_ORIGIN + '/login',
+        title: 'ログイン'
+      },
+      urlLogout: {
+        url: URL_ORIGIN + '/logout',
+        title: 'ログアウト'
+      },
+      urlRegister: {
+        url: URL_ORIGIN + '/register',
+        title: 'ユーザ登録'
+      }
     };
   },
-  mounted: function mounted() {
-    this.reloadData();
-  },
   methods: {
-    reloadData: function reloadData() {
-      var _this = this;
-
-      // ログイン状態や画面毎に異なるNavのデータを取得
-      axios.get('/crypto/reloadNavData').then(function (res) {
-        _this.navList = res.data;
-      });
-    },
     navClick: function navClick() {
       // ハンバーガーアイコン押下時の処理
       this.navActive = !this.navActive;
@@ -37907,62 +37930,156 @@ var render = function() {
         staticClass: "c-nav_body"
       },
       [
-        _c(
-          "ul",
-          { staticClass: "c-nav_ul" },
-          _vm._l(_vm.navList, function(nav, index) {
-            return _c("li", { key: index, staticClass: "c-nav_li" }, [
-              nav.title != "ログアウト"
-                ? _c(
-                    "a",
-                    {
-                      staticClass: "c-button c-button-warning",
-                      attrs: { href: nav.url }
-                    },
-                    [_vm._v(_vm._s(nav.title))]
-                  )
-                : _c(
-                    "button",
-                    {
-                      staticClass: "c-button c-button-warning",
-                      attrs: { type: "submit" }
-                    },
-                    [_vm._v(_vm._s(nav.title))]
-                  )
-            ])
-          }),
-          0
-        )
-      ]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "c-nav_body-md" }, [
-      _c(
-        "ul",
-        { staticClass: "c-nav_ul-md" },
-        _vm._l(_vm.navList, function(nav, index) {
-          return _c("li", { key: index, staticClass: "c-nav_li" }, [
-            nav.title != "ログアウト"
-              ? _c(
-                  "a",
-                  {
-                    staticClass: "c-button c-button-warning",
-                    attrs: { href: nav.url }
-                  },
-                  [_vm._v(_vm._s(nav.title))]
-                )
-              : _c(
+        _c("ul", { staticClass: "c-nav_ul" }, [
+          _vm.auth
+            ? _c("li", { staticClass: "c-nav_li" }, [
+                _c(
                   "button",
                   {
                     staticClass: "c-button c-button-warning",
                     attrs: { type: "submit" }
                   },
-                  [_vm._v(_vm._s(nav.title))]
+                  [_vm._v(_vm._s(_vm.urlLogout.title))]
                 )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          !_vm.auth
+            ? _c("li", { staticClass: "c-nav_li" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "c-button c-button-warning",
+                    attrs: { href: _vm.urlLogin.url }
+                  },
+                  [_vm._v(_vm._s(_vm.urlLogin.title))]
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          !_vm.auth
+            ? _c("li", { staticClass: "c-nav_li" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "c-button c-button-warning",
+                    attrs: { href: _vm.urlRegister.url }
+                  },
+                  [_vm._v(_vm._s(_vm.urlRegister.title))]
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("li", { staticClass: "c-nav_li" }, [
+            _c(
+              "a",
+              {
+                staticClass: "c-button c-button-warning",
+                attrs: { href: _vm.urlIndex.url }
+              },
+              [_vm._v(_vm._s(_vm.urlIndex.title))]
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "c-nav_li" }, [
+            _c(
+              "a",
+              {
+                staticClass: "c-button c-button-warning",
+                attrs: { href: _vm.urlAccount.url }
+              },
+              [_vm._v(_vm._s(_vm.urlAccount.title))]
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "c-nav_li" }, [
+            _c(
+              "a",
+              {
+                staticClass: "c-button c-button-warning",
+                attrs: { href: _vm.urlNews.url }
+              },
+              [_vm._v(_vm._s(_vm.urlNews.title))]
+            )
           ])
-        }),
-        0
-      )
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "c-nav_body-md" }, [
+      _c("ul", { staticClass: "c-nav_ul-md" }, [
+        _vm.auth
+          ? _c("li", { staticClass: "c-nav_li" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "c-button c-button-warning",
+                  attrs: { type: "submit" }
+                },
+                [_vm._v(_vm._s(_vm.urlLogout.title))]
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        !_vm.auth
+          ? _c("li", { staticClass: "c-nav_li" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "c-button c-button-warning",
+                  attrs: { href: _vm.urlLogin.url }
+                },
+                [_vm._v(_vm._s(_vm.urlLogin.title))]
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        !_vm.auth
+          ? _c("li", { staticClass: "c-nav_li" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "c-button c-button-warning",
+                  attrs: { href: _vm.urlRegister.url }
+                },
+                [_vm._v(_vm._s(_vm.urlRegister.title))]
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c("li", { staticClass: "c-nav_li" }, [
+          _c(
+            "a",
+            {
+              staticClass: "c-button c-button-warning",
+              attrs: { href: _vm.urlIndex.url }
+            },
+            [_vm._v(_vm._s(_vm.urlIndex.title))]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "c-nav_li" }, [
+          _c(
+            "a",
+            {
+              staticClass: "c-button c-button-warning",
+              attrs: { href: _vm.urlAccount.url }
+            },
+            [_vm._v(_vm._s(_vm.urlAccount.title))]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "c-nav_li" }, [
+          _c(
+            "a",
+            {
+              staticClass: "c-button c-button-warning",
+              attrs: { href: _vm.urlNews.url }
+            },
+            [_vm._v(_vm._s(_vm.urlNews.title))]
+          )
+        ])
+      ])
     ])
   ])
 }
@@ -38010,7 +38127,7 @@ var render = function() {
           _vm._v(" "),
           _c("a", {
             staticClass: "p-news_mono-link",
-            attrs: { href: news.url }
+            attrs: { target: "”_blank”", href: news.url }
           })
         ])
       }),

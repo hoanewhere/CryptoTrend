@@ -32,7 +32,7 @@
             <form action="{{ url('/logout') }}" method="POST">
                 @csrf
                 
-                <nav-component></nav-component>
+                <nav-component :auth="{{ Auth::check() ? 'true' : 'false' }}"></nav-component>
             </form>
         </header>
 

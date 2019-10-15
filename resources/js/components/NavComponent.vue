@@ -11,20 +11,24 @@
     <!-- スマホ時のNav -->
     <div class="c-nav_body" v-show="navActive">
         <ul class="c-nav_ul">
-            <li class="c-nav_li" v-for="(nav, index) in navList" :key="index">
-                <a v-if="nav.title != 'ログアウト'" :href="nav.url" class="c-button c-button-warning">{{ nav.title }}</a>
-                <button v-else type="submit" class="c-button c-button-warning">{{ nav.title }}</button>
-            </li>
+            <li class="c-nav_li" v-if="auth"><button type="submit" class="c-button c-button-warning">{{urlLogout.title}}</button></li>
+            <li class="c-nav_li" v-if="!(auth)"><a :href="urlLogin.url" class="c-button c-button-warning">{{ urlLogin.title }}</a></li>
+            <li class="c-nav_li" v-if="!(auth)"><a :href="urlRegister.url" class="c-button c-button-warning">{{ urlRegister.title }}</a></li>
+            <li class="c-nav_li"><a :href="urlIndex.url" class="c-button c-button-warning">{{urlIndex.title}}</a></li>
+            <li class="c-nav_li"><a :href="urlAccount.url" class="c-button c-button-warning">{{urlAccount.title}}</a></li>
+            <li class="c-nav_li"><a :href="urlNews.url" class="c-button c-button-warning">{{urlNews.title}}</a></li>
         </ul>
     </div>
 
     <!-- タブレット、PC時のNav -->
     <div class="c-nav_body-md">
         <ul class="c-nav_ul-md">
-            <li class="c-nav_li" v-for="(nav, index) in navList" :key="index">
-                <a v-if="nav.title != 'ログアウト'" :href="nav.url" class="c-button c-button-warning">{{ nav.title }}</a>
-                <button v-else type="submit" class="c-button c-button-warning">{{ nav.title }}</button>
-            </li>
+            <li class="c-nav_li" v-if="auth"><button type="submit" class="c-button c-button-warning">{{urlLogout.title}}</button></li>
+            <li class="c-nav_li" v-if="!(auth)"><a :href="urlLogin.url" class="c-button c-button-warning">{{ urlLogin.title }}</a></li>
+            <li class="c-nav_li" v-if="!(auth)"><a :href="urlRegister.url" class="c-button c-button-warning">{{ urlRegister.title }}</a></li>
+            <li class="c-nav_li"><a :href="urlIndex.url" class="c-button c-button-warning">{{urlIndex.title}}</a></li>
+            <li class="c-nav_li"><a :href="urlAccount.url" class="c-button c-button-warning">{{urlAccount.title}}</a></li>
+            <li class="c-nav_li"><a :href="urlNews.url" class="c-button c-button-warning">{{urlNews.title}}</a></li>
         </ul>
     </div>
 
@@ -32,23 +36,27 @@
 </template>
 
 <script>
+    const URL_ORIGIN = location.origin
+
     export default {
+        props: {
+            auth: {
+                required: false
+            }
+        },
         data: function () {
             return {
                 navList: {},
                 navActive: false,
+                urlIndex: {url: URL_ORIGIN + '/index', title: 'トレンド'},
+                urlAccount: {url: URL_ORIGIN + '/accountList', title: 'アカウント一覧'},
+                urlNews: {url: URL_ORIGIN + '/newsList', title: 'ニュース一覧'},
+                urlLogin: {url: URL_ORIGIN + '/login', title: 'ログイン'},
+                urlLogout: {url: URL_ORIGIN + '/logout', title: 'ログアウト'},
+                urlRegister: {url: URL_ORIGIN + '/register', title: 'ユーザ登録'},
             }
         },
-        mounted() {
-            this.reloadData()
-        },
         methods: {
-            reloadData: function() { // ログイン状態や画面毎に異なるNavのデータを取得
-                axios.get('/crypto/reloadNavData')
-                .then((res) => {
-                    this.navList = res.data
-                })
-            },
             navClick: function() { // ハンバーガーアイコン押下時の処理
                 this.navActive = !this.navActive
             }

@@ -30,18 +30,7 @@ class AccountListController extends Controller
     const MAX_FOLLOW_DAY_LIMIT = 1000; // twitterAPIの一日でのフォロー人数制限
     const USER_SEARCH_WORD = '仮想通貨'; // ユーザ検索時のキーワード
 
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-
+    
     /**
      * ツイッターアカウントとの連携を確認し、アカウント一覧画面を表示する。（一覧データ未取得の場合は取得処理も実施）
      * 
