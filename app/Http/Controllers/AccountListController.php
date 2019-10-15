@@ -339,6 +339,7 @@ class AccountListController extends Controller
 
 
     public function saveFollowingData(User $user) {
+        Log::debug('saveFollowingData(関数呼び出し)');
         // パラメータ初期化
         $params['user_id'] = '';
         $cnt = 0;
@@ -361,6 +362,16 @@ class AccountListController extends Controller
         }
         if($cnt !== 0) { // 100件ずつのループで最後に溢れたIDに対しての処理
             $this->saveFollowingDataDetail($user->id, $params, $access_token);
+        }
+    }
+
+
+    public function saveFollowingDataAllUsers() {
+        Log::debug('saveFollowingDataAllUsers(関数呼び出し)');
+        $targetUsers = User::whereNotNull('access_token')->get();
+        
+        foreach($targetUsers as $targetUser) {
+            $this->saveFollowingData($targetUser);
         }
     }
 
