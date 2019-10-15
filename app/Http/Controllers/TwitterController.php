@@ -21,7 +21,6 @@ class TwitterController extends Controller
 
     const MAX_TWEET_SEARCH = 450; // twitterAPIのツイート検索時の上限(450/15min)
     const MAX_USER_SEARCH = 900; // twitterAPIのユーザ検索時の上限(900/15min)
-    const USER_SEARCH_WORD = '憚る'; // ユーザ検索時のキーワード
 
     private static $searchd_tweet_cnt = 0; // ツイート検索数
     public static $searchd_tweet_limit_flg = false; // ツイート検索の上限フラグ
@@ -132,17 +131,17 @@ class TwitterController extends Controller
 
 
     /**
-     * ログインユーザに紐づくツイッターアカウントでキーワードに関連するアカウントを取得し、返す。
-     * @param array $access_token, int $next_page, string $search_word
+     * キーワードに関連するユーザを取得し、返す。
+     * @param int $next_page, string $search_word
      * @return array $users_arr
      */
-    public static function searchTweetUsers(array $access_token, int $next_page, string $search_word) {
+    public static function searchTweetUsers(int $next_page, string $search_word) {
+        Log::debug('searchTweetUsers(関数呼び出し)');
         // ユーザ情報の配列を初期化
         $users_arr = array();
         
-        // ログインユーザにひもづくアクセストークンで認証する
         $config = config('twitter');
-        $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], $access_token['oauth_token'], $access_token['oauth_token_secret']);
+        $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], $config['access_token'], $config['access_token_secret']);
         $connection->setTimeouts(10, 10);
 
         // パラメータを設定
@@ -157,11 +156,11 @@ class TwitterController extends Controller
             }
 
             $users = $connection->get('users/search', $params);
-            Log::debug('取得データ（apiの返り値）：'. print_r($users, true));
+            // Log::debug('取得データ（apiの返り値）：'. print_r($users, true));
 
             // 取得データを連想配列に変換
             foreach($users as $user) {
-                Log::debug('個別データ：'. print_r($user, true));
+                // Log::debug('個別データ：'. print_r($user, true));
                 $user_arr = json_decode(json_encode($user), true);
 
                 // レスポンスがエラーで返ってきた場合、処理を終了する
@@ -169,14 +168,6 @@ class TwitterController extends Controller
                 Log::debug('resultエラー:'. print_r($user_arr, true));
                     break 2;
                 }
-
-                // // 取得データに重複がないかチェック → 上位で判断する
-                // foreach($users_arr as $result) {
-                //     if($result['id'] === $user_arr['id']) { // 重複している場合、処理終了して上位に配列を返す
-                //         Log::debug('重複データあり(処理終了)：');
-                //         return $users_arr;
-                //     }
-                // }
 
                 // 最新ツイートの埋め込みhtmlを取得
                 $latest_html = "";
@@ -187,7 +178,7 @@ class TwitterController extends Controller
                     }
                 }
                 $user_arr['latest_html'] = $latest_html;
-                Log::debug('latest_htmlの結果:'. $latest_html);
+                // Log::debug('latest_htmlの結果:'. $latest_html);
 
                 // image_urlのサイズをオリジナルに変更する
                 $pattern1 = '/_normal\./';
@@ -259,7 +250,7 @@ class TwitterController extends Controller
         ));
         Log::debug('飛び先'.$url);
 
-        return redirect($url);
+        return $url;
     }
 
 
@@ -274,7 +265,9 @@ class TwitterController extends Controller
         $oauth_token = session('oauth_token');
         $oauth_token_secret = session('oauth_token_secret');
 
-        if ($request->has('oauth_token') && $oauth_token !== $request->oauth_token) {
+        if( !($request->has('oauth_token')) ) {
+            return null;
+        } else if ($request->has('oauth_token') && $oauth_token !== $request->oauth_token) {
             return null;
         }
 
@@ -325,5 +318,33 @@ class TwitterController extends Controller
         // 対象IDをフォローする
         $connection->post('friendships/destroy', array('screen_name' => $screen_name));
         return;
+    }
+
+
+    /**
+     * ログインユーザと対象アカウントのフォロー状態を取得する
+     * @param array $access_token, array $params
+     * @return void
+     */
+    public static function lookupFriendships(array $access_token, array $params) {
+        // ログインユーザにひもづくアクセストークンで認証する
+        $config = config('twitter');
+        $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], $access_token['oauth_token'], $access_token['oauth_token_secret']);
+        $connection->setTimeouts(10, 10);
+
+
+        $result_std = $connection->get('friendships/lookup', $params);
+        $result = json_decode(json_encode($result_std), true);
+        Log::debug('lookupFriendships取得データ(配列):' . print_r($result, true));
+
+        // レスポンスがエラーで返ってきた場合、
+        if (isset($result['errors'])) {
+            Log::debug('resultエラー:'. print_r($result['errors'], true));
+            return "";
+        } else if (empty($result)) {
+            Log::debug('resultエラー:返り値null');
+            return "";
+        }
+        return $result;
     }
 }

@@ -27,12 +27,12 @@
         {{-- header --}}
         <header class="l-header u-px-md">
             <div>
-                <a href="{{ url('/index') }}"><img src="{{ asset('img/logo.png') }}"></a>
+                <a href="{{ url('/index') }}"><img src="{{ asset('img/logo.png') }}" class="p-logo"></a>
             </div>
             <form action="{{ url('/logout') }}" method="POST">
                 @csrf
                 
-                <nav-component></nav-component>
+                <nav-component :auth="{{ Auth::check() ? 'true' : 'false' }}"></nav-component>
             </form>
         </header>
 
@@ -52,7 +52,7 @@
         {{-- footer --}}
         <footer class="l-footer">
             <div>
-                <a href="{{ url('/index') }}"><img src="{{ asset('img/logo.png') }}"></a>
+                <a href="{{ url('/index') }}"><img src="{{ asset('img/logo.png') }}" class="p-logo"></a>
             </div>
             <p>Copyright © Crypto Trend. All Rights Reserved</p>
         </footer>

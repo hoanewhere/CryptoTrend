@@ -1,17 +1,16 @@
-.c-invalid_input-text {
-    border-color: $co-danger;
-}
-
-.c-invalid_input-text:focus {
-    border-color: $co-danger;
-    box-shadow: 0 0 0 0.2rem rgba(227, 52, 47, 0.25);
-    outline: 0;
-}
-
-.c-invalid_text {
-    display: block;
-    width: 100%;
-    margin-top: 0.25rem;
-    font-size: 80%;
-    color: $co-danger;
+.c-invalid {
+    &_text {
+        display: block;
+        width: 100%;
+        margin-top: 0.25rem;
+        font-size: 80%;
+        color: $co-danger;
+    }
+    &_input-text {
+        border-color: $co-danger;
+        &:focus {
+            box-shadow: 0 0 0 0.2rem rgba(227, 52, 47, 0.25);
+            outline: 0;
+        }
+    }
 }

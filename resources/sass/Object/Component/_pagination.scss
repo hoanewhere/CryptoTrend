@@ -5,29 +5,31 @@
     list-style:none;
     color:$co-base0;
     padding: 1rem 0;
-}
-
-.c-pagination_item {
-    border: 1px solid black;
-    border-right: none;
-}
-
-.c-pagination_item-active {
-    background-color: $co-peace;
-}
-
-.c-pagination_item:first-of-type {
-    border-top-left-radius: 0.25rem;
-    border-bottom-left-radius: 0.25rem;
-}
-.c-pagination_item:last-of-type {
-    border-right: 1px solid black;
-    border-top-right-radius: 0.25rem;
-    border-bottom-right-radius: 0.25rem;
-}
-
-.c-pagination_link {
-    position: relative;
-    display: block;
-    padding: 0.8rem;
+    &_item {
+        border: 1px solid black;
+        border-right: none;
+        &#{&}-active {
+            background-color: $co-peace;
+        }
+        &:first-of-type {
+            border-top-left-radius: 0.25rem;
+            border-bottom-left-radius: 0.25rem;
+        }
+        &:last-of-type {
+            border-right: 1px solid black;
+            border-top-right-radius: 0.25rem;
+            border-bottom-right-radius: 0.25rem;
+        }
+    }
+    &_link {
+        position: relative;
+        display: block;
+        padding: 0.5rem;
+        @include mq(md) {
+            padding: 0.8rem;
+        }
+    }
+    &_overview {
+        text-align: center;
+    }
 }

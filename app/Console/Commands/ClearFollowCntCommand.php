@@ -39,7 +39,12 @@ class ClearFollowCntCommand extends Command
      */
     public function handle()
     {
+        Log::info('************************');
         Log::info('command:clearFollowCnt 実施');
+        Log::info('************************');
         AccountListController::clearFollowCntOfDayLimit();
+        Log::info('************************');
+        Log::info('command:clearFollowCnt 終了');
+        Log::info('************************');
     }
 }

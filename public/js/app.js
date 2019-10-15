@@ -1742,6 +1742,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1749,6 +1755,7 @@ __webpack_require__.r(__webpack_exports__);
       accountsPaginate: {},
       gotTime: '',
       autoFollowFlg: false,
+      connectedTwitterFlg: false,
       page: 1
     };
   },
@@ -1772,7 +1779,8 @@ __webpack_require__.r(__webpack_exports__);
         _this.accounts = res.data.accounts.data;
         _this.accountsPaginate = res.data.accounts;
         _this.gotTime = res.data.got_time;
-        _this.autoFollowFlg = res.data.auto_follow_flg; // acocuntデータをjsonにパース
+        _this.autoFollowFlg = res.data.auto_follow_flg;
+        _this.connectedTwitterFlg = res.data.connected_twitter_flg; // acocuntデータをjsonにパース
 
         for (var i in _this.accounts) {
           var jsonData = JSON.parse(_this.accounts[i].account_data);
@@ -1786,7 +1794,7 @@ __webpack_require__.r(__webpack_exports__);
         record_id: account.id,
         screen_name: account.account_data.screen_name
       }).then(function (res) {
-        account.account_data.following = true;
+        account.following = true;
       });
     },
     unfollow: function unfollow(account) {
@@ -1795,7 +1803,7 @@ __webpack_require__.r(__webpack_exports__);
         record_id: account.id,
         screen_name: account.account_data.screen_name
       }).then(function (res) {
-        account.account_data.following = false;
+        account.following = false;
       });
     },
     toggleAutoFollow: function toggleAutoFollow() {
@@ -1811,6 +1819,23 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (res) {
         console.log('toggleautofollow完了');
       });
+    },
+    toggleConnectedTwitter: function toggleConnectedTwitter() {
+      var _this2 = this;
+
+      if (this.connectedTwitterFlg == true) {
+        // 連携解除
+        axios.post('accountList/connectStop').then(function (res) {
+          _this2.connectedTwitterFlg = false;
+        });
+      } else {
+        // 連携開始
+        this.connectedTwitterFlg = true;
+        axios.post('accountList/connectStart').then(function (res) {
+          _this2.connectedTwitterFlg = true;
+          location.href = res.data;
+        });
+      }
     },
     movePage: function movePage(page) {
       // ページネーションのページ移動処理
@@ -1897,25 +1922,48 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+var URL_ORIGIN = location.origin;
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    auth: {
+      required: false
+    }
+  },
   data: function data() {
     return {
       navList: {},
-      navActive: false
+      navActive: false,
+      urlIndex: {
+        url: URL_ORIGIN + '/index',
+        title: 'トレンド'
+      },
+      urlAccount: {
+        url: URL_ORIGIN + '/accountList',
+        title: 'アカウント一覧'
+      },
+      urlNews: {
+        url: URL_ORIGIN + '/newsList',
+        title: 'ニュース一覧'
+      },
+      urlLogin: {
+        url: URL_ORIGIN + '/login',
+        title: 'ログイン'
+      },
+      urlLogout: {
+        url: URL_ORIGIN + '/logout',
+        title: 'ログアウト'
+      },
+      urlRegister: {
+        url: URL_ORIGIN + '/register',
+        title: 'ユーザ登録'
+      }
     };
   },
-  mounted: function mounted() {
-    this.reloadData();
-  },
   methods: {
-    reloadData: function reloadData() {
-      var _this = this;
-
-      // ログイン状態や画面毎に異なるNavのデータを取得
-      axios.get('/crypto/reloadNavData').then(function (res) {
-        _this.navList = res.data;
-      });
-    },
     navClick: function navClick() {
       // ハンバーガーアイコン押下時の処理
       this.navActive = !this.navActive;
@@ -1984,6 +2032,11 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
 //
 //
 //
@@ -37606,7 +37659,40 @@ var render = function() {
       _vm._v(" "),
       _vm.accounts
         ? _c("div", { staticClass: "u-ta-c u-mb-lg" }, [
-            _vm.autoFollowFlg == true
+            _vm.connectedTwitterFlg == true
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "c-button c-button-peace",
+                    attrs: { type: "button" },
+                    on: { click: _vm.toggleConnectedTwitter }
+                  },
+                  [_vm._v("twitter連携中")]
+                )
+              : _c(
+                  "button",
+                  {
+                    staticClass: "c-button c-button-dark",
+                    attrs: { type: "button" },
+                    on: { click: _vm.toggleConnectedTwitter }
+                  },
+                  [_vm._v("twitter連携　開始")]
+                )
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.accounts
+        ? _c("div", { staticClass: "u-ta-c u-mb-lg" }, [
+            _vm.connectedTwitterFlg == false
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "c-button c-button-dark",
+                    attrs: { type: "button", disabled: "" }
+                  },
+                  [_vm._v("連携後、機能解放")]
+                )
+              : _vm.autoFollowFlg == true
               ? _c(
                   "button",
                   {
@@ -37614,7 +37700,7 @@ var render = function() {
                     attrs: { type: "button" },
                     on: { click: _vm.toggleAutoFollow }
                   },
-                  [_vm._v("自動フォロー ON")]
+                  [_vm._v("自動フォロー ON中")]
                 )
               : _c(
                   "button",
@@ -37656,7 +37742,16 @@ var render = function() {
                   }),
                   _vm._v(" "),
                   _c("div", { staticClass: "p-account_inner-btn u-mb-md" }, [
-                    account.account_data.following === false
+                    _vm.connectedTwitterFlg == false
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "c-button c-button-dark",
+                            attrs: { type: "button", disabled: "" }
+                          },
+                          [_vm._v("連携後、機能解放")]
+                        )
+                      : account.following == false
                       ? _c(
                           "button",
                           {
@@ -37837,65 +37932,159 @@ var render = function() {
             expression: "navActive"
           }
         ],
-        staticClass: "c-nav-sm"
+        staticClass: "c-nav_body"
       },
       [
-        _c(
-          "ul",
-          { staticClass: "c-nav_ul" },
-          _vm._l(_vm.navList, function(nav, index) {
-            return _c("li", { key: index, staticClass: "c-nav_li" }, [
-              nav.title != "ログアウト"
-                ? _c(
-                    "a",
-                    {
-                      staticClass: "c-button c-button-warning",
-                      attrs: { href: nav.url }
-                    },
-                    [_vm._v(_vm._s(nav.title))]
-                  )
-                : _c(
-                    "button",
-                    {
-                      staticClass: "c-button c-button-warning",
-                      attrs: { type: "submit" }
-                    },
-                    [_vm._v(_vm._s(nav.title))]
-                  )
-            ])
-          }),
-          0
-        )
-      ]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "c-nav-md" }, [
-      _c(
-        "ul",
-        { staticClass: "c-nav_ul-md" },
-        _vm._l(_vm.navList, function(nav, index) {
-          return _c("li", { key: index, staticClass: "c-nav_li" }, [
-            nav.title != "ログアウト"
-              ? _c(
-                  "a",
-                  {
-                    staticClass: "c-button c-button-warning",
-                    attrs: { href: nav.url }
-                  },
-                  [_vm._v(_vm._s(nav.title))]
-                )
-              : _c(
+        _c("ul", { staticClass: "c-nav_ul" }, [
+          _vm.auth
+            ? _c("li", { staticClass: "c-nav_li" }, [
+                _c(
                   "button",
                   {
                     staticClass: "c-button c-button-warning",
                     attrs: { type: "submit" }
                   },
-                  [_vm._v(_vm._s(nav.title))]
+                  [_vm._v(_vm._s(_vm.urlLogout.title))]
                 )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          !_vm.auth
+            ? _c("li", { staticClass: "c-nav_li" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "c-button c-button-warning",
+                    attrs: { href: _vm.urlLogin.url }
+                  },
+                  [_vm._v(_vm._s(_vm.urlLogin.title))]
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          !_vm.auth
+            ? _c("li", { staticClass: "c-nav_li" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "c-button c-button-warning",
+                    attrs: { href: _vm.urlRegister.url }
+                  },
+                  [_vm._v(_vm._s(_vm.urlRegister.title))]
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("li", { staticClass: "c-nav_li" }, [
+            _c(
+              "a",
+              {
+                staticClass: "c-button c-button-warning",
+                attrs: { href: _vm.urlIndex.url }
+              },
+              [_vm._v(_vm._s(_vm.urlIndex.title))]
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "c-nav_li" }, [
+            _c(
+              "a",
+              {
+                staticClass: "c-button c-button-warning",
+                attrs: { href: _vm.urlAccount.url }
+              },
+              [_vm._v(_vm._s(_vm.urlAccount.title))]
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", { staticClass: "c-nav_li" }, [
+            _c(
+              "a",
+              {
+                staticClass: "c-button c-button-warning",
+                attrs: { href: _vm.urlNews.url }
+              },
+              [_vm._v(_vm._s(_vm.urlNews.title))]
+            )
           ])
-        }),
-        0
-      )
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "c-nav_body-lg" }, [
+      _c("ul", { staticClass: "c-nav_ul-lg" }, [
+        _vm.auth
+          ? _c("li", { staticClass: "c-nav_li" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "c-button c-button-warning",
+                  attrs: { type: "submit" }
+                },
+                [_vm._v(_vm._s(_vm.urlLogout.title))]
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        !_vm.auth
+          ? _c("li", { staticClass: "c-nav_li" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "c-button c-button-warning",
+                  attrs: { href: _vm.urlLogin.url }
+                },
+                [_vm._v(_vm._s(_vm.urlLogin.title))]
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        !_vm.auth
+          ? _c("li", { staticClass: "c-nav_li" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "c-button c-button-warning",
+                  attrs: { href: _vm.urlRegister.url }
+                },
+                [_vm._v(_vm._s(_vm.urlRegister.title))]
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c("li", { staticClass: "c-nav_li" }, [
+          _c(
+            "a",
+            {
+              staticClass: "c-button c-button-warning",
+              attrs: { href: _vm.urlIndex.url }
+            },
+            [_vm._v(_vm._s(_vm.urlIndex.title))]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "c-nav_li" }, [
+          _c(
+            "a",
+            {
+              staticClass: "c-button c-button-warning",
+              attrs: { href: _vm.urlAccount.url }
+            },
+            [_vm._v(_vm._s(_vm.urlAccount.title))]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "c-nav_li" }, [
+          _c(
+            "a",
+            {
+              staticClass: "c-button c-button-warning",
+              attrs: { href: _vm.urlNews.url }
+            },
+            [_vm._v(_vm._s(_vm.urlNews.title))]
+          )
+        ])
+      ])
     ])
   ])
 }
@@ -37943,7 +38132,7 @@ var render = function() {
           _vm._v(" "),
           _c("a", {
             staticClass: "p-news_mono-link",
-            attrs: { href: news.url }
+            attrs: { target: "”_blank”", href: news.url }
           })
         ])
       }),
@@ -37973,67 +38162,81 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return !Array.isArray(_vm.data)
-    ? _c(
-        "ul",
-        { staticClass: "c-pagination" },
-        [
-          _vm.hasPrev
-            ? _c("li", { staticClass: "c-pagination_item" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "c-pagination_link",
-                    attrs: { href: "" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.move(_vm.data.current_page - 1)
+  return Object.keys(_vm.data).length
+    ? _c("div", [
+        _c("p", { staticClass: "c-pagination_overview" }, [
+          _vm._v(
+            "全" +
+              _vm._s(_vm.data.total) +
+              "件中 / " +
+              _vm._s(_vm.data.from) +
+              "件 〜 " +
+              _vm._s(_vm.data.to) +
+              "件"
+          )
+        ]),
+        _vm._v(" "),
+        _c(
+          "ul",
+          { staticClass: "c-pagination" },
+          [
+            _vm.hasPrev
+              ? _c("li", { staticClass: "c-pagination_item" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "c-pagination_link",
+                      attrs: { href: "" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.move(_vm.data.current_page - 1)
+                        }
                       }
+                    },
+                    [_vm._v("前へ")]
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm._l(_vm.pages, function(page, index) {
+              return _c("li", { key: index, class: _vm.getPageClass(page) }, [
+                _c("a", {
+                  staticClass: "c-pagination_link",
+                  attrs: { href: "" },
+                  domProps: { textContent: _vm._s(page) },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.move(page)
                     }
-                  },
-                  [_vm._v("前へ")]
-                )
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm._l(_vm.pages, function(page, index) {
-            return _c("li", { key: index, class: _vm.getPageClass(page) }, [
-              _c("a", {
-                staticClass: "c-pagination_link",
-                attrs: { href: "" },
-                domProps: { textContent: _vm._s(page) },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.move(page)
                   }
-                }
-              })
-            ])
-          }),
-          _vm._v(" "),
-          _vm.hasNext
-            ? _c("li", { staticClass: "c-pagination_item" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "c-pagination_link",
-                    attrs: { href: "" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.move(_vm.data.current_page + 1)
-                      }
-                    }
-                  },
-                  [_vm._v("次へ")]
-                )
+                })
               ])
-            : _vm._e()
-        ],
-        2
-      )
+            }),
+            _vm._v(" "),
+            _vm.hasNext
+              ? _c("li", { staticClass: "c-pagination_item" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "c-pagination_link",
+                      attrs: { href: "" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.move(_vm.data.current_page + 1)
+                        }
+                      }
+                    },
+                    [_vm._v("次へ")]
+                  )
+                ])
+              : _vm._e()
+          ],
+          2
+        )
+      ])
     : _vm._e()
 }
 var staticRenderFns = []
@@ -38071,7 +38274,7 @@ var render = function() {
       _c(
         "button",
         {
-          staticClass: "c-button c-button-peace p-search_button",
+          staticClass: "c-button c-button-peace p-search_button-dispaly",
           attrs: { type: "button" },
           on: { click: _vm.searchClick }
         },
@@ -38083,8 +38286,8 @@ var render = function() {
       _c(
         "div",
         {
-          staticClass: "p-search-lg u-ta-c p-trendRanking_child",
-          class: { "p-search": _vm.searchActive }
+          staticClass: "p-search u-ta-c p-trendRanking_child",
+          class: { "is-active": _vm.searchActive }
         },
         [
           _c("h3", { staticClass: "c-title_article u-mb-lg" }, [
@@ -38155,7 +38358,7 @@ var render = function() {
                 "div",
                 { staticClass: "p-search_chks" },
                 [
-                  _c("div", { staticClass: "p-search_chk u-mb-sm" }, [
+                  _c("div", { staticClass: "p-search_chk u-mb-md" }, [
                     _c("label", [
                       _c("input", {
                         directives: [
@@ -38206,7 +38409,7 @@ var render = function() {
                   _vm._l(_vm.cryptoList, function(crypto) {
                     return _c(
                       "div",
-                      { key: crypto.id, staticClass: "p-search_chk u-mb-sm" },
+                      { key: crypto.id, staticClass: "p-search_chk u-mb-md" },
                       [
                         _c("label", [
                           _c("input", {
@@ -38264,7 +38467,8 @@ var render = function() {
             _c(
               "button",
               {
-                staticClass: "c-button c-button-peace",
+                staticClass:
+                  "c-button c-button-peace p-search_button-search u-mb-md",
                 attrs: { type: "button" },
                 on: { click: _vm.reloadTrendData }
               },

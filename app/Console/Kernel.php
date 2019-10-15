@@ -36,22 +36,22 @@ class Kernel extends ConsoleKernel
         ->name('task-aggregateTweetTrend')
         ->withoutOverlapping();
 
-        // アカウント連携している全ユーザに対して、対象のツイッターアカウントを取得する
+        // 1日に１回、対象のツイッターユーザー情報を取得、更新する
         $schedule->call(function() {
             $account_list1 = New AccountListController();
-            $account_list1->getUsersAllAcounts();
+            $account_list1->getUsers();
         })->everyTenMinutes()
         ->name('task-getUsers')
         ->withoutOverlapping();
 
         // 定期的に、ツイッターアカウントの自動フォローをする
         //（API制限にかからないように実施(15/15min, 1000/1day)）
-        // $schedule->call(function() {
-        //     $account_list2 = New AccountListController();
-        //     $account_list2->toFollowAutoLimit();
-        // })->everyFifteenMinutes()
-        // ->name('task-autoFollow')
-        // ->withoutOverlapping();
+        $schedule->call(function() {
+            $account_list2 = New AccountListController();
+            $account_list2->toFollowAutoLimit();
+        })->everyFifteenMinutes()
+        ->name('task-autoFollow')
+        ->withoutOverlapping();
 
         // 一日に一回、自動フォローのカウントをクリアする(1000/1day)
         $schedule->call(function() {

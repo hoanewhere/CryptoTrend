@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UpdatedTime extends Model
+class TwitterFollowing extends Model
 {
     protected $fillable = [
-        'time_index', 'complete_flg', 'next_page'
+        'login_user_id', 'searched_twitter_id_str', 'following', 
     ];
 }
