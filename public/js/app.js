@@ -2053,6 +2053,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 var MAX_SHOW_PAGE = 5;
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -38158,66 +38163,80 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return Object.keys(_vm.data).length
-    ? _c(
-        "ul",
-        { staticClass: "c-pagination" },
-        [
-          _vm.hasPrev
-            ? _c("li", { staticClass: "c-pagination_item" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "c-pagination_link",
-                    attrs: { href: "" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.move(_vm.data.current_page - 1)
+    ? _c("div", [
+        _c("p", { staticClass: "c-pagination_overview" }, [
+          _vm._v(
+            "全" +
+              _vm._s(_vm.data.total) +
+              "件中 / " +
+              _vm._s(_vm.data.from) +
+              "件 〜 " +
+              _vm._s(_vm.data.to) +
+              "件"
+          )
+        ]),
+        _vm._v(" "),
+        _c(
+          "ul",
+          { staticClass: "c-pagination" },
+          [
+            _vm.hasPrev
+              ? _c("li", { staticClass: "c-pagination_item" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "c-pagination_link",
+                      attrs: { href: "" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.move(_vm.data.current_page - 1)
+                        }
                       }
+                    },
+                    [_vm._v("前へ")]
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm._l(_vm.pages, function(page, index) {
+              return _c("li", { key: index, class: _vm.getPageClass(page) }, [
+                _c("a", {
+                  staticClass: "c-pagination_link",
+                  attrs: { href: "" },
+                  domProps: { textContent: _vm._s(page) },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.move(page)
                     }
-                  },
-                  [_vm._v("前へ")]
-                )
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm._l(_vm.pages, function(page, index) {
-            return _c("li", { key: index, class: _vm.getPageClass(page) }, [
-              _c("a", {
-                staticClass: "c-pagination_link",
-                attrs: { href: "" },
-                domProps: { textContent: _vm._s(page) },
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.move(page)
                   }
-                }
-              })
-            ])
-          }),
-          _vm._v(" "),
-          _vm.hasNext
-            ? _c("li", { staticClass: "c-pagination_item" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "c-pagination_link",
-                    attrs: { href: "" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.move(_vm.data.current_page + 1)
-                      }
-                    }
-                  },
-                  [_vm._v("次へ")]
-                )
+                })
               ])
-            : _vm._e()
-        ],
-        2
-      )
+            }),
+            _vm._v(" "),
+            _vm.hasNext
+              ? _c("li", { staticClass: "c-pagination_item" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "c-pagination_link",
+                      attrs: { href: "" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.move(_vm.data.current_page + 1)
+                        }
+                      }
+                    },
+                    [_vm._v("次へ")]
+                  )
+                ])
+              : _vm._e()
+          ],
+          2
+        )
+      ])
     : _vm._e()
 }
 var staticRenderFns = []

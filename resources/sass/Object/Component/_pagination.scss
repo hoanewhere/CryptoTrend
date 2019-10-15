@@ -24,6 +24,12 @@
     &_link {
         position: relative;
         display: block;
-        padding: 0.8rem;
+        padding: 0.5rem;
+        @include mq(md) {
+            padding: 0.8rem;
+        }
+    }
+    &_overview {
+        text-align: center;
     }
 }

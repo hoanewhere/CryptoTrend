@@ -1,22 +1,27 @@
 <template>
-<ul class="c-pagination" v-if="Object.keys(data).length">
+<div v-if="Object.keys(data).length">
+    <p class="c-pagination_overview">全{{data.total}}件中 / {{data.from}}件 〜 {{data.to}}件</p>
 
-    <!-- prevボタン -->
-    <li class="c-pagination_item" v-if="hasPrev">
-        <a class="c-pagination_link" href="" @click.prevent="move(data.current_page-1)">前へ</a>
-    </li>
+    <ul class="c-pagination">
 
-    <!-- ページボタン -->
-    <li :class="getPageClass(page)" v-for="(page, index) in pages" :key="index">
-        <a class="c-pagination_link" href="" @click.prevent="move(page)" v-text="page"></a>
-    </li>
+        <!-- prevボタン -->
+        <li class="c-pagination_item" v-if="hasPrev">
+            <a class="c-pagination_link" href="" @click.prevent="move(data.current_page-1)">前へ</a>
+        </li>
 
-    <!-- nextボタン -->
-    <li class="c-pagination_item" v-if="hasNext">
-        <a class="c-pagination_link" href="" @click.prevent="move(data.current_page+1)">次へ</a>
-    </li>
+        <!-- ページボタン -->
+        <li :class="getPageClass(page)" v-for="(page, index) in pages" :key="index">
+            <a class="c-pagination_link" href="" @click.prevent="move(page)" v-text="page"></a>
+        </li>
 
-</ul>
+        <!-- nextボタン -->
+        <li class="c-pagination_item" v-if="hasNext">
+            <a class="c-pagination_link" href="" @click.prevent="move(data.current_page+1)">次へ</a>
+        </li>
+
+    </ul>
+</div>
+
 </template>
 
 <script>
