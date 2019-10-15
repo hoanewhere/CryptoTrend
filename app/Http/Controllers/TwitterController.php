@@ -136,6 +136,7 @@ class TwitterController extends Controller
      * @return array $users_arr
      */
     public static function searchTweetUsers(int $next_page, string $search_word) {
+        Log::debug('searchTweetUsers(関数呼び出し)');
         // ユーザ情報の配列を初期化
         $users_arr = array();
         
@@ -155,11 +156,11 @@ class TwitterController extends Controller
             }
 
             $users = $connection->get('users/search', $params);
-            Log::debug('取得データ（apiの返り値）：'. print_r($users, true));
+            // Log::debug('取得データ（apiの返り値）：'. print_r($users, true));
 
             // 取得データを連想配列に変換
             foreach($users as $user) {
-                Log::debug('個別データ：'. print_r($user, true));
+                // Log::debug('個別データ：'. print_r($user, true));
                 $user_arr = json_decode(json_encode($user), true);
 
                 // レスポンスがエラーで返ってきた場合、処理を終了する
@@ -167,14 +168,6 @@ class TwitterController extends Controller
                 Log::debug('resultエラー:'. print_r($user_arr, true));
                     break 2;
                 }
-
-                // // 取得データに重複がないかチェック → 上位で判断する
-                // foreach($users_arr as $result) {
-                //     if($result['id'] === $user_arr['id']) { // 重複している場合、処理終了して上位に配列を返す
-                //         Log::debug('重複データあり(処理終了)：');
-                //         return $users_arr;
-                //     }
-                // }
 
                 // 最新ツイートの埋め込みhtmlを取得
                 $latest_html = "";
@@ -185,7 +178,7 @@ class TwitterController extends Controller
                     }
                 }
                 $user_arr['latest_html'] = $latest_html;
-                Log::debug('latest_htmlの結果:'. $latest_html);
+                // Log::debug('latest_htmlの結果:'. $latest_html);
 
                 // image_urlのサイズをオリジナルに変更する
                 $pattern1 = '/_normal\./';

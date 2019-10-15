@@ -120,14 +120,23 @@ class AccountListController extends Controller
      */
     public function reloadTweetData() {
         Log::debug('reloadTweetData(関数呼び出し)');
-        $login_user = Auth::user();
         $got_time = "";
         $accounts = array();
-
-        // twitter連携状態確認
         $connected_twitter_flg = false;
-        if(!empty($login_user->access_token)) {
-            $connected_twitter_flg = true;
+        $auto_follow_flg = false;
+        
+        $login_user = Auth::user();
+        if($login_user) {
+            // twitter連携状態確認
+            if(!empty($login_user->access_token)) {
+                $connected_twitter_flg = true;
+            }
+
+            // 自動フォローフラグ取得
+            $follow_management = FollowManagement::where('login_user_id', $login_user->id)->first();
+            if(!empty($follow_management)) {
+                $auto_follow_flg = $follow_management->auto_follow_flg;
+            }
         }
 
         // 更新日付取得
@@ -148,31 +157,6 @@ class AccountListController extends Controller
         } else {
             $got_time = "データ取得中";
         }
-
-        // 自動フォローフラグ取得
-        $auto_follow_flg = false;
-        $follow_management = FollowManagement::where('login_user_id', $login_user->id)->first();
-        if(!empty($follow_management)) {
-            $auto_follow_flg = $follow_management->auto_follow_flg;
-        }
-
-        // twitter連携状態確認
-        $connected_twitter_flg = false;
-        if(!empty($login_user->access_token)) {
-            $connected_twitter_flg = true;
-        }
-
-        // フォロー状態取得 TBD::followingテーブルとsearched_accountテーブルにズレがあるため、両テーブルを再取得した時コメント解除する
-        // if ($connected_twitter_flg) {
-        //     Log::debug('accountsデータ' . print_r($accounts, true));
-        //     foreach ($accounts as $account) {
-        //         $account_data = json_decode($account->account_data, true);
-        //         Log::debug('accountデータ' . print_r($account_data['id'], true));
-        //         $twitter_following = TwitterFollowing::where('login_user_id', $login_user->id)->where('searched_twitter_id_str', $account_data['id_str'])->first();
-        //         Log::debug('twitter_followingデータ' . print_r($twitter_following, true));
-        //         $account['following'] = $twitter_following->following;
-        //     }
-        // }
 
         $res_data = [
             'accounts' => $accounts,
@@ -211,7 +195,7 @@ class AccountListController extends Controller
                 // day_cnt確認
                 $follow_management = FollowManagement::where('login_user_id', $login_user_id)->first();
                 $day_cnt = $follow_management->day_cnt;
-                Log::debug('アカウント名前: ' . print_r($account, true));
+                // Log::debug('アカウント名前: ' . print_r($account, true));
                 if($day_cnt < self::MAX_FOLLOW_DAY_LIMIT) {
                     self::toFollowAuto($account->following_id, $account->screen_name, $login_user_id);
 
@@ -249,7 +233,6 @@ class AccountListController extends Controller
         TwitterController::createFriendships($access_token, $screen_name);
 
         //DB更新
-        // $searched_account = SearchedAccount::where('id', $record_id)->update(['account_data->following' => true]);
         $twitter_following = TwitterFollowing::where('id', $record_id)->update(['following' => true]);
     }
 
@@ -394,7 +377,7 @@ class AccountListController extends Controller
         Log::debug('serachUsers(関数呼び出し)');
 
         $result_arr = TwitterController::searchTweetUsers($next_page, self::USER_SEARCH_WORD);
-        Log::debug('取得データ(result_arr)：'. print_r($result_arr, true));
+        // Log::debug('取得データ(result_arr)：'. print_r($result_arr, true));
         return $result_arr;
     }
 

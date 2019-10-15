@@ -21,7 +21,7 @@ class GetUsersCommand extends Command
      *
      * @var string
      */
-    protected $description = '一日に一回、アカウント連携している全ユーザに対して、対象のツイッターアカウントを取得する';
+    protected $description = '一日に一回、対象のツイッターアカウントを取得する';
 
     /**
      * Create a new command instance.
@@ -40,8 +40,13 @@ class GetUsersCommand extends Command
      */
     public function handle()
     {
+        Log::info('************************');
         Log::info('command:getUsers 実施');
+        Log::info('************************');
         $account_list = New AccountListController();
-        $account_list->getUsersAllAcounts();
+        $account_list->getUsers();
+        Log::info('************************');
+        Log::info('command:getUsers 終了');
+        Log::info('************************');
     }
 }

@@ -29,12 +29,12 @@ class Kernel extends ConsoleKernel
     {
         // 一日に一回、対象ワードのツイート数の集計を実施
         // （一回の取得件数に制限があるため、その日の集計が完了するまで本タスクを定期的に実施）
-        // $schedule->call(function() {
-        //     $trend_ranking = New TrendRankingController();
-        //     $trend_ranking->aggregateTweetTrend();
-        // })->everyFiveMinutes()
-        // ->name('task-aggregateTweetTrend')
-        // ->withoutOverlapping();
+        $schedule->call(function() {
+            $trend_ranking = New TrendRankingController();
+            $trend_ranking->aggregateTweetTrend();
+        })->everyFiveMinutes()
+        ->name('task-aggregateTweetTrend')
+        ->withoutOverlapping();
 
         // 1日に１回、対象のツイッターユーザー情報を取得、更新する
         $schedule->call(function() {
@@ -46,12 +46,12 @@ class Kernel extends ConsoleKernel
 
         // 定期的に、ツイッターアカウントの自動フォローをする
         //（API制限にかからないように実施(15/15min, 1000/1day)）
-        // $schedule->call(function() {
-        //     $account_list2 = New AccountListController();
-        //     $account_list2->toFollowAutoLimit();
-        // })->everyFifteenMinutes()
-        // ->name('task-autoFollow')
-        // ->withoutOverlapping();
+        $schedule->call(function() {
+            $account_list2 = New AccountListController();
+            $account_list2->toFollowAutoLimit();
+        })->everyFifteenMinutes()
+        ->name('task-autoFollow')
+        ->withoutOverlapping();
 
         // 一日に一回、自動フォローのカウントをクリアする(1000/1day)
         $schedule->call(function() {
