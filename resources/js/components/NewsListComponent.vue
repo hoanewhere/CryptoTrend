@@ -8,7 +8,7 @@
             <h3 class="p-news_mono-title">{{ news.title }}</h3>
             <p class="p-news_mono-sub">{{ news.date }}</p>
             <p class="p-news_mono-sub">{{ news.source }}</p>
-            <a class="p-news_mono-link" :href="news.url"></a>
+            <a class="p-news_mono-link" target=”_blank” :href="news.url"></a>
         </div>
     </div>
 
