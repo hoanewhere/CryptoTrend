@@ -8,7 +8,7 @@
         <span class="c-nav_trigger-parts" :class="{'is-active': navActive}"></span>
     </div>
 
-    <!-- スマホ時のNav -->
+    <!-- スマホ,タブレット時のNav -->
     <div class="c-nav_body" v-show="navActive">
         <ul class="c-nav_ul">
             <li class="c-nav_li" v-if="auth"><button type="submit" class="c-button c-button-warning">{{urlLogout.title}}</button></li>
@@ -20,9 +20,9 @@
         </ul>
     </div>
 
-    <!-- タブレット、PC時のNav -->
-    <div class="c-nav_body-md">
-        <ul class="c-nav_ul-md">
+    <!-- PC時のNav -->
+    <div class="c-nav_body-lg">
+        <ul class="c-nav_ul-lg">
             <li class="c-nav_li" v-if="auth"><button type="submit" class="c-button c-button-warning">{{urlLogout.title}}</button></li>
             <li class="c-nav_li" v-if="!(auth)"><a :href="urlLogin.url" class="c-button c-button-warning">{{ urlLogin.title }}</a></li>
             <li class="c-nav_li" v-if="!(auth)"><a :href="urlRegister.url" class="c-button c-button-warning">{{ urlRegister.title }}</a></li>

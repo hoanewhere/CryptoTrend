@@ -7,7 +7,7 @@
         width: 40px;
         height: 34px;
         z-index: 500;
-        @include mq(md) {
+        @include mq(lg) {
             display: none;
         }
         &-parts {
@@ -43,12 +43,12 @@
         }
     }
     &_body {
-        @include mq(md) {
+        @include mq(lg) {
             display: none;
         }
-        &-md {
+        &-lg {
             display: none;
-            @include mq(md) {
+            @include mq(lg) {
                 display: block;
             }
         }
@@ -65,13 +65,13 @@
         justify-content: center;
         flex-direction: column;
         z-index: 499;
-        &-md {
+        &-lg {
             display: flex;
         }
     }
     &_li {
         margin-bottom: 1rem;
-        @include mq(md) {
+        @include mq(lg) {
             margin-bottom: 0;
             margin-left: 1rem;
         }
