@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return redirect('/index');
+    return redirect('/top');
 });
 
 Auth::routes();
@@ -21,6 +21,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 // 全体
 Route::get('/crypto/reloadNavData', 'CryptoController@reloadNavData');
+
+// TOPページ
+Route::get('/top', 'TopController@index');
 
 // トレンドランキング
 Route::get('/index', 'TrendRankingController@index');
