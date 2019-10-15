@@ -38011,8 +38011,8 @@ var render = function() {
       ]
     ),
     _vm._v(" "),
-    _c("div", { staticClass: "c-nav_body-md" }, [
-      _c("ul", { staticClass: "c-nav_ul-md" }, [
+    _c("div", { staticClass: "c-nav_body-lg" }, [
+      _c("ul", { staticClass: "c-nav_ul-lg" }, [
         _vm.auth
           ? _c("li", { staticClass: "c-nav_li" }, [
               _c(

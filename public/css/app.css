@@ -266,7 +266,7 @@ textarea {
   z-index: 500;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 1024px) {
   .c-nav_trigger {
     display: none;
   }
@@ -310,18 +310,18 @@ textarea {
   top: 50%;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 1024px) {
   .c-nav_body {
     display: none;
   }
 }
 
-.c-nav_body-md {
+.c-nav_body-lg {
   display: none;
 }
 
-@media screen and (min-width: 768px) {
-  .c-nav_body-md {
+@media screen and (min-width: 1024px) {
+  .c-nav_body-lg {
     display: block;
   }
 }
@@ -340,7 +340,7 @@ textarea {
   z-index: 499;
 }
 
-.c-nav_ul-md {
+.c-nav_ul-lg {
   display: flex;
 }
 
@@ -348,7 +348,7 @@ textarea {
   margin-bottom: 1rem;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 1024px) {
   .c-nav_li {
     margin-bottom: 0;
     margin-left: 1rem;
@@ -584,6 +584,11 @@ textarea {
 .c-tra-slide-fade-leave-to {
   transform: translate(100px, 0);
   opacity: 0;
+}
+
+.p-logo {
+  width: 12rem;
+  height: auto;
 }
 
 .p-ranks {
