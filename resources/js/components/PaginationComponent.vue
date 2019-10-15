@@ -1,5 +1,5 @@
 <template>
-<ul class="c-pagination" v-if="!(Array.isArray(data))">
+<ul class="c-pagination" v-if="Object.keys(data).length">
 
     <!-- prevボタン -->
     <li class="c-pagination_item" v-if="hasPrev">

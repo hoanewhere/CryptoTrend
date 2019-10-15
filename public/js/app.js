@@ -38157,7 +38157,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return !Array.isArray(_vm.data)
+  return Object.keys(_vm.data).length
     ? _c(
         "ul",
         { staticClass: "c-pagination" },
