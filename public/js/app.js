@@ -38529,7 +38529,7 @@ var render = function() {
                   _vm._v(" "),
                   _c("a", {
                     staticClass: "p-rank-link",
-                    attrs: { href: trend.search_url }
+                    attrs: { target: "”_blank”", href: trend.search_url }
                   })
                 ]
               )

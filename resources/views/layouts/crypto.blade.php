@@ -27,7 +27,7 @@
         {{-- header --}}
         <header class="l-header u-px-md">
             <div>
-                <a href="{{ url('/index') }}"><img src="{{ asset('img/logo.png') }}" class="p-logo"></a>
+                <a href="{{ url('/top') }}"><img src="{{ asset('img/logo.png') }}" class="p-logo"></a>
             </div>
             <form action="{{ url('/logout') }}" method="POST">
                 @csrf

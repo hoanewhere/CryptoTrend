@@ -5,4 +5,5 @@
 @section('content')
 <div>
     <news-list-component></news-list-component>
+</div>
 @endsection
