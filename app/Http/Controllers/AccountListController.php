@@ -57,7 +57,7 @@ class AccountListController extends Controller
         // アクセストークンを取得する
         $access_token = TwitterController::getAccessToken($request);
         if(empty($access_token)) {
-            return redirect('index');
+            return redirect('accountList'); //TBD: 連携失敗時にインフォメーションだす
         }
 
         // アクセストークンをjson形式でDBに保存する

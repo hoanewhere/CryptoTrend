@@ -52,7 +52,7 @@
         {{-- footer --}}
         <footer class="l-footer">
             <div>
-                <a href="{{ url('/index') }}"><img src="{{ asset('img/logo.png') }}" class="p-logo"></a>
+                <a href="{{ url('/top') }}"><img src="{{ asset('img/logo.png') }}" class="p-logo"></a>
             </div>
             <p>Copyright © Crypto Trend. All Rights Reserved</p>
         </footer>
