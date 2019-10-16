@@ -21,6 +21,11 @@
         background-color:$co-warning;
         border-color: $co-warning;
     }
+    &-danger {
+        color: $co-base0;
+        background-color:$co-danger;
+        border-color: $co-danger;
+    }
     &-dark {
         color: $co-base0;
         background-color:$co-base3;

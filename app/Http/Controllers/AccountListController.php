@@ -41,6 +41,7 @@ class AccountListController extends Controller
         // $this->saveFollowingData($login_user);
         // $this->getUsers();
         // $this->toFollowAutoLimit();
+        // $this->saveFollowingDataAllUsers();
 
         return view('crypto.accountList');
     }
