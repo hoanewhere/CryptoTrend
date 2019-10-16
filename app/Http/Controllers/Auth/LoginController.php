@@ -28,7 +28,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/index';
+    protected $redirectTo = '/top';
 
     /**
      * Create a new controller instance.
@@ -40,6 +40,18 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+    /**
+     * Show the application's login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showLoginForm()
+    {
+        if (isset($_SERVER['HTTP_REFERER'])) {
+            session(['url.intended' => $_SERVER['HTTP_REFERER']]);
+        }
+        return view('auth.login');
+    }
 
     /**
      * ログアウト後の遷移先を指定
