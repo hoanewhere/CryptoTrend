@@ -54,7 +54,7 @@ class LoginController extends Controller
 
         $request->session()->invalidate();
 
-        // indexに変更
-        return $this->loggedOut($request) ?: redirect('/index');
+        $redirect_url = url()->previous();
+        return $this->loggedOut($request) ?: redirect($redirect_url);
     }
 }
