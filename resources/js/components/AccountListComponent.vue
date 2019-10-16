@@ -5,7 +5,8 @@
         <p class="u-mb-sm">{{ gotTime }}</p>
     </div>
     <div class="u-ta-c u-mb-lg" v-if="accounts">
-        <button v-if="connectedTwitterFlg == true" type="button" class="c-button c-button-peace" @click="toggleConnectedTwitter">twitter連携中</button>
+        <button v-if="loginFlg == false" type="button" disabled class="c-button c-button-dark" @click="toggleConnectedTwitter">ログイン後、機能解放</button>
+        <button v-else-if="connectedTwitterFlg == true" type="button" class="c-button c-button-peace" @click="toggleConnectedTwitter">twitter連携中</button>
         <button v-else type="button" class="c-button c-button-dark" @click="toggleConnectedTwitter">twitter連携　開始</button>
     </div>
     <div class="u-ta-c u-mb-lg" v-if="accounts">
@@ -58,6 +59,7 @@
                 gotTime: '',
                 autoFollowFlg: false,
                 connectedTwitterFlg: false,
+                loginFlg: false,
                 page: 1,
             }
         },
@@ -84,6 +86,7 @@
                     this.gotTime = res.data.got_time
                     this.autoFollowFlg = res.data.auto_follow_flg
                     this.connectedTwitterFlg = res.data.connected_twitter_flg
+                    this.loginFlg = res.data.login_flg
 
                     // acocuntデータをjsonにパース
                     for(let i in this.accounts) {

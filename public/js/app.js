@@ -1748,6 +1748,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1756,6 +1757,7 @@ __webpack_require__.r(__webpack_exports__);
       gotTime: '',
       autoFollowFlg: false,
       connectedTwitterFlg: false,
+      loginFlg: false,
       page: 1
     };
   },
@@ -1780,7 +1782,8 @@ __webpack_require__.r(__webpack_exports__);
         _this.accountsPaginate = res.data.accounts;
         _this.gotTime = res.data.got_time;
         _this.autoFollowFlg = res.data.auto_follow_flg;
-        _this.connectedTwitterFlg = res.data.connected_twitter_flg; // acocuntデータをjsonにパース
+        _this.connectedTwitterFlg = res.data.connected_twitter_flg;
+        _this.loginFlg = res.data.login_flg; // acocuntデータをjsonにパース
 
         for (var i in _this.accounts) {
           var jsonData = JSON.parse(_this.accounts[i].account_data);
@@ -37658,7 +37661,17 @@ var render = function() {
       _vm._v(" "),
       _vm.accounts
         ? _c("div", { staticClass: "u-ta-c u-mb-lg" }, [
-            _vm.connectedTwitterFlg == true
+            _vm.loginFlg == false
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "c-button c-button-dark",
+                    attrs: { type: "button", disabled: "" },
+                    on: { click: _vm.toggleConnectedTwitter }
+                  },
+                  [_vm._v("ログイン後、機能解放")]
+                )
+              : _vm.connectedTwitterFlg == true
               ? _c(
                   "button",
                   {

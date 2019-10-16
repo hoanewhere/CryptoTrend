@@ -125,9 +125,13 @@ class AccountListController extends Controller
         $accounts = array();
         $connected_twitter_flg = false;
         $auto_follow_flg = false;
+        $login_flg = false;
         
         $login_user = Auth::user();
         if($login_user) {
+            // ログインフラグON
+            $login_flg = true;
+
             // twitter連携状態確認
             if(!empty($login_user->access_token)) {
                 $connected_twitter_flg = true;
@@ -163,7 +167,8 @@ class AccountListController extends Controller
             'accounts' => $accounts,
             'got_time' => $got_time,
             'auto_follow_flg' => $auto_follow_flg,
-            'connected_twitter_flg' => $connected_twitter_flg
+            'connected_twitter_flg' => $connected_twitter_flg,
+            'login_flg' => $login_flg,
         ];
     
         Log::debug('初期表示データ：' . print_r($res_data, true));
