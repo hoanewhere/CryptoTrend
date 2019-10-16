@@ -127,10 +127,9 @@
                         this.connectedTwitterFlg = false
                     })
                 } else { // 連携開始
-                    this.connectedTwitterFlg = true
                     axios.post('accountList/connectStart')
                     .then((res) => {
-                        this.connectedTwitterFlg = true
+                        // this.connectedTwitterFlg = true // 連携開始の場合、再度データが読み込まれるため、ここではフラグをONにしない
                         location.href = res.data
                     })
                 }

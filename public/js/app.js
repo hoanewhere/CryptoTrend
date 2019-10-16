@@ -1830,9 +1830,8 @@ __webpack_require__.r(__webpack_exports__);
         });
       } else {
         // 連携開始
-        this.connectedTwitterFlg = true;
         axios.post('accountList/connectStart').then(function (res) {
-          _this2.connectedTwitterFlg = true;
+          // this.connectedTwitterFlg = true // 連携開始の場合、再度データが読み込まれるため、ここではフラグをONにしない
           location.href = res.data;
         });
       }
