@@ -251,9 +251,13 @@ textarea {
 
 .l-footer {
   background-color: #ffffff;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 -4px 8px rgba(0, 0, 0, 0.28);
+  border-top: 1px solid #f7f7f7;
   text-align: center;
   width: 100%;
   padding-bottom: 1rem;
+  position: relative;
+  z-index: 300;
 }
 
 .c-nav_trigger {
@@ -441,6 +445,12 @@ textarea {
   border-color: #F7F77C;
 }
 
+.c-button-danger {
+  color: #ffffff;
+  background-color: #e3342f;
+  border-color: #e3342f;
+}
+
 .c-button-dark {
   color: #ffffff;
   background-color: #787878;
@@ -584,6 +594,28 @@ textarea {
 .c-tra-slide-fade-leave-to {
   transform: translate(100px, 0);
   opacity: 0;
+}
+
+.c-trim {
+  overflow: hidden;
+  width: 15rem;
+  height: 15rem;
+  position: relative;
+  border-radius: 50%;
+}
+
+@media screen and (min-width: 1024px) {
+  .c-trim {
+    width: 20rem;
+    height: 20rem;
+  }
+}
+
+.c-trim-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .p-logo {
@@ -838,6 +870,139 @@ textarea {
   left: 0;
   height: 100%;
   width: 100%;
+}
+
+.p-top_block {
+  text-align: center;
+  position: relative;
+}
+
+.p-top_container {
+  margin: 0 auto;
+  padding: 3rem 1rem;
+  max-width: 1180px;
+}
+
+.p-top_container-top {
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  max-width: 600px;
+}
+
+@media screen and (min-width: 768px) {
+  .p-top_container-top {
+    padding: 5rem 1rem;
+  }
+}
+
+.p-top_container-body {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+@media screen and (min-width: 768px) {
+  .p-top_container-body {
+    flex-direction: row;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .p-top_container-body-reverse {
+    flex-direction: row-reverse;
+  }
+}
+
+.p-top_container-body-img {
+  max-width: 480px;
+}
+
+.p-top_container-body-text {
+  max-width: 480px;
+}
+
+.p-top_title {
+  font-size: 3rem;
+  line-height: 3rem;
+  margin: 3rem auto;
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  .p-top_title {
+    font-size: 5rem;
+    line-height: 5rem;
+  }
+}
+
+.p-top_title-sub {
+  font-size: 1.5rem;
+  line-height: 1.5rem;
+  margin: 3rem auto;
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  .p-top_title-sub {
+    font-size: 3rem;
+    line-height: 3rem;
+  }
+}
+
+.p-top_text {
+  text-align: left;
+  font-size: 1.5rem;
+  line-height: 1.5rem;
+  padding: 1rem;
+}
+
+.p-top_text-focus {
+  font-size: 1.2rem;
+  line-height: 1.2rem;
+  padding: 1rem;
+  color: #e3342f;
+}
+
+.p-top_bg-crypto {
+  background-image: url(/images/top.jpg?7a4f74c88666109142c58f9595d02a5a);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  width: 100%;
+  height: calc(100vh - 3rem);
+  vertical-align: middle;
+}
+
+.p-top_bg-yellow {
+  background-color: #F7F77C;
+}
+
+.p-top_bg-white {
+  background-color: #ffffff;
+}
+
+.p-top_cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  opacity: 0.5;
+  z-index: 2;
+}
+
+.p-top_img {
+  width: 30rem;
+  height: auto;
 }
 
 /*! Emma.css 0.15.0 | MIT License | https://git.io/emma */
