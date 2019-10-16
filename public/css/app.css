@@ -961,7 +961,7 @@ textarea {
   text-align: left;
   font-size: 1.5rem;
   line-height: 1.5rem;
-  padding: 1rem;
+  padding: 1rem 0;
 }
 
 .p-top_text-focus {
@@ -972,7 +972,7 @@ textarea {
 }
 
 .p-top_bg-crypto {
-  background-image: url(/images/top.jpg?7a4f74c88666109142c58f9595d02a5a);
+  background-image: url(/images/top.jpg?1331268c88a3b675f86ec03f1612622a);
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
