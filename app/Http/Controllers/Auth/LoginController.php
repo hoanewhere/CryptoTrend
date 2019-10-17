@@ -28,7 +28,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/top';
+    // protected $redirectTo = '/top';
 
     /**
      * Create a new controller instance.
@@ -47,8 +47,13 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
+        $pattern_login = '/login$/';
+        $previous_url = url()->previous();
+        
         if (isset($_SERVER['HTTP_REFERER'])) {
+            if(!preg_match($pattern_login, $previous_url)) {
             session(['url.intended' => $_SERVER['HTTP_REFERER']]);
+        }
         }
         return view('auth.login');
     }
