@@ -19,7 +19,7 @@ class TwitterController extends Controller
     */
 
 
-    const MAX_TWEET_SEARCH = 300; // twitterAPIのツイート検索時の上限(450/15min) →　10minutesタスクなので300
+    const MAX_TWEET_SEARCH = 450; // twitterAPIのツイート検索時の上限(450/15min)
 
     private static $searchd_tweet_cnt = 0; // ツイート検索数
     public static $searchd_tweet_limit_flg = false; // ツイート検索の上限フラグ
@@ -173,14 +173,13 @@ class TwitterController extends Controller
                     continue;
                 }
 
-                // // 取得データに重複がないかチェック → 上位で判断する
+                // // 取得データに重複がないかチェック
                 foreach($users_arr as $result) {
                     if($result['id_str'] === $user_arr['id_str']) { // 重複している場合、処理終了して上位に配列を返す
-                        Log::debug('重複データあり(処理終了)：');
+                        Log::debug('重複データあり(処理飛ばす)：');
                         Log::debug('重複データ($result["id_str"])：' . $result['id_str']);
                         Log::debug('重複データ($user_arr["id_str"])：' . $user_arr['id_str']);
-                        $params['page'] = 0;
-                        break 3;
+                        continue 2; //　重複データは飛ばして、次のユーザの処理を実施
                     }
                 }
 

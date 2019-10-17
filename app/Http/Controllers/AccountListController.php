@@ -421,33 +421,33 @@ class AccountListController extends Controller
         $updated_time = UpdatedTime::where('time_index', '2')->where('created_at', 'LIKE', "$today%")->first(); 
         $saved_users = SearchedAccount::select('account_data->id_str as twitter_id_str')->where('update_time_id', $updated_time->id)->get();
 
-        foreach($users as $user) {
-            // 重複チェック
-            foreach($saved_users as $saved_user) {
-                // Log::debug('保存してる側のid_str:' . $saved_user->twitter_id_str);
-                // Log::debug('取得側のid_str:'. $user['id_str']);
-                if($saved_user->twitter_id_str == $user['id_str']) {
-                    Log::debug('重複ありのため終了');
-                    Log::debug('重複データ（$saved_user->twitter_id_str）:'. $saved_user->twitter_id_str);
-                    Log::debug('重複データ（$user["id_str"]）:'. $user['id_str']);
-                    $complete_flg = true;
-                    $next_page = 0;
-                    break 2;
+        if (is_array($users)) {
+            foreach($users as $user) {
+                // 重複チェック
+                foreach($saved_users as $saved_user) {
+                    // Log::debug('保存してる側のid_str:' . $saved_user->twitter_id_str);
+                    // Log::debug('取得側のid_str:'. $user['id_str']);
+                    if($saved_user->twitter_id_str == $user['id_str']) {
+                        Log::debug('重複しているユーザは保存しない');
+                        Log::debug('重複データ（$saved_user->twitter_id_str）:'. $saved_user->twitter_id_str);
+                        Log::debug('重複データ（$user["id_str"]）:'. $user['id_str']);
+                        continue 2;
+                    }
                 }
-            }
 
-            // 重複していなければDBに保存する
-            $user_json = json_encode($user);
-            $searched_account = New SearchedAccount();
-            $searched_account->fill([
-                'account_data' => $user_json,
-                'update_time_id' => $updated_time->id
-            ]);
-            $searched_account->save();
+                // 重複していなければDBに保存する
+                $user_json = json_encode($user);
+                $searched_account = New SearchedAccount();
+                $searched_account->fill([
+                    'account_data' => $user_json,
+                    'update_time_id' => $updated_time->id
+                ]);
+                $searched_account->save();
+            }
         }
 
         // 完了確認
-        if($next_page > 50 || $next_page == 0) {
+        if($next_page > 50) {
             $complete_flg = true;
             $next_page = 0;
         }

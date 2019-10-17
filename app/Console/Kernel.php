@@ -29,12 +29,12 @@ class Kernel extends ConsoleKernel
     {
         // 一日に一回、対象ワードのツイート数の集計を実施
         // （一回の取得件数に制限があるため、その日の集計が完了するまで本タスクを定期的に実施）
-        // $schedule->call(function() {
-        //     $trend_ranking = New TrendRankingController();
-        //     $trend_ranking->aggregateTweetTrend();
-        // })->everyTenMinutes()
-        // ->name('task-aggregateTweetTrend')
-        // ->withoutOverlapping();
+        $schedule->call(function() {
+            $trend_ranking = New TrendRankingController();
+            $trend_ranking->aggregateTweetTrend();
+        })->everyTenMinutes()
+        ->name('task-aggregateTweetTrend')
+        ->withoutOverlapping();
 
         // 1日に１回、対象のツイッターユーザー情報を取得、更新する
         $schedule->call(function() {
