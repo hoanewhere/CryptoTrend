@@ -60,6 +60,13 @@ class AccountListController extends Controller
         }
 
         // TBD 同一のツイッターIDは弾いて再度別垢で登録してもらう処理追加
+        // ツイッターアカウントをチェック
+        $users = User::where('access_token->screen_name', $access_token['screen_name'])->get();
+        if(count($users)) {
+            Log::debug('同一アカウントのためアカウント連携しない');
+            Log::debug('NG 対象データ' . print_r($access_token, true));
+            return redirect('accountList')->with('ng', '連携に失敗しました。既に別ユーザで連携されたIDです。');
+        }
 
         // アクセストークンをjson形式でDBに保存する
         $access_token_json = json_encode($access_token);
@@ -72,7 +79,7 @@ class AccountListController extends Controller
         // 連携ユーザとのフォロー状態を確認して保存する
         $this->saveFollowingData($login_user);
 
-        return redirect('accountList');
+        return redirect('accountList')->with('success', '連携完了しました。');
     }
     
 
@@ -419,7 +426,7 @@ class AccountListController extends Controller
             foreach($saved_users as $saved_user) {
                 // Log::debug('保存してる側のid_str:' . $saved_user->twitter_id_str);
                 // Log::debug('取得側のid_str:'. $user['id_str']);
-                if($saved_user->twitter_id_str == $user['id_str']) { //tbd:$saved_user->account_data['id']じゃない？　あと比較するならid_strでする
+                if($saved_user->twitter_id_str == $user['id_str']) {
                     Log::debug('重複ありのため終了');
                     Log::debug('重複データ（$saved_user->twitter_id_str）:'. $saved_user->twitter_id_str);
                     Log::debug('重複データ（$user["id_str"]）:'. $user['id_str']);
