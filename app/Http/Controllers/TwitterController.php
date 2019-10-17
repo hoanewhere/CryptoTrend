@@ -165,14 +165,28 @@ class TwitterController extends Controller
 
                 // レスポンスがエラーで返ってきた場合、処理を終了する
                 if (isset($user_arr[0]['code'])) {
-                Log::debug('resultエラー:'. print_r($user_arr, true));
-                    break 2;
+                    Log::debug('resultエラー:'. print_r($user_arr, true));
+                        break 2;
+                }
+
+                // 鍵アカウントは対象外とする
+                if ($user_arr['protected'] == true) {
+                    continue;
+                }
+
+                // // 取得データに重複がないかチェック → 上位で判断する
+                foreach($users_arr as $result) {
+                    if($result['id_str'] === $user_arr['id_str']) { // 重複している場合、処理終了して上位に配列を返す
+                        Log::debug('重複データあり(処理終了)：');
+                        $params['page'] = 0;
+                        break 3;
+                    }
                 }
 
                 // 最新ツイートの埋め込みhtmlを取得
                 $latest_html = "";
                 if(!empty($user_arr['status'])) {
-                    $latest_html = self::getOembed($connection, $user_arr['screen_name'], $user_arr['status']['id']);
+                    $latest_html = self::getOembed($connection, $user_arr['screen_name'], $user_arr['status']['id_str']);
                     if(empty($latest_html)) {
                         break 2;
                     }
@@ -335,7 +349,7 @@ class TwitterController extends Controller
 
         $result_std = $connection->get('friendships/lookup', $params);
         $result = json_decode(json_encode($result_std), true);
-        Log::debug('lookupFriendships取得データ(配列):' . print_r($result, true));
+        // Log::debug('lookupFriendships取得データ(配列):' . print_r($result, true));
 
         // レスポンスがエラーで返ってきた場合、
         if (isset($result['errors'])) {

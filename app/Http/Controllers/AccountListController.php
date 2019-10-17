@@ -38,7 +38,6 @@ class AccountListController extends Controller
      */
     public function index() {
         // test
-        // $this->saveFollowingData($login_user);
         // $this->getUsers();
         // $this->toFollowAutoLimit();
         // $this->saveFollowingDataAllUsers();
@@ -171,13 +170,13 @@ class AccountListController extends Controller
             'login_flg' => $login_flg,
         ];
     
-        Log::debug('初期表示データ：' . print_r($res_data, true));
+        // Log::debug('初期表示データ：' . print_r($res_data, true));
         return $res_data;
     }
 
 
     /**
-     * 自動フォローフラグがONのユーザに対して、自動フォローを実施する。(15人/15minの制限あり)
+     * 自動フォローフラグがONのユーザに対して、自動フォローを実施する。(10人/10minの制限あり)
      * 
      * @return void
      */
@@ -188,16 +187,16 @@ class AccountListController extends Controller
         $auto_flg_users = FollowManagement::where('auto_follow_flg', true)->get();
         
         foreach($auto_flg_users as $auto_flg_user) { // auto_flgが立っているuserに対して処理を実施
-            // 未フォローのアカウントを15件取得
+            // 未フォローのアカウントを10件取得
             $login_user_id = $auto_flg_user->login_user_id;
             $updated_time_id = UpdatedTime::select('id')->where('time_index', 2)->where('complete_flg', true)->latest()->first();
             $accounts = SearchedAccount::select('account_data->screen_name as screen_name', 'twitter_followings.id as following_id')
                                         ->leftJoin('twitter_followings', 'searched_accounts.account_data->id_str', '=', 'twitter_followings.searched_twitter_id_str')
                                         ->where('update_time_id', $updated_time_id->id)
                                         ->where('twitter_followings.login_user_id', $login_user_id)
-                                        ->where('twitter_followings.following', false)->limit(15)->get();
+                                        ->where('twitter_followings.following', false)->limit(10)->get();
 
-            foreach($accounts as $account) { // 最大15人に対してフォロー処理を実施
+            foreach($accounts as $account) { // 最大10人に対してフォロー処理を実施
                 // day_cnt確認
                 $follow_management = FollowManagement::where('login_user_id', $login_user_id)->first();
                 $day_cnt = $follow_management->day_cnt;
@@ -356,9 +355,9 @@ class AccountListController extends Controller
         $searched_accounts = SearchedAccount::select('id', 'account_data->id_str as twitter_id_str')->where('update_time_id', $updated_time->id)->get();
         foreach($searched_accounts as $searched_account) {
             $cnt++;
-            Log::debug('friendsips/lokupの単品パラメータ:' . $searched_account->twitter_id_str);
+            // Log::debug('friendsips/lokupの単品パラメータ:' . $searched_account->twitter_id_str);
             $params['user_id'] = $params['user_id'] . ($searched_account->twitter_id_str) . ',';
-            Log::debug('friendsips/lokupのパラメータ:' . $params['user_id']);
+            // Log::debug('friendsips/lokupのパラメータ:' . $params['user_id']);
             
             if($cnt == 100) { // パラメータに１００件のidが貯まったら以下処理実施
                 $this->saveFollowingDataDetail($user->id, $params, $access_token);
@@ -411,12 +410,14 @@ class AccountListController extends Controller
         $complete_flg = false;
         $today = date('Y-m-d');
         $updated_time = UpdatedTime::where('time_index', '2')->where('created_at', 'LIKE', "$today%")->first(); 
-        $saved_users = SearchedAccount::where('update_time_id', $updated_time->id)->get();
+        $saved_users = SearchedAccount::select('account_data->id_str as twitter_id_str')->where('update_time_id', $updated_time->id)->get();
 
         foreach($users as $user) {
             // 重複チェック
             foreach($saved_users as $saved_user) {
-                if($saved_user->id === $user['id']) { //tbd:$saved_user->account_data['id']じゃない？　あと比較するならid_strでする
+                // Log::debug('保存してる側のid_str:' . $saved_user->twitter_id_str);
+                // Log::debug('取得側のid_str:'. $user['id_str']);
+                if($saved_user->twitter_id_str == $user['id_str']) { //tbd:$saved_user->account_data['id']じゃない？　あと比較するならid_strでする
                     Log::debug('重複ありのため終了');
                     $complete_flg = true;
                     $next_page = 0;
@@ -435,7 +436,7 @@ class AccountListController extends Controller
         }
 
         // 完了確認
-        if($next_page > 50) {
+        if($next_page > 50 || $next_page == 0) {
             $complete_flg = true;
             $next_page = 0;
         }
