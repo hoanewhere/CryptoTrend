@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\AccountListController;
 
 class DaylyCommand extends Command
 {
@@ -40,7 +42,8 @@ class DaylyCommand extends Command
         Log::info('************************');
         Log::info('clearFollowCnt 実施');
         Log::info('************************');
-        AccountListController::clearFollowCntOfDayLimit();
+        $account_list = New AccountListController();
+        $account_list->clearFollowCntOfDayLimit();
         Log::info('************************');
         Log::info('clearFollowCnt 終了');
         Log::info('************************');
