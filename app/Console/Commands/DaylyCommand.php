@@ -39,13 +39,13 @@ class DaylyCommand extends Command
      */
     public function handle()
     {
-        Log::info('************************');
-        Log::info('clearFollowCnt 実施');
-        Log::info('************************');
+        Log::debug('************************');
+        Log::debug('clearFollowCnt 実施');
+        Log::debug('************************');
         $account_list = New AccountListController();
         $account_list->clearFollowCntOfDayLimit();
-        Log::info('************************');
-        Log::info('clearFollowCnt 終了');
-        Log::info('************************');
+        Log::debug('************************');
+        Log::debug('clearFollowCnt 終了');
+        Log::debug('************************');
     }
 }

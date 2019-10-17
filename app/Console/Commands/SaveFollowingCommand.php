@@ -39,13 +39,13 @@ class SaveFollowingCommand extends Command
      */
     public function handle()
     {
-        Log::info('************************');
-        Log::info('command:saveFollowing 実施');
-        Log::info('************************');
+        Log::debug('************************');
+        Log::debug('command:saveFollowing 実施');
+        Log::debug('************************');
         $account_list = New AccountListController();
         $account_list->saveFollowingDataAllUsers();
-        Log::info('************************');
-        Log::info('command:saveFollowing 終了');
-        Log::info('************************');
+        Log::debug('************************');
+        Log::debug('command:saveFollowing 終了');
+        Log::debug('************************');
     }
 }

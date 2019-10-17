@@ -42,33 +42,33 @@ class TenMinutesCommand extends Command
     public function handle()
     {
         // autoFollow
-        Log::info('************************');
-        Log::info('autoFollow 開始');
-        Log::info('************************');
+        Log::debug('************************');
+        Log::debug('autoFollow 開始');
+        Log::debug('************************');
         $account_list = New AccountListController();
         $account_list->toFollowAutoLimit();
-        Log::info('************************');
-        Log::info('autoFollow 終了');
-        Log::info('************************');
+        Log::debug('************************');
+        Log::debug('autoFollow 終了');
+        Log::debug('************************');
 
         // getUsers
-        Log::info('************************');
-        Log::info('getUsers 実施');
-        Log::info('************************');
+        Log::debug('************************');
+        Log::debug('getUsers 実施');
+        Log::debug('************************');
         $account_list = New AccountListController();
         $account_list->getUsers();
-        Log::info('************************');
-        Log::info('getUsers 終了');
-        Log::info('************************');
+        Log::debug('************************');
+        Log::debug('getUsers 終了');
+        Log::debug('************************');
 
         // aggregateTweetTrend
-        Log::info('************************');
-        Log::info('aggregateTweetTrend 実施');
-        Log::info('************************');
+        Log::debug('************************');
+        Log::debug('aggregateTweetTrend 実施');
+        Log::debug('************************');
         $trend_ranking = New TrendRankingController();
         $trend_ranking->aggregateTweetTrend();
-        Log::info('************************');
-        Log::info('aggregateTweetTrend 終了');
-        Log::info('************************');
+        Log::debug('************************');
+        Log::debug('aggregateTweetTrend 終了');
+        Log::debug('************************');
     }
 }

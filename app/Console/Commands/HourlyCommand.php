@@ -39,13 +39,13 @@ class HourlyCommand extends Command
      */
     public function handle()
     {
-        Log::info('************************');
-        Log::info('saveFollowing 実施');
-        Log::info('************************');
+        Log::debug('************************');
+        Log::debug('saveFollowing 実施');
+        Log::debug('************************');
         $account_list = New AccountListController();
         $account_list->saveFollowingDataAllUsers();
-        Log::info('************************');
-        Log::info('saveFollowing 終了');
-        Log::info('************************');
+        Log::debug('************************');
+        Log::debug('saveFollowing 終了');
+        Log::debug('************************');
     }
 }
