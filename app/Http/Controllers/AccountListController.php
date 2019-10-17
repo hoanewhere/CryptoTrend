@@ -419,6 +419,8 @@ class AccountListController extends Controller
                 // Log::debug('取得側のid_str:'. $user['id_str']);
                 if($saved_user->twitter_id_str == $user['id_str']) { //tbd:$saved_user->account_data['id']じゃない？　あと比較するならid_strでする
                     Log::debug('重複ありのため終了');
+                    Log::debug('重複データ（$saved_user->twitter_id_str）:'. $saved_user->twitter_id_str);
+                    Log::debug('重複データ（$user["id_str"]）:'. $user['id_str']);
                     $complete_flg = true;
                     $next_page = 0;
                     break 2;
