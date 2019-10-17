@@ -40,13 +40,13 @@ class GetUsersCommand extends Command
      */
     public function handle()
     {
-        Log::info('************************');
-        Log::info('command:getUsers 実施');
-        Log::info('************************');
+        Log::debug('************************');
+        Log::debug('command:getUsers 実施');
+        Log::debug('************************');
         $account_list = New AccountListController();
         $account_list->getUsers();
-        Log::info('************************');
-        Log::info('command:getUsers 終了');
-        Log::info('************************');
+        Log::debug('************************');
+        Log::debug('command:getUsers 終了');
+        Log::debug('************************');
     }
 }

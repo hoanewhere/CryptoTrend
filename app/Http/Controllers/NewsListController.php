@@ -44,7 +44,7 @@ class NewsListController extends Controller
 
         //　キーワードの文字コード変更
         $query = urlencode(mb_convert_encoding(self::SEARCH_KEYWORD, "UTF-8", "auto"));
-        Log::debug('エンコード結果'.print_r($query, true));
+        // Log::debug('エンコード結果'.print_r($query, true));
 
         // APIへのリクエストURL生成
         $api_url = $api_base_url_front . $query . $api_base_url_back;
@@ -54,11 +54,11 @@ class NewsListController extends Controller
         $xml = simplexml_load_string($contents);
         $json = json_encode($xml);
         $array = json_decode($json,TRUE);
-        Log::debug('XML形式：'.print_r($xml, true));
+        // Log::debug('XML形式：'.print_r($xml, true));
 
         //記事エントリを取り出す
         $data = $array['channel']['item'];
-        Log::debug('XML->item：'.print_r($data, true));
+        // Log::debug('XML->item：'.print_r($data, true));
 
         //記事のタイトルやURLを取り出してs配列に格納
         $list = array();

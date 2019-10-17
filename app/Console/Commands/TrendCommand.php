@@ -39,13 +39,13 @@ class TrendCommand extends Command
      */
     public function handle()
     {
-        Log::info('************************');
-        Log::info('command:aggregateTweetTrend 実施');
-        Log::info('************************');
+        Log::debug('************************');
+        Log::debug('command:aggregateTweetTrend 実施');
+        Log::debug('************************');
         $trend_ranking = New TrendRankingController();
         $trend_ranking->aggregateTweetTrend();
-        Log::info('************************');
-        Log::info('command:aggregateTweetTrend 終了');
-        Log::info('************************');
+        Log::debug('************************');
+        Log::debug('command:aggregateTweetTrend 終了');
+        Log::debug('************************');
     }
 }

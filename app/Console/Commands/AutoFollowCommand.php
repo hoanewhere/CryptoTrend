@@ -39,13 +39,13 @@ class AutoFollowCommand extends Command
      */
     public function handle()
     {
-        Log::info('************************');
-        Log::info('command:autoFollow 開始');
-        Log::info('************************');
+        Log::debug('************************');
+        Log::debug('command:autoFollow 開始');
+        Log::debug('************************');
         $account_list = New AccountListController();
         $account_list->toFollowAutoLimit();
-        Log::info('************************');
-        Log::info('command:autoFollow 終了');
-        Log::info('************************');
+        Log::debug('************************');
+        Log::debug('command:autoFollow 終了');
+        Log::debug('************************');
     }
 }

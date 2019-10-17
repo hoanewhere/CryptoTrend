@@ -59,7 +59,6 @@ class AccountListController extends Controller
             return redirect('accountList')->with('ng', '連携に失敗しました。ツイッターにログインし、再度お試しください。');
         }
 
-        // TBD 同一のツイッターIDは弾いて再度別垢で登録してもらう処理追加
         // ツイッターアカウントをチェック
         $users = User::where('access_token->screen_name', $access_token['screen_name'])->get();
         if(count($users)) {

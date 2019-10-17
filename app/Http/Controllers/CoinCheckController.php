@@ -28,7 +28,7 @@ class CoinCheckController extends Controller
         $config = config('coincheck');
         $coincheck = new Coincheck($config['access_key'], $config['secret_key']);
         $res = $coincheck->ticker->all();
-        Log::debug('coincheck.tickerの結果:'. print_r($res, true));
+        // Log::debug('coincheck.tickerの結果:'. print_r($res, true));
         return $res;
     }
 }

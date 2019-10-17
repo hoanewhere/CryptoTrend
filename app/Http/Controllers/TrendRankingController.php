@@ -78,16 +78,16 @@ class TrendRankingController extends Controller
                 $complete_flg = true;
             }
         }
-        Log::debug('タイムテーブルの取得データ: '.print_r($updated_time_result, true));
-        Log::debug('タイムフラグ: '.$time_flg);
-        Log::debug('タイムテーブルのコンプリートフラグ: '.$complete_flg);
+        // Log::debug('タイムテーブルの取得データ: '.print_r($updated_time_result, true));
+        // Log::debug('タイムフラグ: '.$time_flg);
+        // Log::debug('タイムテーブルのコンプリートフラグ: '.$complete_flg);
 
         if($time_flg) { //現在日付のレコードがある場合
             if ($complete_flg) { // 現在日付の情報取得が完了している場合
-                Log::info('集計済み');
+                Log::debug('集計済み');
                 return;
             } else { // 現在日付の情報収集が未完了の場合
-                Log::info('集計途中');
+                Log::debug('集計途中');
                 $start_day = date("Y-m-d H:i:s", strtotime($updated_time_result[0]->created_at)); //timestampからstringに変換。右記参照 $start_day = date('Y-m-d_H:i:s', strtotime(timeテーブルのtimestamp));
                 $start_id = $updated_time_result[0]->id;
 
@@ -95,7 +95,7 @@ class TrendRankingController extends Controller
                 $crypto_data = $this->resumeSearch($start_day, $start_id);
             }
         } else { //現在日付のレコードがない場合
-            Log::info('集計未実施');
+            Log::debug('集計未実施');
             // UpdatedTimeテーブルにレコード追加
             $updated_time = New UpdatedTime();
             $updated_time->fill([
@@ -130,7 +130,7 @@ class TrendRankingController extends Controller
         // 集計が完了したか確認する
         foreach($crypto_data as $item) {
             if($item['complete_flg'] == false) {
-                Log::info('集計完了(次のタスクで処理再開):');
+                Log::debug('集計完了(次のタスクで処理再開):');
                 return; // 一つでも未完了のものがあれば処理終了。次のタスクで処理再開。
             }
         }
@@ -140,7 +140,6 @@ class TrendRankingController extends Controller
         ]);
         $updated_time_result[0]->save();
         Log::debug('集計完了:');
-        Log::info('集計完了');
     }
 
 
@@ -151,8 +150,8 @@ class TrendRankingController extends Controller
      */
     public function reloadTrendData( Request $request) {
         Log::debug('reloadTrendData(関数呼び出し)');
-        Log::debug('reloadTrendData時の$request: '.$request);
-        Log::debug('$request->term: '.$request->term);
+        // Log::debug('reloadTrendData時の$request: '.$request);
+        // Log::debug('$request->term: '.$request->term);
         $request->validate([
             'term' => 'numeric',
         ]);

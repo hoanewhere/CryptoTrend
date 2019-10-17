@@ -114,8 +114,9 @@ class TwitterController extends Controller
 
             // search回数をカウント
             self::$searchd_tweet_cnt++;
-            Log::debug('制限カウント：'.self::$searchd_tweet_cnt);
             if (self::$searchd_tweet_cnt >= self::MAX_TWEET_SEARCH) {
+                Log::debug('制限に引っかかりました。');
+                Log::debug('制限カウント：'.self::$searchd_tweet_cnt);
                 self::$searchd_tweet_limit_flg = true;
                 self::$searchd_tweet_cnt = 0;
                 break;
@@ -246,13 +247,13 @@ class TwitterController extends Controller
 
         // リクエストトークンを入手
         $config = config('twitter');
-        Log::debug('コールバックurl'.$config['call_back_url']);
+        // Log::debug('コールバックurl'.$config['call_back_url']);
         $connection = new TwitterOAuth($config['api_key'], $config['secret_key']);
         $connection->setTimeouts(10, 10);
         $request_token = $connection->oauth("oauth/request_token", array("oauth_callback" => $config['call_back_url']));
 
-        Log::debug('リクエストトークン'.$request_token['oauth_token']);
-        Log::debug('リクエストトークン(secret)'.$request_token['oauth_token_secret']);
+        // Log::debug('リクエストトークン'.$request_token['oauth_token']);
+        // Log::debug('リクエストトークン(secret)'.$request_token['oauth_token_secret']);
 
         // callback後に認証で使用するため、セッションに保存
         session(['oauth_token' => $request_token['oauth_token']]);
@@ -262,7 +263,7 @@ class TwitterController extends Controller
         $url = $connection->url('oauth/authorize', array(
             'oauth_token' => $request_token['oauth_token']
         ));
-        Log::debug('飛び先'.$url);
+        // Log::debug('飛び先'.$url);
 
         return $url;
     }
@@ -295,7 +296,7 @@ class TwitterController extends Controller
             'oauth_verifier' => $request->oauth_verifier,
             'oauth_token' => $request->oauth_token,
         ));
-        Log::debug('アクセストークン：'. print_r($access_token, true));
+        // Log::debug('アクセストークン：'. print_r($access_token, true));
 
         return $access_token;
     }
