@@ -448,8 +448,8 @@ textarea {
 
 .c-button-danger {
   color: #ffffff;
-  background-color: #e3342f;
-  border-color: #e3342f;
+  background-color: #a94442;
+  border-color: #a94442;
 }
 
 .c-button-dark {
@@ -501,11 +501,11 @@ textarea {
   width: 100%;
   margin-top: 0.25rem;
   font-size: 80%;
-  color: #e3342f;
+  color: #a94442;
 }
 
 .c-invalid_input-text {
-  border-color: #e3342f;
+  border-color: #a94442;
 }
 
 .c-invalid_input-text:focus {
@@ -561,7 +561,6 @@ textarea {
 .c-alert {
   position: relative;
   padding: 0.75rem 1.25rem;
-  margin-bottom: 1rem;
   border: 1px solid transparent;
   border-radius: 0.25rem;
   text-align: center;
@@ -573,6 +572,12 @@ textarea {
   border-color: #c7eed8;
 }
 
+.c-alert-danger {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+
 .c-tra-fade-enter-active,
 .c-tra-fade--leave-active {
   transition: opacity 1s;
@@ -581,6 +586,16 @@ textarea {
 .c-tra-fade-enter,
 .c-tra-fade-leave-to {
   opacity: 0;
+}
+
+.c-tra-slide-down-up-enter-active,
+.c-tra-slide-down-up--leave-active {
+  transition: all 1s;
+}
+
+.c-tra-slide-down-up-enter,
+.c-tra-slide-down-up-leave-to {
+  height: 0;
 }
 
 .c-tra-slide-fade-enter-active {
@@ -969,7 +984,7 @@ textarea {
   font-size: 1.2rem;
   line-height: 1.2rem;
   padding: 1rem;
-  color: #e3342f;
+  color: #a94442;
 }
 
 .p-top_bg-crypto {

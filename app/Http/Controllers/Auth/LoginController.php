@@ -52,11 +52,23 @@ class LoginController extends Controller
         
         if (isset($_SERVER['HTTP_REFERER'])) {
             if(!preg_match($pattern_login, $previous_url)) {
-            session(['url.intended' => $_SERVER['HTTP_REFERER']]);
-        }
+                session(['url.intended' => $_SERVER['HTTP_REFERER']]);
+            }
         }
         return view('auth.login');
     }
+
+    /**
+     * ログインした時のリダイレクト先
+     * Where to redirect users after login.
+     *
+     * @var string
+     */
+    // protected $redirectTo = '/home';
+    protected function redirectTo() {
+        session()->flash('success', 'ログインしました');
+    }
+
 
     /**
      * ログアウト後の遷移先を指定
@@ -72,6 +84,6 @@ class LoginController extends Controller
         $request->session()->invalidate();
 
         $redirect_url = url()->previous();
-        return $this->loggedOut($request) ?: redirect($redirect_url);
+        return $this->loggedOut($request) ?: redirect($redirect_url)->with('success', 'ログアウトしました');
     }
 }

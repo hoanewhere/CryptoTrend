@@ -40,9 +40,13 @@
         <main class="l-header_pt l-body_main">
             <div>
                 @if (session('status'))
-                    <div class="c-alert c-alert-success" role="alert">
-                        {{ session('status') }}
-                    </div>
+                    <message-component :state="true" message="{{ session('status') }}"></message-component>
+                @endif
+                @if (session('success'))
+                    <message-component :state="true" message="{{ session('success') }}"></message-component>
+                @endif
+                @if (session('ng'))
+                    <message-component :state="false" message="{{ session('ng') }}"></message-component>
                 @endif
             </div>
 

@@ -11,6 +11,7 @@
     border: 1px solid transparent;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     line-height: 1.6;
+    cursor: pointer;
     &-peace {
         color: $co-base0;
         background-color:$co-peace;

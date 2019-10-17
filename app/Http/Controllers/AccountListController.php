@@ -56,7 +56,7 @@ class AccountListController extends Controller
         // アクセストークンを取得する
         $access_token = TwitterController::getAccessToken($request);
         if(empty($access_token)) {
-            return redirect('accountList'); //TBD: 連携失敗時にインフォメーションだす
+            return redirect('accountList')->with('ng', '連携に失敗しました。ツイッターにログインし、再度お試しください。');
         }
 
         // TBD 同一のツイッターIDは弾いて再度別垢で登録してもらう処理追加
