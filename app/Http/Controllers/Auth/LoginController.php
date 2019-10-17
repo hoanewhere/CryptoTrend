@@ -28,7 +28,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/index';
+    // protected $redirectTo = '/top';
 
     /**
      * Create a new controller instance.
@@ -38,6 +38,35 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    /**
+     * Show the application's login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showLoginForm()
+    {
+        $pattern_login = '/login$/';
+        $previous_url = url()->previous();
+        
+        if (isset($_SERVER['HTTP_REFERER'])) {
+            if(!preg_match($pattern_login, $previous_url)) {
+                session(['url.intended' => $_SERVER['HTTP_REFERER']]);
+            }
+        }
+        return view('auth.login');
+    }
+
+    /**
+     * ログインした時のリダイレクト先
+     * Where to redirect users after login.
+     *
+     * @var string
+     */
+    // protected $redirectTo = '/home';
+    protected function redirectTo() {
+        session()->flash('success', 'ログインしました');
     }
 
 
@@ -54,7 +83,7 @@ class LoginController extends Controller
 
         $request->session()->invalidate();
 
-        // indexに変更
-        return $this->loggedOut($request) ?: redirect('/index');
+        $redirect_url = url()->previous();
+        return $this->loggedOut($request) ?: redirect($redirect_url)->with('success', 'ログアウトしました');
     }
 }

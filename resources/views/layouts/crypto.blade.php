@@ -1,14 +1,22 @@
 <!DOCTYPE html>
 <html lang="jp">
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    {{-- Title --}}
+    <title>@yield('title')</title>
+
+    {{-- Description --}}
+    <meta name="description" content="仮想通貨（Crypto）の流行（Trend）を様々なデータから追いかけることができます。ツイッターと連携することで、対象アカウントの自動フォロー等の処理などもあります。"/>
+
+    {{-- Keywords --}}
+    <meta name="keywords" content="仮想通貨,トレンド,流行" />
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
-    <title>@yield('title')</title>
 
     {{-- Scripts --}}
     <script src="//platform.twitter.com/widgets.js" charset="utf-8" defer></script>
@@ -40,9 +48,13 @@
         <main class="l-header_pt l-body_main">
             <div>
                 @if (session('status'))
-                    <div class="c-alert c-alert-success" role="alert">
-                        {{ session('status') }}
-                    </div>
+                    <message-component :state="true" message="{{ session('status') }}"></message-component>
+                @endif
+                @if (session('success'))
+                    <message-component :state="true" message="{{ session('success') }}"></message-component>
+                @endif
+                @if (session('ng'))
+                    <message-component :state="false" message="{{ session('ng') }}"></message-component>
                 @endif
             </div>
 
@@ -52,7 +64,7 @@
         {{-- footer --}}
         <footer class="l-footer">
             <div>
-                <a href="{{ url('/index') }}"><img src="{{ asset('img/logo.png') }}" class="p-logo"></a>
+                <a href="{{ url('/top') }}"><img src="{{ asset('img/logo.png') }}" class="p-logo"></a>
             </div>
             <p>Copyright © Crypto Trend. All Rights Reserved</p>
         </footer>

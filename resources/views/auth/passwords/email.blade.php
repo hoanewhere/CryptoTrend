@@ -1,6 +1,6 @@
 @extends('layouts.crypto')
 
-@section('title', 'パスワードリマインド')
+@section('title', 'パスワードリマインド'. ' | Cryoto Trend')
 
 @section('content')
 <div class="c-form">

@@ -11,24 +11,24 @@
     <!-- スマホ,タブレット時のNav -->
     <div class="c-nav_body" v-show="navActive">
         <ul class="c-nav_ul">
-            <li class="c-nav_li" v-if="auth"><button type="submit" class="c-button c-button-warning">{{urlLogout.title}}</button></li>
-            <li class="c-nav_li" v-if="!(auth)"><a :href="urlLogin.url" class="c-button c-button-warning">{{ urlLogin.title }}</a></li>
-            <li class="c-nav_li" v-if="!(auth)"><a :href="urlRegister.url" class="c-button c-button-warning">{{ urlRegister.title }}</a></li>
-            <li class="c-nav_li"><a :href="urlIndex.url" class="c-button c-button-warning">{{urlIndex.title}}</a></li>
-            <li class="c-nav_li"><a :href="urlAccount.url" class="c-button c-button-warning">{{urlAccount.title}}</a></li>
-            <li class="c-nav_li"><a :href="urlNews.url" class="c-button c-button-warning">{{urlNews.title}}</a></li>
+            <li class="c-nav_li" v-if="auth"><button type="submit" class="c-button c-button-danger">{{urlLogout.title}}</button></li>
+            <li class="c-nav_li" v-if="!(auth)"><a :href="urlLogin.url" class="c-button c-button-danger">{{ urlLogin.title }}</a></li>
+            <li class="c-nav_li" v-if="!(auth)"><a :href="urlRegister.url" class="c-button c-button-danger">{{ urlRegister.title }}</a></li>
+            <li class="c-nav_li"><a :href="urlIndex.url" class="c-button c-button-danger">{{urlIndex.title}}</a></li>
+            <li class="c-nav_li"><a :href="urlAccount.url" class="c-button c-button-danger">{{urlAccount.title}}</a></li>
+            <li class="c-nav_li"><a :href="urlNews.url" class="c-button c-button-danger">{{urlNews.title}}</a></li>
         </ul>
     </div>
 
     <!-- PC時のNav -->
     <div class="c-nav_body-lg">
         <ul class="c-nav_ul-lg">
-            <li class="c-nav_li" v-if="auth"><button type="submit" class="c-button c-button-warning">{{urlLogout.title}}</button></li>
-            <li class="c-nav_li" v-if="!(auth)"><a :href="urlLogin.url" class="c-button c-button-warning">{{ urlLogin.title }}</a></li>
-            <li class="c-nav_li" v-if="!(auth)"><a :href="urlRegister.url" class="c-button c-button-warning">{{ urlRegister.title }}</a></li>
-            <li class="c-nav_li"><a :href="urlIndex.url" class="c-button c-button-warning">{{urlIndex.title}}</a></li>
-            <li class="c-nav_li"><a :href="urlAccount.url" class="c-button c-button-warning">{{urlAccount.title}}</a></li>
-            <li class="c-nav_li"><a :href="urlNews.url" class="c-button c-button-warning">{{urlNews.title}}</a></li>
+            <li class="c-nav_li" v-if="auth"><button type="submit" class="c-button c-button-danger">{{urlLogout.title}}</button></li>
+            <li class="c-nav_li" v-if="!(auth)"><a :href="urlLogin.url" class="c-button c-button-danger">{{ urlLogin.title }}</a></li>
+            <li class="c-nav_li" v-if="!(auth)"><a :href="urlRegister.url" class="c-button c-button-danger">{{ urlRegister.title }}</a></li>
+            <li class="c-nav_li"><a :href="urlIndex.url" class="c-button c-button-danger">{{urlIndex.title}}</a></li>
+            <li class="c-nav_li"><a :href="urlAccount.url" class="c-button c-button-danger">{{urlAccount.title}}</a></li>
+            <li class="c-nav_li"><a :href="urlNews.url" class="c-button c-button-danger">{{urlNews.title}}</a></li>
         </ul>
     </div>
 
