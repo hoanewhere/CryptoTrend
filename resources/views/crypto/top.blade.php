@@ -1,6 +1,6 @@
 @extends('layouts.crypto')
 
-@section('title', 'TOP')
+@section('title', 'TOP'. ' | Cryoto Trend')
 
 @section('content')
 <div>
