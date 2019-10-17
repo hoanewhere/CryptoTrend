@@ -229,7 +229,7 @@ class AccountListController extends Controller
      * 
      * @return void
      */
-    public static function clearFollowCntOfDayLimit() {
+    public function clearFollowCntOfDayLimit() {
         $follow_management = FollowManagement::where('id', '>=', 1)->update(['day_cnt' => 0]);
     }
 
