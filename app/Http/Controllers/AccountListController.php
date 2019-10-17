@@ -59,6 +59,8 @@ class AccountListController extends Controller
             return redirect('accountList'); //TBD: 連携失敗時にインフォメーションだす
         }
 
+        // TBD 同一のツイッターIDは弾いて再度別垢で登録してもらう処理追加
+
         // アクセストークンをjson形式でDBに保存する
         $access_token_json = json_encode($access_token);
         $login_user = Auth::user();
