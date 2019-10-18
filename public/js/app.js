@@ -38295,7 +38295,7 @@ var render = function() {
           _vm._v(" "),
           _c("a", {
             staticClass: "p-news_mono-link",
-            attrs: { target: "”_blank”", href: news.url }
+            attrs: { target: "_blank", href: news.url }
           })
         ])
       }),
