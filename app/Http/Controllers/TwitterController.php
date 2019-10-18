@@ -314,7 +314,9 @@ class TwitterController extends Controller
         $connection->setTimeouts(10, 10);
 
         // 対象IDをフォローする
-        $connection->post('friendships/create', array('screen_name' => $screen_name));
+        $result_arr = $connection->post('friendships/create', array('screen_name' => $screen_name));
+        Log::debug('フォロー処理時のscreen_name:'. $screen_name);
+        Log::debug('フォロー処理時の結果:'. print_r($result_arr, true));
         return;
     }
 
