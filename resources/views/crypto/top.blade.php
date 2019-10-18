@@ -4,6 +4,7 @@
 
 @section('content')
 <div>
+
     <div class="p-top_block p-top_bg-crypto">
         <div class="p-top_container-top">
             <h1 class="p-top_title">Crypto Trend</h1>
@@ -11,6 +12,7 @@
         </div>
         <div class="p-top_cover"></div>
     </div>
+
     <div class="p-top_block">
         <div class="p-top_container">
             <h2 class="p-top_title-sub">トレンドランキング</h2>
@@ -26,6 +28,7 @@
             </div>
         </div>
     </div>
+
     <div class="p-top_block p-top_bg-white">
         <div class="p-top_container">
             <h2 class="p-top_title-sub">アカウント一覧</h2>
@@ -41,6 +44,7 @@
             </div>
         </div>
     </div>
+
     <div class="p-top_block">
         <div class="p-top_container">
             <h2 class="p-top_title-sub">アカウント自動フォロー</h2>
@@ -56,6 +60,7 @@
             </div>
         </div>
     </div>
+
     <div class="p-top_block p-top_bg-white">
         <div class="p-top_container">
             <h2 class="p-top_title-sub">ニュース一覧</h2>
@@ -71,5 +76,6 @@
             </div>
         </div>
     </div>
+    
 </div>
 @endsection

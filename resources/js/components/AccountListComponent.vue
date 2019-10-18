@@ -123,7 +123,7 @@
                     console.log('toggleautofollow完了')
                 })
             },
-            toggleConnectedTwitter: function() {
+            toggleConnectedTwitter: function() { // ツイッター連携の切り替え処理
                 if(this.connectedTwitterFlg == true) { // 連携解除
                     axios.post('accountList/connectStop')
                     .then((res) => {

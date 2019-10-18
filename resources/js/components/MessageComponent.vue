@@ -42,7 +42,7 @@
                 }
                 return classes;
             },
-            toggleIsDisplay() {
+            toggleIsDisplay() { // 表示のトグル処理
                 this.active = !this.active
             }
         }
