@@ -1,5 +1,5 @@
 .p-ranks {
-    margin: 1rem;
+    margin: 1rem auto;
     max-width: $layout-width-innerMain;
     @include mq(md) {
         margin: 1rem;
@@ -13,6 +13,8 @@
     background-color: $co-base0;
     border: 1px solid $co-base2;
     border-radius: 0.35rem;
+    margin-right: 1rem;
+    margin-left: 1rem;
     margin-bottom: 1rem;
     padding: 1rem;
     &:last-of-type {
