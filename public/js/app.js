@@ -1826,6 +1826,7 @@ __webpack_require__.r(__webpack_exports__);
     toggleConnectedTwitter: function toggleConnectedTwitter() {
       var _this2 = this;
 
+      // ツイッター連携の切り替え処理
       if (this.connectedTwitterFlg == true) {
         // 連携解除
         axios.post('accountList/connectStop').then(function (res) {
@@ -1936,6 +1937,7 @@ var URL_ORIGIN = location.origin;
       return classes;
     },
     toggleIsDisplay: function toggleIsDisplay() {
+      // 表示のトグル処理
       this.active = !this.active;
     }
   }
