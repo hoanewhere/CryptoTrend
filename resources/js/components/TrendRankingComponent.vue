@@ -3,7 +3,7 @@
     <h1 class="c-title_main">仮想通貨トレンドランキング</h1>
     <div class="u-ta-c">
         <p class="u-mb-sm">データ取得時間：{{ gotTime }}</p>
-        <button type="button" class="c-button c-button-peace p-search_button-dispaly" @click="searchClick">表示条件</button>
+        <button type="button" class="c-button c-button-peace p-search_button-dispaly" @click="searchClick(); getWindow()">表示条件</button>
     </div>
     <div class="p-trendRanking">
 
