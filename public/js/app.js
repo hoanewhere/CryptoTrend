@@ -2025,13 +2025,30 @@ var URL_ORIGIN = location.origin;
       urlRegister: {
         url: URL_ORIGIN + '/register',
         title: 'ユーザ登録'
-      }
+      },
+      heightPx: window.innerHeight
     };
+  },
+  mounted: function mounted() {
+    window.addEventListener('resize', this.getWindow, false);
+    this.getWindow();
+  },
+  beforeDestroy: function beforeDestroy() {
+    window.removeEventListener('resize', this.getWindow, false);
+  },
+  computed: {
+    maxHeight: function maxHeight() {
+      return this.heightPx + 'px';
+    }
   },
   methods: {
     navClick: function navClick() {
       // ハンバーガーアイコン押下時の処理
       this.navActive = !this.navActive;
+    },
+    getWindow: function getWindow() {
+      this.heightPx = window.innerHeight;
+      console.log('windowの高さ:' + this.heightPx);
     }
   }
 });
@@ -38033,22 +38050,34 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("nav", { staticClass: "c-nav" }, [
-    _c("div", { staticClass: "c-nav_trigger", on: { click: _vm.navClick } }, [
-      _c("span", {
-        staticClass: "c-nav_trigger-parts",
-        class: { "is-active": _vm.navActive }
-      }),
-      _vm._v(" "),
-      _c("span", {
-        staticClass: "c-nav_trigger-parts",
-        class: { "is-active": _vm.navActive }
-      }),
-      _vm._v(" "),
-      _c("span", {
-        staticClass: "c-nav_trigger-parts",
-        class: { "is-active": _vm.navActive }
-      })
-    ]),
+    _c(
+      "div",
+      {
+        staticClass: "c-nav_trigger",
+        on: {
+          click: function($event) {
+            _vm.navClick()
+            _vm.getWindow()
+          }
+        }
+      },
+      [
+        _c("span", {
+          staticClass: "c-nav_trigger-parts",
+          class: { "is-active": _vm.navActive }
+        }),
+        _vm._v(" "),
+        _c("span", {
+          staticClass: "c-nav_trigger-parts",
+          class: { "is-active": _vm.navActive }
+        }),
+        _vm._v(" "),
+        _c("span", {
+          staticClass: "c-nav_trigger-parts",
+          class: { "is-active": _vm.navActive }
+        })
+      ]
+    ),
     _vm._v(" "),
     _c(
       "div",
@@ -38064,79 +38093,83 @@ var render = function() {
         staticClass: "c-nav_body"
       },
       [
-        _c("ul", { staticClass: "c-nav_ul" }, [
-          _vm.auth
-            ? _c("li", { staticClass: "c-nav_li" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "c-button c-button-danger",
-                    attrs: { type: "submit" }
-                  },
-                  [_vm._v(_vm._s(_vm.urlLogout.title))]
-                )
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          !_vm.auth
-            ? _c("li", { staticClass: "c-nav_li" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "c-button c-button-danger",
-                    attrs: { href: _vm.urlLogin.url }
-                  },
-                  [_vm._v(_vm._s(_vm.urlLogin.title))]
-                )
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          !_vm.auth
-            ? _c("li", { staticClass: "c-nav_li" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "c-button c-button-danger",
-                    attrs: { href: _vm.urlRegister.url }
-                  },
-                  [_vm._v(_vm._s(_vm.urlRegister.title))]
-                )
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _c("li", { staticClass: "c-nav_li" }, [
-            _c(
-              "a",
-              {
-                staticClass: "c-button c-button-danger",
-                attrs: { href: _vm.urlIndex.url }
-              },
-              [_vm._v(_vm._s(_vm.urlIndex.title))]
-            )
-          ]),
-          _vm._v(" "),
-          _c("li", { staticClass: "c-nav_li" }, [
-            _c(
-              "a",
-              {
-                staticClass: "c-button c-button-danger",
-                attrs: { href: _vm.urlAccount.url }
-              },
-              [_vm._v(_vm._s(_vm.urlAccount.title))]
-            )
-          ]),
-          _vm._v(" "),
-          _c("li", { staticClass: "c-nav_li" }, [
-            _c(
-              "a",
-              {
-                staticClass: "c-button c-button-danger",
-                attrs: { href: _vm.urlNews.url }
-              },
-              [_vm._v(_vm._s(_vm.urlNews.title))]
-            )
-          ])
-        ])
+        _c(
+          "ul",
+          { staticClass: "c-nav_ul", style: { height: _vm.maxHeight } },
+          [
+            _vm.auth
+              ? _c("li", { staticClass: "c-nav_li" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "c-button c-button-danger",
+                      attrs: { type: "submit" }
+                    },
+                    [_vm._v(_vm._s(_vm.urlLogout.title))]
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            !_vm.auth
+              ? _c("li", { staticClass: "c-nav_li" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "c-button c-button-danger",
+                      attrs: { href: _vm.urlLogin.url }
+                    },
+                    [_vm._v(_vm._s(_vm.urlLogin.title))]
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            !_vm.auth
+              ? _c("li", { staticClass: "c-nav_li" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "c-button c-button-danger",
+                      attrs: { href: _vm.urlRegister.url }
+                    },
+                    [_vm._v(_vm._s(_vm.urlRegister.title))]
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c("li", { staticClass: "c-nav_li" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "c-button c-button-danger",
+                  attrs: { href: _vm.urlIndex.url }
+                },
+                [_vm._v(_vm._s(_vm.urlIndex.title))]
+              )
+            ]),
+            _vm._v(" "),
+            _c("li", { staticClass: "c-nav_li" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "c-button c-button-danger",
+                  attrs: { href: _vm.urlAccount.url }
+                },
+                [_vm._v(_vm._s(_vm.urlAccount.title))]
+              )
+            ]),
+            _vm._v(" "),
+            _c("li", { staticClass: "c-nav_li" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "c-button c-button-danger",
+                  attrs: { href: _vm.urlNews.url }
+                },
+                [_vm._v(_vm._s(_vm.urlNews.title))]
+              )
+            ])
+          ]
+        )
       ]
     ),
     _vm._v(" "),
@@ -38405,7 +38438,12 @@ var render = function() {
         {
           staticClass: "c-button c-button-peace p-search_button-dispaly",
           attrs: { type: "button" },
-          on: { click: _vm.searchClick }
+          on: {
+            click: function($event) {
+              _vm.searchClick()
+              _vm.getWindow()
+            }
+          }
         },
         [_vm._v("表示条件")]
       )
@@ -51355,15 +51393,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!***********************************************************!*\
   !*** ./resources/js/components/TrendRankingComponent.vue ***!
   \***********************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _TrendRankingComponent_vue_vue_type_template_id_c06e746e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TrendRankingComponent.vue?vue&type=template&id=c06e746e& */ "./resources/js/components/TrendRankingComponent.vue?vue&type=template&id=c06e746e&");
 /* harmony import */ var _TrendRankingComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TrendRankingComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/TrendRankingComponent.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _TrendRankingComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _TrendRankingComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -51393,7 +51430,7 @@ component.options.__file = "resources/js/components/TrendRankingComponent.vue"
 /*!************************************************************************************!*\
   !*** ./resources/js/components/TrendRankingComponent.vue?vue&type=script&lang=js& ***!
   \************************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
