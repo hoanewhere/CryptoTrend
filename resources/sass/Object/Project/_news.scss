@@ -1,5 +1,6 @@
 .p-news {
-    margin: 1rem;
+    margin: 1rem auto;
+    padding: 1rem;
     max-width: $layout-width-innerMain;
     @include mq(md) {
         margin: 1rem auto;

@@ -340,6 +340,8 @@ textarea {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  flex-wrap: wrap;
+  padding: 2rem;
   z-index: 499;
 }
 
@@ -850,7 +852,8 @@ textarea {
 }
 
 .p-news {
-  margin: 1rem;
+  margin: 1rem auto;
+  padding: 1rem;
   max-width: 480px;
 }
 
