@@ -83,7 +83,7 @@ class AccountListController extends Controller
     
 
     /**
-     * ログインユーザにひもづくアカウントで仮想通貨に関連するユーザを取得し、DBに保存する。
+     * 仮想通貨に関連するユーザを取得し、DBに保存する。
      * 
      * @return void
      */
@@ -234,7 +234,7 @@ class AccountListController extends Controller
 
 
     /**
-     * 自動フォローでフォローしたユーザの内部データの情報（フォロー）を更新する。
+     * 引数の情報から自動でツイッターユーザをフォローする。
      * @param int $record_id, string $screen_name, int $user_id
      * @return void
      */
@@ -251,7 +251,7 @@ class AccountListController extends Controller
 
 
     /**
-     * ユーザ操作でフォローしたユーザの内部データの情報（フォロー）を更新する。
+     * 引数の情報からツイッターユーザをフォローする。
      * @param Request $request
      * @return void
      */
@@ -274,7 +274,7 @@ class AccountListController extends Controller
 
 
     /**
-     * ユーザ操作でフォロー解除したユーザの内部データの情報（フォロー解除）を更新する。
+     * 引数の情報からツイッターユーザをフォロー解除する。
      * @param Request $request
      * @return void
      */
@@ -312,6 +312,12 @@ class AccountListController extends Controller
         );
     }
 
+
+    /**
+     * ツイッター連携を開始する（コールバック先のurlを返す）。
+     * 
+     * @return url
+     */
     public function connectStart() {
         Log::debug('connect開始');
         $login_user = Auth::user();
@@ -322,6 +328,11 @@ class AccountListController extends Controller
     }
 
 
+    /**
+     * ツイッター連携を解除する。
+     * 
+     * @return void
+     */
     public function connectStop() {
         Log::debug('connect停止');
         $login_user = Auth::user();
@@ -351,6 +362,11 @@ class AccountListController extends Controller
     }
 
 
+    /**
+     * 引数で与えられたユーザのフォロー状態を取得し、DBに保存する。
+     * @param User $user
+     * @return void
+     */
     public function saveFollowingData(User $user) {
         Log::debug('saveFollowingData(関数呼び出し)');
         // パラメータ初期化
@@ -379,6 +395,11 @@ class AccountListController extends Controller
     }
 
 
+    /**
+     * ツイッター連携している全ユーザのフォロー状態を取得し、DBに保存する。
+     * 
+     * @return void
+     */
     public function saveFollowingDataAllUsers() {
         Log::debug('saveFollowingDataAllUsers(関数呼び出し)');
         $targetUsers = User::whereNotNull('access_token')->get();
@@ -387,6 +408,7 @@ class AccountListController extends Controller
             $this->saveFollowingData($targetUser);
         }
     }
+
 
     // **
     // 以下 private関数
@@ -459,6 +481,12 @@ class AccountListController extends Controller
         $updated_time->save();
     }
 
+
+    /**
+     * 引数で与えられた情報からフォロー状態を取得し、DBに保存する。
+     * @param int $login_user_id, array $params, array $access_token
+     * @return void
+     */
     private function saveFollowingDataDetail (int $login_user_id, array $params, array $access_token) {
         // twitterapi friendships/lookup実施
         $following_states = TwitterController::lookupFriendships($access_token, $params);

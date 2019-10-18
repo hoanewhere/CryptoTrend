@@ -59,12 +59,10 @@ class LoginController extends Controller
     }
 
     /**
-     * ログインした時のリダイレクト先
-     * Where to redirect users after login.
+     * ログイン時の処理
      *
-     * @var string
+     * @return void
      */
-    // protected $redirectTo = '/home';
     protected function redirectTo() {
         session()->flash('success', 'ログインしました');
     }
@@ -73,7 +71,8 @@ class LoginController extends Controller
     /**
      * ログアウト後の遷移先を指定
      *
-     * @return void
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
     public function logout(Request $request)
     {

@@ -337,7 +337,7 @@ class TwitterController extends Controller
 
 
     /**
-     * ログインユーザと対象アカウントのフォロー状態を取得する
+     * ユーザと対象アカウントのフォロー状態を取得する
      * @param array $access_token, array $params
      * @return void
      */

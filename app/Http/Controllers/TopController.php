@@ -12,7 +12,7 @@ class TopController extends Controller
     | Top Controller
     |--------------------------------------------------------------------------
     |
-    | 
+    | TOP画面に関するコントローラ
     |
     */
 
