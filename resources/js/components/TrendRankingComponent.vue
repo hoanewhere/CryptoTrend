@@ -49,7 +49,7 @@
                             <p>最低：<span>{{ trend.transaction_price_min }}</span></p>
                         </div>
                     </div>
-                    <a target=”_blank” :href="trend.search_url" class="p-rank-link"></a>
+                    <a target="_blank" :href="trend.search_url" class="p-rank-link"></a>
                 </div>
             </transition-group>
         </div>

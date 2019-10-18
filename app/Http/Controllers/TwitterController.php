@@ -19,7 +19,7 @@ class TwitterController extends Controller
     */
 
 
-    const MAX_TWEET_SEARCH = 450; // twitterAPIのツイート検索時の上限(450/15min)
+    const MAX_TWEET_SEARCH = 300; // twitterAPIのツイート検索時の上限(450/15min) →　(300/10min)
 
     private static $searchd_tweet_cnt = 0; // ツイート検索数
     public static $searchd_tweet_limit_flg = false; // ツイート検索の上限フラグ
