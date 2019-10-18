@@ -8,7 +8,7 @@
     <div class="p-trendRanking">
 
         <!-- search -->
-        <div class="p-search u-ta-c p-trendRanking_child" :class="{'is-active': searchActive}">
+        <div class="p-search u-ta-c p-trendRanking_child" :style="{height: maxHeight}" :class="{'is-active': searchActive}">
             <h3 class="c-title_article u-mb-lg">表示条件</h3>
             <form>
                 <div class="p-search_mono u-mb-lg">
@@ -69,10 +69,17 @@
                 selectedCryptoIds: [],
                 selectedSearchTerm: 0,
                 searchActive: false,
+                widthPx: 0,
+                heightPx: 0,
             }
         },
         mounted() {
-            this.reloadTrendData(true)
+            this.reloadTrendData(true);
+            this.getWindow();
+            window.addEventListener('resize', this.getWindow, false);
+        },
+        beforeDestroy() {
+            window.removeEventListener('resize', this.getWindow, false);
         },
         computed: {
             selectAll: {
@@ -92,6 +99,13 @@
                     } else {
                         this.selectedCryptoIds = []
                     }
+                }
+            },
+            maxHeight: function() {
+                if (this.widthPx >= 768) {
+                    return null
+                } else {
+                    return 'calc(' + this.heightPx + 'px - 3rem)'
                 }
             }
         },
@@ -154,7 +168,13 @@
             },
             searchClick: function() { // 検索画面の表示
                 this.searchActive = true
-            }
+            }, 
+            getWindow: function() {
+              this.widthPx=window.innerWidth;
+              this.heightPx=window.innerHeight;
+              console.log('windowの幅:'+this.widthPx);
+              console.log('windowの高さ:'+this.heightPx);
+            },
         }
     }
 </script>

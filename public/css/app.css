@@ -640,7 +640,7 @@ textarea {
 }
 
 .p-ranks {
-  margin: 1rem;
+  margin: 1rem auto;
   max-width: 480px;
 }
 
@@ -657,6 +657,8 @@ textarea {
   background-color: #ffffff;
   border: 1px solid #b7b7b7;
   border-radius: 0.35rem;
+  margin-right: 1rem;
+  margin-left: 1rem;
   margin-bottom: 1rem;
   padding: 1rem;
 }
@@ -723,7 +725,6 @@ textarea {
   top: 3rem;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 3rem);
   overflow: auto;
   padding: 1rem;
   background-color: rgba(0, 0, 0, 0.8);
