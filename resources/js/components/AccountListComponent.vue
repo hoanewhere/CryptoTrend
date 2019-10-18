@@ -140,6 +140,7 @@
             movePage(page) { // ページネーションのページ移動処理
                 this.page = page
                 this.reloadData()
+                window.scrollTo(0, 0)
             }
         }
     }
