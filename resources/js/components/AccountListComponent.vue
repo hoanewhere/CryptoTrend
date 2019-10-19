@@ -29,6 +29,11 @@
                         <button v-else-if="account.following == false" type="button" class="c-button c-button-peace" @click="toFollow(account)">フォローする</button>
                         <button v-else type="button" class="c-button c-button-dark" @click="unfollow(account)">フォロー済</button>
                     </div>
+                    <slide-up-down :active="account.activeToggle" :dulation="10000">
+                        <div class="c-alert u-mb-md" :class="getAlertClass(account)">
+                            <p>{{account.message}}</p>
+                        </div>
+                    </slide-up-down>
                     <p class="u-mb-sm">{{ account.account_data.name }}</p>
                     <p class="u-mb-sm">{{ account.account_data.screen_name }}</p>
                     <div class="p-account_inner-row u-mb-sm">
@@ -61,6 +66,8 @@
                 connectedTwitterFlg: false,
                 loginFlg: false,
                 page: 1,
+                message: "",
+                isSuccess: false,
             }
         },
         mounted() {
@@ -100,7 +107,19 @@
                     record_id: account.id,
                     screen_name: account.account_data.screen_name
                 }).then((res) => {
-                    account.following = true;
+                    account.isSuccess = res.data.follow_flg
+                    account.following = res.data.follow_flg
+                    if(account.isSuccess) {
+                        account.message = 'フォローしました'
+                    } else {
+                        account.message = 'フォロー失敗しました。時間をおいて再度操作してください。'
+                    }
+                    
+
+                    account.activeToggle = true
+                    setTimeout(() => {
+                        this.toggleIsDisplay(account);
+                    }, 4000);
                 })
             },
             unfollow: function(account) { // アカウントフォロー解除処理
@@ -141,6 +160,23 @@
                 this.page = page
                 this.reloadData()
                 window.scrollTo(0, 0)
+            },
+            getAlertClass(account) { // 現在のページ番号にactiveをつける
+                let classes = '';
+
+                if(account.isSuccess == true) {
+                    classes = 'c-alert-success';
+                } else {
+                    classes = 'c-alert-danger';
+                }
+                return classes;
+            },
+            toggleIsDisplay: function(account) { // 表示のトグル処理
+                this.$set(account, "activeToggle", false)
+
+                // vue　data更新用の処理
+                this.$set(account, "update", false)
+                delete account.update
             }
         }
     }
