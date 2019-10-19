@@ -309,15 +309,21 @@ class TwitterController extends Controller
      */
     public static function createFriendships(array $access_token, string $screen_name) {
         // ログインユーザにひもづくアクセストークンで認証する
+        $state = true;
         $config = config('twitter');
         $connection = new TwitterOAuth($config['api_key'], $config['secret_key'], $access_token['oauth_token'], $access_token['oauth_token_secret']);
         $connection->setTimeouts(10, 10);
 
         // 対象IDをフォローする
-        $result_arr = $connection->post('friendships/create', array('screen_name' => $screen_name));
-        Log::debug('フォロー処理時のscreen_name:'. $screen_name);
-        Log::debug('フォロー処理時の結果:'. print_r($result_arr, true));
-        return;
+        $result_std = $connection->post('friendships/create', array('screen_name' => $screen_name));
+        $result = json_decode(json_encode($result_std), true);
+        Log::debug('フォロー処理時の結果:'. print_r($result, true));
+        if (!isset($result['id'])) {
+            Log::debug('フォロー処理失敗:');
+            Log::debug('フォロー処理失敗結果:'. print_r($result, true));
+            $state = false;
+        }
+        return $state;
     }
 
 

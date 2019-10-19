@@ -27,7 +27,7 @@ class AccountListController extends Controller
     */
 
 
-    const MAX_FOLLOW_DAY_LIMIT = 1000; // twitterAPIの一日でのフォロー人数制限
+    const MAX_FOLLOW_DAY_LIMIT = 400; // twitterAPIの一日でのフォロー人数制限
     const USER_SEARCH_WORD = '仮想通貨'; // ユーザ検索時のキーワード
 
     
@@ -205,15 +205,26 @@ class AccountListController extends Controller
                                         ->where('twitter_followings.following', false)->limit(10)->get();
 
             foreach($accounts as $account) { // 最大10人に対してフォロー処理を実施
-                // day_cnt確認
+                // day_limit_flg確認
                 $follow_management = FollowManagement::where('login_user_id', $login_user_id)->first();
+                $day_limit_flg = $follow_management->day_limit_flg;
                 $day_cnt = $follow_management->day_cnt;
                 // Log::debug('アカウント名前: ' . print_r($account, true));
-                if($day_cnt < self::MAX_FOLLOW_DAY_LIMIT) {
-                    self::toFollowAuto($account->following_id, $account->screen_name, $login_user_id);
+                if($day_limit_flg == false) {
+                    $follow_flg = self::toFollowAuto($account->following_id, $account->screen_name, $login_user_id);
+                    
+                    if ($follow_flg) {
+                        $day_cnt++;
+                        if ($day_cnt >= self::MAX_FOLLOW_DAY_LIMIT) {
+                            $day_limit_flg = true;
+                        }
+                    } else {
+                        $day_limit_flg = true;
+                    }
 
                     $follow_management->fill([
-                        'day_cnt' => ++$day_cnt
+                        'day_cnt' => $day_cnt,
+                        'day_limit_flg' => $day_limit_flg,
                     ])->save();
                 } else {
                     break;
@@ -224,12 +235,12 @@ class AccountListController extends Controller
 
 
     /**
-     * ツイッターフォロー数の一日の制限数をクリアする。(1000人/1dayの制限あり)
+     * ツイッターフォロー数の一日の制限数をクリアする。(400人/1dayの制限あり)
      * 
      * @return void
      */
     public function clearFollowCntOfDayLimit() {
-        $follow_management = FollowManagement::where('id', '>=', 1)->update(['day_cnt' => 0]);
+        $follow_managements = FollowManagement::where('id', '>=', 1)->update(['day_cnt' => 0])->update(['day_limit_flg' => 0]);
     }
 
 
@@ -243,10 +254,14 @@ class AccountListController extends Controller
 
         $user = User::where('id', $user_id)->first();
         $access_token = json_decode($user->access_token, true);
-        TwitterController::createFriendships($access_token, $screen_name);
+        $follow_flg = TwitterController::createFriendships($access_token, $screen_name);
 
-        //DB更新
-        $twitter_following = TwitterFollowing::where('id', $record_id)->update(['following' => true]);
+        if ($follow_flg) { // フォロー処理成功した場合
+            //DB更新
+            $twitter_following = TwitterFollowing::where('id', $record_id)->update(['following' => true]);
+        }
+
+        return $follow_flg;
     }
 
 
@@ -261,15 +276,41 @@ class AccountListController extends Controller
             'record_id' => 'required|integer',
             'screen_name' => 'required|string'
         ]);
-        // Log::debug('リクエスト(record_id)' . $request->record_id);
-        // Log::debug('リクエスト(screen_name)' . $request->screen_name);
 
         $login_user = Auth::user();
-        $access_token = json_decode($login_user->access_token, true);
-        TwitterController::createFriendships($access_token, $request->screen_name);
 
-        //DB更新
-        $twitter_following = TwitterFollowing::where('id', $request->record_id)->update(['following' => true]);
+        // day_limit_flg確認
+        $follow_management = FollowManagement::where('login_user_id', $login_user->id)->first();
+        $day_limit_flg = $follow_management->day_limit_flg;
+        $day_cnt = $follow_management->day_cnt;
+        $follow_flg = false;
+
+        if($day_limit_flg == false) {
+            $access_token = json_decode($login_user->access_token, true);
+            $follow_flg = TwitterController::createFriendships($access_token, $request->screen_name);
+            
+            if ($follow_flg) {
+                //DB更新
+                $twitter_following = TwitterFollowing::where('id', $request->record_id)->update(['following' => true]);
+                $day_cnt++;
+                if ($day_cnt >= self::MAX_FOLLOW_DAY_LIMIT) {
+                    $day_limit_flg = true;
+                }
+            } else {
+                $day_limit_flg = true;
+            }
+
+            $follow_management->fill([
+                'day_cnt' => $day_cnt,
+                'day_limit_flg' => $day_limit_flg,
+            ])->save();
+        }
+
+        $res_data = [
+            'follow_flg' => $follow_flg,
+        ];
+
+        return $res_data;
     }
 
 

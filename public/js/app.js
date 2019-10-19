@@ -1749,6 +1749,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1758,7 +1763,9 @@ __webpack_require__.r(__webpack_exports__);
       autoFollowFlg: false,
       connectedTwitterFlg: false,
       loginFlg: false,
-      page: 1
+      page: 1,
+      message: "",
+      isSuccess: false
     };
   },
   mounted: function mounted() {
@@ -1792,12 +1799,26 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     toFollow: function toFollow(account) {
+      var _this2 = this;
+
       // アカウントフォロー処理
       axios.post('accountList/toFollow', {
         record_id: account.id,
         screen_name: account.account_data.screen_name
       }).then(function (res) {
-        account.following = true;
+        account.isSuccess = res.data.follow_flg;
+        account.following = res.data.follow_flg;
+
+        if (account.isSuccess) {
+          account.message = 'フォローしました';
+        } else {
+          account.message = 'フォロー失敗しました。時間をおいて再度操作してください。';
+        }
+
+        account.activeToggle = true;
+        setTimeout(function () {
+          _this2.toggleIsDisplay(account);
+        }, 4000);
       });
     },
     unfollow: function unfollow(account) {
@@ -1824,13 +1845,13 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     toggleConnectedTwitter: function toggleConnectedTwitter() {
-      var _this2 = this;
+      var _this3 = this;
 
       // ツイッター連携の切り替え処理
       if (this.connectedTwitterFlg == true) {
         // 連携解除
         axios.post('accountList/connectStop').then(function (res) {
-          _this2.connectedTwitterFlg = false;
+          _this3.connectedTwitterFlg = false;
         });
       } else {
         // 連携開始
@@ -1845,6 +1866,25 @@ __webpack_require__.r(__webpack_exports__);
       this.page = page;
       this.reloadData();
       window.scrollTo(0, 0);
+    },
+    getAlertClass: function getAlertClass(account) {
+      // 現在のページ番号にactiveをつける
+      var classes = '';
+
+      if (account.isSuccess == true) {
+        classes = 'c-alert-success';
+      } else {
+        classes = 'c-alert-danger';
+      }
+
+      return classes;
+    },
+    toggleIsDisplay: function toggleIsDisplay(account) {
+      // 表示のトグル処理
+      this.$set(account, "activeToggle", false); // vue　data更新用の処理
+
+      this.$set(account, "update", false);
+      delete account.update;
     }
   }
 });
@@ -37845,88 +37885,112 @@ var render = function() {
             { key: account.id, staticClass: "p-account" },
             [
               _c("transition", { attrs: { name: "c-tra-fade", appear: "" } }, [
-                _c("div", { staticClass: "p-account_inner" }, [
-                  _c("img", {
-                    staticClass: "p-account_inner-img",
-                    attrs: {
-                      src: account.account_data.profile_image_url,
-                      alt: ""
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "p-account_inner-btn u-mb-md" }, [
-                    _vm.connectedTwitterFlg == false
-                      ? _c(
-                          "button",
-                          {
-                            staticClass: "c-button c-button-dark",
-                            attrs: { type: "button", disabled: "" }
-                          },
-                          [_vm._v("連携後、機能解放")]
-                        )
-                      : account.following == false
-                      ? _c(
-                          "button",
-                          {
-                            staticClass: "c-button c-button-peace",
-                            attrs: { type: "button" },
-                            on: {
-                              click: function($event) {
-                                return _vm.toFollow(account)
+                _c(
+                  "div",
+                  { staticClass: "p-account_inner" },
+                  [
+                    _c("img", {
+                      staticClass: "p-account_inner-img",
+                      attrs: {
+                        src: account.account_data.profile_image_url,
+                        alt: ""
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "p-account_inner-btn u-mb-md" }, [
+                      _vm.connectedTwitterFlg == false
+                        ? _c(
+                            "button",
+                            {
+                              staticClass: "c-button c-button-dark",
+                              attrs: { type: "button", disabled: "" }
+                            },
+                            [_vm._v("連携後、機能解放")]
+                          )
+                        : account.following == false
+                        ? _c(
+                            "button",
+                            {
+                              staticClass: "c-button c-button-peace",
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.toFollow(account)
+                                }
                               }
-                            }
-                          },
-                          [_vm._v("フォローする")]
-                        )
-                      : _c(
-                          "button",
-                          {
-                            staticClass: "c-button c-button-dark",
-                            attrs: { type: "button" },
-                            on: {
-                              click: function($event) {
-                                return _vm.unfollow(account)
+                            },
+                            [_vm._v("フォローする")]
+                          )
+                        : _c(
+                            "button",
+                            {
+                              staticClass: "c-button c-button-dark",
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.unfollow(account)
+                                }
                               }
-                            }
+                            },
+                            [_vm._v("フォロー済")]
+                          )
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "slide-up-down",
+                      {
+                        attrs: { active: account.activeToggle, dulation: 10000 }
+                      },
+                      [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "c-alert u-mb-md",
+                            class: _vm.getAlertClass(account)
                           },
-                          [_vm._v("フォロー済")]
+                          [_c("p", [_vm._v(_vm._s(account.message))])]
                         )
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "u-mb-sm" }, [
-                    _vm._v(_vm._s(account.account_data.name))
-                  ]),
-                  _vm._v(" "),
-                  _c("p", { staticClass: "u-mb-sm" }, [
-                    _vm._v(_vm._s(account.account_data.screen_name))
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "p-account_inner-row u-mb-sm" }, [
-                    _c("p", { staticClass: "u-mr-lg" }, [
-                      _vm._v("フォロー"),
-                      _c("span", [
-                        _vm._v(_vm._s(account.account_data.friends_count))
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "u-mb-sm" }, [
+                      _vm._v(_vm._s(account.account_data.name))
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "u-mb-sm" }, [
+                      _vm._v(_vm._s(account.account_data.screen_name))
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "p-account_inner-row u-mb-sm" }, [
+                      _c("p", { staticClass: "u-mr-lg" }, [
+                        _vm._v("フォロー"),
+                        _c("span", [
+                          _vm._v(_vm._s(account.account_data.friends_count))
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("p", [
+                        _vm._v("フォロワー"),
+                        _c("span", [
+                          _vm._v(_vm._s(account.account_data.followers_count))
+                        ])
                       ])
                     ]),
                     _vm._v(" "),
-                    _c("p", [
-                      _vm._v("フォロワー"),
-                      _c("span", [
-                        _vm._v(_vm._s(account.account_data.followers_count))
+                    _c("div", { staticClass: "u-mb-sm" }, [
+                      _c("p", [
+                        _vm._v(_vm._s(account.account_data.description))
                       ])
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "u-mb-sm" }, [
-                    _c("p", [_vm._v(_vm._s(account.account_data.description))])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", {
-                    domProps: {
-                      innerHTML: _vm._s(account.account_data.latest_html)
-                    }
-                  })
-                ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", {
+                      domProps: {
+                        innerHTML: _vm._s(account.account_data.latest_html)
+                      }
+                    })
+                  ],
+                  1
+                )
               ])
             ],
             1
