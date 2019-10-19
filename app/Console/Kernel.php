@@ -64,7 +64,8 @@ class Kernel extends ConsoleKernel
 
         // 一日に一回、自動フォローのカウントをクリアする(1000/1day)
         $schedule->call(function() {
-            AccountListController::clearFollowCntOfDayLimit();
+            $account_list4 = New AccountListController();
+            $account_list4->clearFollowCntOfDayLimit();
         })->daily()
         ->name('task-clearFollowCnt')
         ->withoutOverlapping();
