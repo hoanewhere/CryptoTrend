@@ -1815,7 +1815,8 @@ __webpack_require__.r(__webpack_exports__);
           account.message = 'フォロー失敗しました。時間をおいて再度操作してください。';
         }
 
-        account.activeToggle = true;
+        _this2.$set(account, "activeToggle", true);
+
         setTimeout(function () {
           _this2.toggleIsDisplay(account);
         }, 4000);

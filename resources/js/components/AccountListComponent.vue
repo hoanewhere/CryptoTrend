@@ -115,8 +115,7 @@
                         account.message = 'フォロー失敗しました。時間をおいて再度操作してください。'
                     }
                     
-
-                    account.activeToggle = true
+                    this.$set(account, "activeToggle", true)
                     setTimeout(() => {
                         this.toggleIsDisplay(account);
                     }, 4000);
