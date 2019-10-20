@@ -31,7 +31,7 @@
 
     <div class="p-top_block p-top_bg-white">
         <div class="p-top_container">
-            <h2 class="p-top_title-sub">アカウント一覧</h2>
+            <h2 class="p-top_title-sub">仮想通貨アカウント一覧</h2>
             <div class="p-top_container-body p-top_container-body-reverse">
                 <div class="c-trim p-top_container-body-img">
                     <img src="{{ asset('img/accountList.jpg') }}" class="p-top_img c-trim-img">

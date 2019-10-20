@@ -48,8 +48,8 @@
             return {
                 navList: {},
                 navActive: false,
-                urlIndex: {url: URL_ORIGIN + '/index', title: 'トレンド'},
-                urlAccount: {url: URL_ORIGIN + '/accountList', title: 'アカウント一覧'},
+                urlIndex: {url: URL_ORIGIN + '/index', title: 'トレンドランキング'},
+                urlAccount: {url: URL_ORIGIN + '/accountList', title: '仮想通貨アカウント一覧'},
                 urlNews: {url: URL_ORIGIN + '/newsList', title: 'ニュース一覧'},
                 urlLogin: {url: URL_ORIGIN + '/login', title: 'ログイン'},
                 urlLogout: {url: URL_ORIGIN + '/logout', title: 'ログアウト'},

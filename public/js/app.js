@@ -2046,11 +2046,11 @@ var URL_ORIGIN = location.origin;
       navActive: false,
       urlIndex: {
         url: URL_ORIGIN + '/index',
-        title: 'トレンド'
+        title: 'トレンドランキング'
       },
       urlAccount: {
         url: URL_ORIGIN + '/accountList',
-        title: 'アカウント一覧'
+        title: '仮想通貨アカウント一覧'
       },
       urlNews: {
         url: URL_ORIGIN + '/newsList',
