@@ -75,6 +75,12 @@ class AccountListController extends Controller
         ]);
         $login_user->save();
 
+        // follow_managementsテーブル更新
+        $follow_management = FollowManagement::updateOrCreate(
+            ['login_user_id' => $login_user->id],
+            ['auto_follow_flg' => false]
+        );
+
         // 連携ユーザとのフォロー状態を確認して保存する
         $this->saveFollowingData($login_user);
 
@@ -347,10 +353,11 @@ class AccountListController extends Controller
         ]);
 
         $login_user = Auth::user();
-        $follow_management = FollowManagement::updateOrCreate(
-            ['login_user_id' => $login_user->id],
-            ['auto_follow_flg' => $request->auto_flg]
-        );
+        $follow_management = FollowManagement::where('login_user_id', $login_user->id)->first();
+        $follow_management->fill([
+            'auto_follow_flg' => $request->auto_flg
+        ]);
+        $follow_management->save();
     }
 
 
@@ -386,10 +393,7 @@ class AccountListController extends Controller
             $login_user->save();
 
             if(!empty($follow_management)) {
-                $follow_management->fill([
-                    'auto_follow_flg' => false,
-                ]);
-                $follow_management->save();
+                $follow_management->delete();
             }
             
             if(!empty($twitter_followings)) {
