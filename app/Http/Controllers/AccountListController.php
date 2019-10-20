@@ -27,7 +27,7 @@ class AccountListController extends Controller
     */
 
 
-    const MAX_FOLLOW_DAY_LIMIT = 400; // twitterAPIの一日でのフォロー人数制限
+    const MAX_FOLLOW_DAY_LIMIT = 400; // twitterAPIの一日でのフォロー人数制限 (現在のtwitterAPIの制限は400/day。　twitterAPIの制限変更に合わせてこちらも変更可。)
     const USER_SEARCH_WORD = '仮想通貨'; // ユーザ検索時のキーワード
 
     
